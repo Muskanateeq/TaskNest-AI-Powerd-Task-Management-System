@@ -191,8 +191,28 @@ class TaskService:
         # Apply sorting
         if sort_by == "created_at":
             sort_col = Task.created_at
+            if sort_order == "asc":
+                query = query.order_by(sort_col.asc())
+            else:
+                query = query.order_by(sort_col.desc())
         elif sort_by == "due_date":
-            sort_col = Task.due_date
+            # Special handling for due_date: overdue first, then upcoming, nulls last
+            from sqlalchemy import case, func
+            today = date.today()
+
+            # Create a case statement to prioritize overdue tasks
+            priority_order = case(
+                (Task.due_date < today, 1),  # Overdue tasks first
+                (Task.due_date >= today, 2),  # Upcoming tasks second
+                else_=3  # No due date last
+            )
+
+            if sort_order == "asc":
+                # Overdue first, then upcoming in chronological order
+                query = query.order_by(priority_order.asc(), Task.due_date.asc().nullslast())
+            else:
+                # Still show overdue first, but reverse the chronological order within each group
+                query = query.order_by(priority_order.asc(), Task.due_date.desc().nullslast())
         elif sort_by == "priority":
             # Custom priority sorting: high > medium > low
             from sqlalchemy import case
@@ -201,15 +221,22 @@ class TaskService:
                 (Task.priority == "medium", 2),
                 (Task.priority == "low", 3),
             )
+            if sort_order == "asc":
+                query = query.order_by(sort_col.asc())
+            else:
+                query = query.order_by(sort_col.desc())
         elif sort_by == "title":
             sort_col = Task.title
+            if sort_order == "asc":
+                query = query.order_by(sort_col.asc())
+            else:
+                query = query.order_by(sort_col.desc())
         else:
             sort_col = Task.created_at
-
-        if sort_order == "asc":
-            query = query.order_by(sort_col.asc())
-        else:
-            query = query.order_by(sort_col.desc())
+            if sort_order == "asc":
+                query = query.order_by(sort_col.asc())
+            else:
+                query = query.order_by(sort_col.desc())
 
         # Apply pagination
         query = query.limit(limit).offset(offset)

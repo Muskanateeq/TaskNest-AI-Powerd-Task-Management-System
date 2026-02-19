@@ -11,13 +11,13 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useNotifications } from '@/hooks/useNotifications';
 import { useTemplates } from '@/hooks/useTemplates';
 import { useStats } from '@/hooks/useStats';
+import { useTags } from '@/hooks/useTags';
 import { Task, TaskCreateRequest, TaskUpdateRequest } from '@/lib/types';
 import TaskForm from '@/components/tasks/TaskForm';
 import TaskDetailModal from '@/components/tasks/TaskDetailModal';
-import FilterPanel from '@/components/tasks/FilterPanel';
-import SortDropdown from '@/components/tasks/SortDropdown';
+import FilterPanel from '@/components/dashboard/FilterPanel';
+import SortDropdown from '@/components/dashboard/SortDropdown';
 import ProgressBar from '@/components/dashboard/ProgressBar';
-import TrendIndicator from '@/components/dashboard/TrendIndicator';
 import NotificationSettings from '@/components/notifications/NotificationSettings';
 import NotificationBell from '@/components/notifications/NotificationBell';
 import TemplateManager from '@/components/templates/TemplateManager';
@@ -38,6 +38,7 @@ export default function DashboardPage() {
     sort,
     setFilters,
     setSort,
+    clearFilters,
     createTask,
     updateTask,
     toggleComplete,
@@ -60,7 +61,10 @@ export default function DashboardPage() {
   } = useTemplates();
 
   // Statistics
-  const { stats, isLoading: statsLoading, refetch: refetchStats } = useStats();
+  const { stats, refetch: refetchStats } = useStats();
+
+  // Tags
+  const { tags } = useTags();
 
   // State
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -72,7 +76,6 @@ export default function DashboardPage() {
   const [viewingTask, setViewingTask] = useState<Task | null>(null);
   const [deletingTaskId, setDeletingTaskId] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [activeFilter, setActiveFilter] = useState<'all' | 'active' | 'completed'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [showFilterPanel, setShowFilterPanel] = useState(false);
@@ -82,10 +85,7 @@ export default function DashboardPage() {
    */
   useEffect(() => {
     const search = searchParams.get('search');
-    const filter = searchParams.get('filter') as 'all' | 'active' | 'completed' | null;
-
     if (search) setSearchQuery(search);
-    if (filter) setActiveFilter(filter);
   }, [searchParams]);
 
   /**
@@ -95,13 +95,15 @@ export default function DashboardPage() {
     const params = new URLSearchParams();
 
     if (debouncedSearch) params.set('search', debouncedSearch);
-    if (activeFilter !== 'all') params.set('filter', activeFilter);
+    if (filters.status && filters.status !== 'all') params.set('status', filters.status);
+    if (filters.priority) params.set('priority', filters.priority);
+    if (filters.due_date_filter) params.set('due_date_filter', filters.due_date_filter);
     if (sort.sort_by) params.set('sort_by', sort.sort_by);
     if (sort.sort_order) params.set('sort_order', sort.sort_order);
 
     const newUrl = params.toString() ? `?${params.toString()}` : '/dashboard';
     router.replace(newUrl, { scroll: false });
-  }, [debouncedSearch, activeFilter, sort, router]);
+  }, [debouncedSearch, filters, sort, router]);
 
   /**
    * Debounce search input (300ms delay)
@@ -109,9 +111,12 @@ export default function DashboardPage() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchQuery);
+      // Update filters with search query
+      setFilters((prev) => ({ ...prev, search: searchQuery || undefined }));
     }, 300);
 
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
 
   /**
@@ -249,28 +254,14 @@ export default function DashboardPage() {
   const completedTasks = stats?.completed_tasks ?? tasks.filter((t) => t.completed).length;
   const inProgressTasks = stats?.in_progress_tasks ?? tasks.filter((t) => !t.completed).length;
   const pendingTasks = inProgressTasks;
-  const overdueTasksCount = stats?.overdue_tasks ?? 0;
 
   // Calculate percentages
   const completedPercentage = stats?.completion_rate ?? (totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0);
   const inProgressPercentage = totalTasks > 0 ? Math.round((inProgressTasks / totalTasks) * 100) : 0;
 
-  // Filter tasks based on active filter and search
-  const filteredTasks = tasks.filter((task) => {
-    // Apply status filter
-    if (activeFilter === 'active' && task.completed) return false;
-    if (activeFilter === 'completed' && !task.completed) return false;
-
-    // Apply search filter
-    if (debouncedSearch) {
-      const searchLower = debouncedSearch.toLowerCase();
-      const matchesTitle = task.title.toLowerCase().includes(searchLower);
-      const matchesDescription = task.description?.toLowerCase().includes(searchLower);
-      if (!matchesTitle && !matchesDescription) return false;
-    }
-
-    return true;
-  });
+  // Tasks are already filtered by the backend via useTasks hook
+  // No need for local filtering
+  const filteredTasks = tasks;
 
   return (
     <div className="dashboard-page">
@@ -427,20 +418,20 @@ export default function DashboardPage() {
                 {/* Filter Tabs */}
                 <div className="dashboard-filter-tabs">
                   <button
-                    className={`dashboard-filter-tab ${activeFilter === 'all' ? 'active' : ''}`}
-                    onClick={() => setActiveFilter('all')}
+                    className={`dashboard-filter-tab ${(!filters.status || filters.status === 'all') ? 'active' : ''}`}
+                    onClick={() => setFilters({ ...filters, status: 'all' })}
                   >
                     All
                   </button>
                   <button
-                    className={`dashboard-filter-tab ${activeFilter === 'active' ? 'active' : ''}`}
-                    onClick={() => setActiveFilter('active')}
+                    className={`dashboard-filter-tab ${filters.status === 'pending' ? 'active' : ''}`}
+                    onClick={() => setFilters({ ...filters, status: 'pending' })}
                   >
                     Active
                   </button>
                   <button
-                    className={`dashboard-filter-tab ${activeFilter === 'completed' ? 'active' : ''}`}
-                    onClick={() => setActiveFilter('completed')}
+                    className={`dashboard-filter-tab ${filters.status === 'completed' ? 'active' : ''}`}
+                    onClick={() => setFilters({ ...filters, status: 'completed' })}
                   >
                     Completed
                   </button>
@@ -460,11 +451,8 @@ export default function DashboardPage() {
 
                 {/* Sort Dropdown */}
                 <SortDropdown
-                  currentSort={{
-                    sort_by: sort.sort_by,
-                    sort_order: sort.sort_order,
-                  }}
-                  onChange={(newSort) => setSort(newSort)}
+                  sort={sort}
+                  onSortChange={setSort}
                 />
               </div>
             </div>
@@ -474,8 +462,9 @@ export default function DashboardPage() {
               <div style={{ marginBottom: '1.5rem' }}>
                 <FilterPanel
                   filters={filters}
-                  onFilterChange={setFilters}
-                  taskCount={filteredTasks.length}
+                  onFiltersChange={setFilters}
+                  onClearFilters={clearFilters}
+                  availableTags={tags}
                 />
               </div>
             )}
