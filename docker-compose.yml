@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database (for local development)
+  # Note: In production, use Neon Serverless PostgreSQL
+  postgres:
+    image: postgres:15-alpine
+    container_name: tasknest-postgres
+    environment:
+      POSTGRES_USER: tasknest
+      POSTGRES_PASSWORD: tasknest_dev_password
+      POSTGRES_DB: tasknest
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tasknest"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # FastAPI Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: tasknest-backend
+    environment:
+      DATABASE_URL: postgresql://tasknest:tasknest_dev_password@postgres:5432/tasknest
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:-dev-secret-key-change-in-production-min-32-chars}
+      JWT_ALGORITHM: HS256
+      JWT_EXPIRATION_DAYS: 7
+      CORS_ORIGINS: http://localhost:3000,http://localhost:3001
+      API_V1_PREFIX: /api/v1
+      ENVIRONMENT: development
+      HOST: 0.0.0.0
+      PORT: 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - /app/.venv  # Prevent overwriting venv
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Next.js Frontend
+  frontend:
+    build:
+      context: ./frontend/TaskNest
+      dockerfile: Dockerfile
+      target: development
+    container_name: tasknest-frontend
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:-dev-secret-key-change-in-production-min-32-chars}
+      BETTER_AUTH_URL: http://localhost:3000
+      NEXT_PUBLIC_ENVIRONMENT: development
+      NEXT_PUBLIC_ENABLE_NOTIFICATIONS: "true"
+      NEXT_PUBLIC_ENABLE_RECURRING_TASKS: "true"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/TaskNest:/app
+      - /app/node_modules  # Prevent overwriting node_modules
+      - /app/.next  # Prevent overwriting .next build cache
+    depends_on:
+      - backend
+    command: npm run dev
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  default:
+    name: tasknest-network

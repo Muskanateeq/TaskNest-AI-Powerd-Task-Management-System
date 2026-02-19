@@ -1,0 +1,480 @@
+/**
+ * FilterPanel Component Styles
+ * Dark Golden Theme - Modern SaaS Design
+ */
+
+.filter-panel {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(228, 155, 15, 0.2);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* Header */
+.filter-panel-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(228, 155, 15, 0.2);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.filter-panel-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.filter-panel-header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.filter-panel-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #E49B0F, #C28608);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.filter-panel-icon svg {
+    width: 20px;
+    height: 20px;
+    color: #000000;
+}
+
+.filter-panel-title-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-panel-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #FFFFFF;
+}
+
+.filter-panel-count {
+    font-size: 0.75rem;
+    color: #666666;
+}
+
+/* Mobile Toggle */
+.filter-panel-toggle {
+    padding: 0.5rem;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.filter-panel-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.filter-panel-toggle svg {
+    width: 20px;
+    height: 20px;
+    color: #A0A0A0;
+    transition: transform 0.3s ease;
+}
+
+.filter-panel-toggle.expanded svg {
+    transform: rotate(180deg);
+}
+
+@media (min-width: 1024px) {
+    .filter-panel-toggle {
+        display: none;
+    }
+}
+
+/* Clear All Button */
+.filter-panel-clear {
+    display: none;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #E49B0F;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+@media (min-width: 1024px) {
+    .filter-panel-clear {
+        display: flex;
+    }
+}
+
+.filter-panel-clear:hover {
+    background: rgba(228, 155, 15, 0.1);
+}
+
+.filter-panel-clear svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Filter Content */
+.filter-panel-content {
+    display: none;
+    position: relative;
+    z-index: 10;
+}
+
+.filter-panel-content.expanded {
+    display: block;
+}
+
+@media (min-width: 1024px) {
+    .filter-panel-content {
+        display: block;
+    }
+}
+
+.filter-panel-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Filter Section */
+.filter-section {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 1;
+}
+
+/* Filter Section Row - For Horizontal Layout */
+.filter-section-row {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.filter-section-half {
+    flex: 1;
+    min-width: 0;
+}
+
+@media (max-width: 768px) {
+    .filter-section-row {
+        flex-direction: column;
+    }
+
+    .filter-section-half {
+        width: 100%;
+    }
+}
+
+.filter-section-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #FFFFFF;
+    margin-bottom: 0.75rem;
+}
+
+/* Status Filter Buttons */
+.filter-status-grid {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.filter-status-btn {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.05);
+    color: #A0A0A0;
+}
+
+.filter-status-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.filter-status-btn.active {
+    background: #E49B0F;
+    color: #000000;
+    box-shadow: 0 4px 12px rgba(228, 155, 15, 0.3);
+}
+
+/* Priority Filter Buttons */
+.filter-priority-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Priority Dropdown */
+.filter-priority-dropdown-container {
+    position: relative;
+}
+
+.filter-priority-dropdown-trigger {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-align: left;
+    border: 2px solid rgba(228, 155, 15, 0.3);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.05);
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.filter-priority-dropdown-trigger:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: #E49B0F;
+}
+
+.filter-priority-dropdown-trigger.open {
+    background: rgba(228, 155, 15, 0.1);
+    border-color: #E49B0F;
+}
+
+.filter-priority-dropdown-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-priority-dropdown-arrow {
+    width: 20px;
+    height: 20px;
+    color: #A0A0A0;
+    transition: transform 0.3s ease;
+}
+
+.filter-priority-dropdown-trigger.open .filter-priority-dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.filter-priority-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    right: 0;
+    background: rgba(10, 10, 10, 0.98);
+    border: 2px solid rgba(228, 155, 15, 0.3);
+    border-radius: 8px;
+    overflow: visible;
+    z-index: 1000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    animation: slideDown 0.2s ease;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.filter-priority-dropdown-item {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-align: left;
+    border: none;
+    border-bottom: 1px solid rgba(228, 155, 15, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: transparent;
+    color: #A0A0A0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-priority-dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.filter-priority-dropdown-item:hover {
+    background: rgba(228, 155, 15, 0.1);
+    color: #FFFFFF;
+}
+
+.filter-priority-dropdown-item.active {
+    background: rgba(228, 155, 15, 0.15);
+    color: #E49B0F;
+    font-weight: 600;
+}
+
+.filter-priority-btn {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-align: left;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: transparent;
+    color: #A0A0A0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-priority-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.filter-priority-btn.all {
+    background: rgba(255, 255, 255, 0.05);
+    color: #FFFFFF;
+}
+
+.filter-priority-btn.active {
+    background: rgba(228, 155, 15, 0.1);
+    color: #E49B0F;
+    border-color: #E49B0F;
+}
+
+.filter-priority-icon {
+    font-size: 1rem;
+}
+
+.filter-priority-text {
+    text-transform: capitalize;
+}
+
+/* Tags Filter */
+.filter-tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+/* Scrollbar */
+.filter-tags-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.filter-tags-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+}
+
+.filter-tags-list::-webkit-scrollbar-thumb {
+    background: rgba(228, 155, 15, 0.3);
+    border-radius: 3px;
+}
+
+.filter-tags-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(228, 155, 15, 0.5);
+}
+
+.filter-tag-btn {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-align: left;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: transparent;
+    color: #A0A0A0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-tag-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.filter-tag-btn.active {
+    background: rgba(228, 155, 15, 0.1);
+    color: #E49B0F;
+    border-color: #E49B0F;
+}
+
+.filter-tag-checkbox {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(228, 155, 15, 0.3);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    background: transparent;
+}
+
+.filter-tag-checkbox.checked {
+    background: #E49B0F;
+    border-color: #E49B0F;
+}
+
+.filter-tag-checkbox svg {
+    width: 12px;
+    height: 12px;
+    color: #000000;
+}
+
+/* Clear All Button (Mobile) */
+.filter-panel-clear-mobile {
+    display: flex;
+    width: 100%;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #E49B0F;
+    background: rgba(228, 155, 15, 0.1);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+@media (min-width: 1024px) {
+    .filter-panel-clear-mobile {
+        display: none;
+    }
+}
+
+.filter-panel-clear-mobile:hover {
+    background: rgba(228, 155, 15, 0.2);
+}
+
+.filter-panel-clear-mobile svg {
+    width: 16px;
+    height: 16px;
+}

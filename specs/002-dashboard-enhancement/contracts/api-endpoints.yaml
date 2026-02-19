@@ -1,0 +1,536 @@
+openapi: 3.0.0
+info:
+  title: TaskNest Dashboard Enhancement API
+  version: 1.0.0
+  description: REST API endpoints for dashboard enhancement features
+
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Local development
+  - url: https://api.tasknest.com/api/v1
+    description: Production
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        detail:
+          type: string
+        status_code:
+          type: integer
+
+security:
+  - BearerAuth: []
+
+paths:
+  # Dashboard & Tasks (Enhanced)
+  /tasks:
+    get:
+      summary: List tasks with enhanced filters
+      tags: [Tasks]
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [all, active, completed]
+        - name: priority
+          in: query
+          schema:
+            type: string
+            enum: [high, medium, low]
+        - name: project_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: assigned_to
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: List of tasks
+        '401':
+          description: Unauthorized
+
+  /tasks/stats/summary:
+    get:
+      summary: Get task statistics
+      tags: [Tasks]
+      responses:
+        '200':
+          description: Task statistics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                  in_progress:
+                    type: integer
+                  completed:
+                    type: integer
+                  pending:
+                    type: integer
+                  completion_rate:
+                    type: number
+                  trend:
+                    type: object
+
+  # Teams
+  /teams:
+    get:
+      summary: List user's teams
+      tags: [Teams]
+      responses:
+        '200':
+          description: List of teams
+    post:
+      summary: Create a new team
+      tags: [Teams]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '201':
+          description: Team created
+
+  /teams/{team_id}:
+    get:
+      summary: Get team details
+      tags: [Teams]
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Team details
+        '403':
+          description: Not a team member
+        '404':
+          description: Team not found
+
+  /teams/{team_id}/members:
+    get:
+      summary: List team members
+      tags: [Teams]
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of team members
+
+  /teams/{team_id}/invite:
+    post:
+      summary: Invite member to team
+      tags: [Teams]
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '201':
+          description: Invitation sent
+
+  # Projects
+  /projects:
+    get:
+      summary: List user's projects
+      tags: [Projects]
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, completed, archived]
+      responses:
+        '200':
+          description: List of projects
+    post:
+      summary: Create a new project
+      tags: [Projects]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                start_date:
+                  type: string
+                  format: date-time
+                end_date:
+                  type: string
+                  format: date-time
+      responses:
+        '201':
+          description: Project created
+
+  /projects/{project_id}:
+    get:
+      summary: Get project details
+      tags: [Projects]
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Project details
+
+  /projects/{project_id}/milestones:
+    get:
+      summary: List project milestones
+      tags: [Projects]
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of milestones
+    post:
+      summary: Create milestone
+      tags: [Projects]
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, date]
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                date:
+                  type: string
+                  format: date-time
+      responses:
+        '201':
+          description: Milestone created
+
+  # Analytics
+  /analytics/completion-rate:
+    get:
+      summary: Get completion rate over time
+      tags: [Analytics]
+      parameters:
+        - name: start_date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Completion rate data
+
+  /analytics/priority-distribution:
+    get:
+      summary: Get task distribution by priority
+      tags: [Analytics]
+      responses:
+        '200':
+          description: Priority distribution
+
+  /analytics/reports:
+    post:
+      summary: Generate custom report
+      tags: [Analytics]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, metrics, date_range_start, date_range_end]
+              properties:
+                name:
+                  type: string
+                metrics:
+                  type: array
+                  items:
+                    type: string
+                date_range_start:
+                  type: string
+                  format: date-time
+                date_range_end:
+                  type: string
+                  format: date-time
+      responses:
+        '201':
+          description: Report generated
+
+  # Notifications
+  /notifications:
+    get:
+      summary: List notifications
+      tags: [Notifications]
+      parameters:
+        - name: read
+          in: query
+          schema:
+            type: boolean
+        - name: type
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+      responses:
+        '200':
+          description: List of notifications
+
+  /notifications/mark-all-read:
+    post:
+      summary: Mark all notifications as read
+      tags: [Notifications]
+      responses:
+        '200':
+          description: All notifications marked as read
+
+  /notifications/preferences:
+    get:
+      summary: Get notification preferences
+      tags: [Notifications]
+      responses:
+        '200':
+          description: Notification preferences
+    put:
+      summary: Update notification preferences
+      tags: [Notifications]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                enabled_types:
+                  type: object
+                enabled_channels:
+                  type: object
+                dnd_start_hour:
+                  type: integer
+                dnd_end_hour:
+                  type: integer
+      responses:
+        '200':
+          description: Preferences updated
+
+  # Settings
+  /settings/profile:
+    get:
+      summary: Get user profile
+      tags: [Settings]
+      responses:
+        '200':
+          description: User profile
+    put:
+      summary: Update user profile
+      tags: [Settings]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Profile updated
+
+  /settings/password:
+    put:
+      summary: Change password
+      tags: [Settings]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [current_password, new_password]
+              properties:
+                current_password:
+                  type: string
+                new_password:
+                  type: string
+      responses:
+        '200':
+          description: Password changed
+        '400':
+          description: Invalid current password
+
+  /settings/export-data:
+    post:
+      summary: Export user data
+      tags: [Settings]
+      responses:
+        '200':
+          description: Data export file
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /settings/delete-account:
+    delete:
+      summary: Delete user account
+      tags: [Settings]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email_confirmation]
+              properties:
+                email_confirmation:
+                  type: string
+                  format: email
+      responses:
+        '204':
+          description: Account deleted
+        '400':
+          description: Email confirmation mismatch
+
+  # Calendar
+  /calendar/tasks:
+    get:
+      summary: Get tasks for calendar view
+      tags: [Calendar]
+      parameters:
+        - name: start_date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Tasks with due dates in range
+
+  /tasks/{task_id}/reschedule:
+    patch:
+      summary: Reschedule task (drag-drop)
+      tags: [Calendar]
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [new_due_date]
+              properties:
+                new_due_date:
+                  type: string
+                  format: date-time
+                new_due_time:
+                  type: string
+      responses:
+        '200':
+          description: Task rescheduled

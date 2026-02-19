@@ -1,4 +1,4 @@
-# Specification Quality Checklist: Phase 2 TaskNest Full-Stack Web Application
+# Specification Quality Checklist: Phase 2 TaskNest Full-Stack Web Application 
 
 **Purpose**: Validate specification completeness and quality before proceeding to planning
 **Created**: 2026-02-02
