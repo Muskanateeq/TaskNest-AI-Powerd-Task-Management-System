@@ -10,11 +10,14 @@ import { useTasks } from '@/hooks/useTasks';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNotifications } from '@/hooks/useNotifications';
 import { useTemplates } from '@/hooks/useTemplates';
+import { useStats } from '@/hooks/useStats';
 import { Task, TaskCreateRequest, TaskUpdateRequest } from '@/lib/types';
 import TaskForm from '@/components/tasks/TaskForm';
 import TaskDetailModal from '@/components/tasks/TaskDetailModal';
 import FilterPanel from '@/components/tasks/FilterPanel';
 import SortDropdown from '@/components/tasks/SortDropdown';
+import ProgressBar from '@/components/dashboard/ProgressBar';
+import TrendIndicator from '@/components/dashboard/TrendIndicator';
 import NotificationSettings from '@/components/notifications/NotificationSettings';
 import NotificationBell from '@/components/notifications/NotificationBell';
 import TemplateManager from '@/components/templates/TemplateManager';
@@ -55,6 +58,9 @@ export default function DashboardPage() {
     updateTemplate,
     deleteTemplate,
   } = useTemplates();
+
+  // Statistics
+  const { stats, isLoading: statsLoading, refetch: refetchStats } = useStats();
 
   // State
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -125,6 +131,8 @@ export default function DashboardPage() {
     try {
       await createTask(data as TaskCreateRequest);
       setIsCreateModalOpen(false);
+      // Refetch statistics after creating a task
+      refetchStats();
     } catch (error) {
       console.error('Failed to create task:', error);
     } finally {
@@ -143,6 +151,8 @@ export default function DashboardPage() {
       await updateTask(editingTask.id, data as TaskUpdateRequest);
       setIsEditModalOpen(false);
       setEditingTask(null);
+      // Refetch statistics after updating a task
+      refetchStats();
     } catch (error) {
       console.error('Failed to update task:', error);
     } finally {
@@ -166,6 +176,8 @@ export default function DashboardPage() {
       const task = tasks.find(t => t.id === taskId);
       if (task) {
         await toggleComplete(task.id, !task.completed);
+        // Refetch statistics after toggling completion
+        refetchStats();
       }
     } catch (error) {
       console.error('Failed to toggle task:', error);
@@ -207,6 +219,8 @@ export default function DashboardPage() {
       await deleteTask(deletingTaskId);
       setDeletingTaskId(null);
       setIsDetailModalOpen(false);
+      // Refetch statistics after deleting a task
+      refetchStats();
     } catch (error) {
       console.error('Failed to delete task:', error);
     }
@@ -230,14 +244,15 @@ export default function DashboardPage() {
     return null;
   }
 
-  // Calculate statistics
-  const totalTasks = tasks.length;
-  const completedTasks = tasks.filter((t) => t.completed).length;
-  const inProgressTasks = tasks.filter((t) => !t.completed).length;
+  // Calculate statistics from API or fallback to local calculation
+  const totalTasks = stats?.total_tasks ?? tasks.length;
+  const completedTasks = stats?.completed_tasks ?? tasks.filter((t) => t.completed).length;
+  const inProgressTasks = stats?.in_progress_tasks ?? tasks.filter((t) => !t.completed).length;
   const pendingTasks = inProgressTasks;
+  const overdueTasksCount = stats?.overdue_tasks ?? 0;
 
   // Calculate percentages
-  const completedPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+  const completedPercentage = stats?.completion_rate ?? (totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0);
   const inProgressPercentage = totalTasks > 0 ? Math.round((inProgressTasks / totalTasks) * 100) : 0;
 
   // Filter tasks based on active filter and search
@@ -358,12 +373,12 @@ export default function DashboardPage() {
               </div>
               <div className="dashboard-stat-value">{inProgressTasks}</div>
               <div className="dashboard-stat-progress">
-                <div className="dashboard-progress-bar">
-                  <div
-                    className="dashboard-progress-fill progress"
-                    style={{ width: `${inProgressPercentage}%` }}
-                  ></div>
-                </div>
+                <ProgressBar
+                  value={inProgressPercentage}
+                  color="primary"
+                  showLabel={false}
+                  height="sm"
+                />
                 <span className="dashboard-progress-text">{inProgressPercentage}% of total</span>
               </div>
             </div>
@@ -379,12 +394,12 @@ export default function DashboardPage() {
               </div>
               <div className="dashboard-stat-value">{completedTasks}</div>
               <div className="dashboard-stat-progress">
-                <div className="dashboard-progress-bar">
-                  <div
-                    className="dashboard-progress-fill completed"
-                    style={{ width: `${completedPercentage}%` }}
-                  ></div>
-                </div>
+                <ProgressBar
+                  value={completedPercentage}
+                  color="success"
+                  showLabel={false}
+                  height="sm"
+                />
                 <span className="dashboard-progress-text">{completedPercentage}% completion rate</span>
               </div>
             </div>
