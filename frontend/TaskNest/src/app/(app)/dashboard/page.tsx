@@ -13,6 +13,7 @@ import { useTemplates } from '@/hooks/useTemplates';
 import { Task, TaskCreateRequest, TaskUpdateRequest } from '@/lib/types';
 import TaskForm from '@/components/tasks/TaskForm';
 import TaskDetailModal from '@/components/tasks/TaskDetailModal';
+import FilterPanel from '@/components/tasks/FilterPanel';
 import SortDropdown from '@/components/tasks/SortDropdown';
 import NotificationSettings from '@/components/notifications/NotificationSettings';
 import NotificationBell from '@/components/notifications/NotificationBell';
@@ -20,16 +21,19 @@ import TemplateManager from '@/components/templates/TemplateManager';
 import FloatingChatButton from '@/components/chat/FloatingChatButton';
 import Modal from '@/components/ui/Modal';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import '../../dashboard.css';
 
 export default function DashboardPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const {
     tasks,
     isLoading,
+    filters,
     sort,
+    setFilters,
     setSort,
     createTask,
     updateTask,
@@ -65,6 +69,33 @@ export default function DashboardPage() {
   const [activeFilter, setActiveFilter] = useState<'all' | 'active' | 'completed'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [showFilterPanel, setShowFilterPanel] = useState(false);
+
+  /**
+   * Initialize state from URL parameters
+   */
+  useEffect(() => {
+    const search = searchParams.get('search');
+    const filter = searchParams.get('filter') as 'all' | 'active' | 'completed' | null;
+
+    if (search) setSearchQuery(search);
+    if (filter) setActiveFilter(filter);
+  }, [searchParams]);
+
+  /**
+   * Update URL parameters when state changes
+   */
+  useEffect(() => {
+    const params = new URLSearchParams();
+
+    if (debouncedSearch) params.set('search', debouncedSearch);
+    if (activeFilter !== 'all') params.set('filter', activeFilter);
+    if (sort.sort_by) params.set('sort_by', sort.sort_by);
+    if (sort.sort_order) params.set('sort_order', sort.sort_order);
+
+    const newUrl = params.toString() ? `?${params.toString()}` : '/dashboard';
+    router.replace(newUrl, { scroll: false });
+  }, [debouncedSearch, activeFilter, sort, router]);
 
   /**
    * Debounce search input (300ms delay)
@@ -400,6 +431,18 @@ export default function DashboardPage() {
                   </button>
                 </div>
 
+                {/* Advanced Filters Toggle */}
+                <button
+                  onClick={() => setShowFilterPanel(!showFilterPanel)}
+                  className="dashboard-filter-toggle"
+                  title="Advanced filters"
+                >
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                  </svg>
+                  <span>Filters</span>
+                </button>
+
                 {/* Sort Dropdown */}
                 <SortDropdown
                   currentSort={{
@@ -410,6 +453,17 @@ export default function DashboardPage() {
                 />
               </div>
             </div>
+
+            {/* Advanced Filter Panel */}
+            {showFilterPanel && (
+              <div style={{ marginBottom: '1.5rem' }}>
+                <FilterPanel
+                  filters={filters}
+                  onFilterChange={setFilters}
+                  taskCount={filteredTasks.length}
+                />
+              </div>
+            )}
 
             {/* Task List */}
             {isLoading ? (
