@@ -20,6 +20,7 @@ import SortDropdown from '@/components/dashboard/SortDropdown';
 import ProgressBar from '@/components/dashboard/ProgressBar';
 import StatsSkeleton from '@/components/dashboard/StatsSkeleton';
 import TaskListSkeleton from '@/components/dashboard/TaskListSkeleton';
+import BulkActionsToolbar from '@/components/dashboard/BulkActionsToolbar';
 import NotificationSettings from '@/components/notifications/NotificationSettings';
 import NotificationBell from '@/components/notifications/NotificationBell';
 import TemplateManager from '@/components/templates/TemplateManager';
@@ -81,6 +82,8 @@ export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [showFilterPanel, setShowFilterPanel] = useState(false);
+  const [bulkSelectionMode, setBulkSelectionMode] = useState(false);
+  const [selectedTaskIds, setSelectedTaskIds] = useState<Set<number>>(new Set());
 
   /**
    * Initialize state from URL parameters
@@ -231,6 +234,95 @@ export default function DashboardPage() {
     } catch (error) {
       console.error('Failed to delete task:', error);
     }
+  };
+
+  /**
+   * Toggle bulk selection mode
+   */
+  const toggleBulkSelectionMode = () => {
+    setBulkSelectionMode(!bulkSelectionMode);
+    setSelectedTaskIds(new Set());
+  };
+
+  /**
+   * Toggle task selection
+   */
+  const toggleTaskSelection = (taskId: number) => {
+    const newSelected = new Set(selectedTaskIds);
+    if (newSelected.has(taskId)) {
+      newSelected.delete(taskId);
+    } else {
+      newSelected.add(taskId);
+    }
+    setSelectedTaskIds(newSelected);
+  };
+
+  /**
+   * Handle bulk mark complete
+   */
+  const handleBulkMarkComplete = async () => {
+    try {
+      const promises = Array.from(selectedTaskIds).map(taskId =>
+        toggleComplete(taskId, true)
+      );
+      await Promise.all(promises);
+      setSelectedTaskIds(new Set());
+      setBulkSelectionMode(false);
+      refetchStats();
+    } catch (error) {
+      console.error('Failed to mark tasks as complete:', error);
+    }
+  };
+
+  /**
+   * Handle bulk mark incomplete
+   */
+  const handleBulkMarkIncomplete = async () => {
+    try {
+      const promises = Array.from(selectedTaskIds).map(taskId =>
+        toggleComplete(taskId, false)
+      );
+      await Promise.all(promises);
+      setSelectedTaskIds(new Set());
+      setBulkSelectionMode(false);
+      refetchStats();
+    } catch (error) {
+      console.error('Failed to mark tasks as incomplete:', error);
+    }
+  };
+
+  /**
+   * Handle bulk delete
+   */
+  const handleBulkDelete = async () => {
+    if (selectedTaskIds.size === 0) return;
+
+    const confirmed = window.confirm(
+      `Are you sure you want to delete ${selectedTaskIds.size} task${selectedTaskIds.size > 1 ? 's' : ''}?`
+    );
+
+    if (!confirmed) return;
+
+    try {
+      const { deleteTask } = await import('@/lib/tasks-api');
+      const promises = Array.from(selectedTaskIds).map(taskId =>
+        deleteTask(taskId)
+      );
+      await Promise.all(promises);
+      setSelectedTaskIds(new Set());
+      setBulkSelectionMode(false);
+      refetchStats();
+    } catch (error) {
+      console.error('Failed to delete tasks:', error);
+    }
+  };
+
+  /**
+   * Cancel bulk selection
+   */
+  const handleCancelBulkSelection = () => {
+    setSelectedTaskIds(new Set());
+    setBulkSelectionMode(false);
   };
 
   /**
@@ -421,6 +513,18 @@ export default function DashboardPage() {
               <h2 className="dashboard-section-title">Recent Tasks</h2>
 
               <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                {/* Bulk Selection Toggle */}
+                <button
+                  onClick={toggleBulkSelectionMode}
+                  className={`dashboard-filter-toggle ${bulkSelectionMode ? 'active' : ''}`}
+                  title="Bulk selection mode"
+                >
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                  </svg>
+                  <span>Bulk Select</span>
+                </button>
+
                 {/* Filter Tabs */}
                 <div className="dashboard-filter-tabs">
                   <button
@@ -489,14 +593,34 @@ export default function DashboardPage() {
             ) : (
               <div className="dashboard-task-list">
                 {filteredTasks.map((task) => (
-                  <div key={task.id} className="dashboard-task-item" onClick={() => handleViewTask(task)}>
-                    <div
-                      className={`dashboard-task-checkbox ${task.completed ? 'checked' : ''}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleToggleComplete(task.id);
-                      }}
-                    ></div>
+                  <div
+                    key={task.id}
+                    className={`dashboard-task-item ${selectedTaskIds.has(task.id) ? 'selected' : ''}`}
+                    onClick={() => bulkSelectionMode ? toggleTaskSelection(task.id) : handleViewTask(task)}
+                  >
+                    {bulkSelectionMode ? (
+                      <div
+                        className={`dashboard-task-bulk-checkbox ${selectedTaskIds.has(task.id) ? 'checked' : ''}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleTaskSelection(task.id);
+                        }}
+                      >
+                        {selectedTaskIds.has(task.id) && (
+                          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                          </svg>
+                        )}
+                      </div>
+                    ) : (
+                      <div
+                        className={`dashboard-task-checkbox ${task.completed ? 'checked' : ''}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleToggleComplete(task.id);
+                        }}
+                      ></div>
+                    )}
                     <div className="dashboard-task-content">
                       <div className={`dashboard-task-title ${task.completed ? 'completed' : ''}`}>
                         {task.title}
@@ -509,36 +633,40 @@ export default function DashboardPage() {
                         <span>Status: {task.completed ? 'Completed' : 'In Progress'}</span>
                       </div>
                     </div>
-                    <div className="dashboard-task-actions">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setEditingTask(task);
-                          setIsEditModalOpen(true);
-                        }}
-                        className="dashboard-task-action-btn edit"
-                        title="Edit task"
-                      >
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteTask(task.id);
-                        }}
-                        className="dashboard-task-action-btn delete"
-                        title="Delete task"
-                      >
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                      </button>
-                    </div>
-                    <div className={`dashboard-task-priority dashboard-priority-${task.priority || 'medium'}`}>
-                      {(task.priority || 'medium').charAt(0).toUpperCase() + (task.priority || 'medium').slice(1)}
-                    </div>
+                    {!bulkSelectionMode && (
+                      <>
+                        <div className="dashboard-task-actions">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setEditingTask(task);
+                              setIsEditModalOpen(true);
+                            }}
+                            className="dashboard-task-action-btn edit"
+                            title="Edit task"
+                          >
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteTask(task.id);
+                            }}
+                            className="dashboard-task-action-btn delete"
+                            title="Delete task"
+                          >
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        </div>
+                        <div className={`dashboard-task-priority dashboard-priority-${task.priority || 'medium'}`}>
+                          {(task.priority || 'medium').charAt(0).toUpperCase() + (task.priority || 'medium').slice(1)}
+                        </div>
+                      </>
+                    )}
                   </div>
                 ))}
               </div>
@@ -630,6 +758,15 @@ export default function DashboardPage() {
 
       {/* Floating Chat Button */}
       <FloatingChatButton />
+
+      {/* Bulk Actions Toolbar */}
+      <BulkActionsToolbar
+        selectedCount={selectedTaskIds.size}
+        onMarkComplete={handleBulkMarkComplete}
+        onMarkIncomplete={handleBulkMarkIncomplete}
+        onDelete={handleBulkDelete}
+        onCancel={handleCancelBulkSelection}
+      />
     </div>
   );
 }

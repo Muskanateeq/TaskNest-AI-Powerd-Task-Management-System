@@ -953,3 +953,45 @@
         min-width: 100%;
     }
 }
+
+/* Bulk Selection Styles */
+.dashboard-task-bulk-checkbox {
+    width: 24px;
+    height: 24px;
+    border: 2px solid rgba(228, 155, 15, 0.3);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.dashboard-task-bulk-checkbox:hover {
+    border-color: #E49B0F;
+    background: rgba(228, 155, 15, 0.1);
+}
+
+.dashboard-task-bulk-checkbox.checked {
+    background: linear-gradient(135deg, #E49B0F, #F5B942);
+    border-color: #E49B0F;
+}
+
+.dashboard-task-bulk-checkbox svg {
+    width: 16px;
+    height: 16px;
+    color: #000000;
+}
+
+.dashboard-task-item.selected {
+    background: rgba(228, 155, 15, 0.1);
+    border-color: #E49B0F;
+}
+
+.dashboard-filter-toggle.active {
+    background: rgba(228, 155, 15, 0.2);
+    border-color: #E49B0F;
+    color: #E49B0F;
+}
