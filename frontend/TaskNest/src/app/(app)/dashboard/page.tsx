@@ -13,7 +13,6 @@ import { useTemplates } from '@/hooks/useTemplates';
 import { Task, TaskCreateRequest, TaskUpdateRequest } from '@/lib/types';
 import TaskForm from '@/components/tasks/TaskForm';
 import TaskDetailModal from '@/components/tasks/TaskDetailModal';
-import FilterPanel from '@/components/tasks/FilterPanel';
 import SortDropdown from '@/components/tasks/SortDropdown';
 import NotificationSettings from '@/components/notifications/NotificationSettings';
 import NotificationBell from '@/components/notifications/NotificationBell';
@@ -30,9 +29,7 @@ export default function DashboardPage() {
   const {
     tasks,
     isLoading,
-    filters,
     sort,
-    setFilters,
     setSort,
     createTask,
     updateTask,
