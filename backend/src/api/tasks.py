@@ -6,9 +6,10 @@ RESTful API endpoints for task management with:
 - Search, filter, and sort
 - Completion toggle
 - User ownership enforcement
+- Statistics and analytics
 """
 
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -16,6 +17,7 @@ from src.database import get_session
 from src.api.deps import get_current_user_id
 from src.models.task import TaskCreate, TaskUpdate, TaskPublic, TaskCompletionToggle
 from src.services.task_service import TaskService
+from src.services.stats_service import StatsService
 
 # Create router
 router = APIRouter(prefix="/tasks", tags=["Tasks"])
@@ -196,6 +198,33 @@ async def delete_task(
         )
 
     return None
+
+
+@router.get(
+    "/stats/summary",
+    response_model=Dict[str, Any],
+    summary="Get task statistics",
+    description="Get comprehensive task statistics and analytics for the authenticated user"
+)
+async def get_task_statistics(
+    user_id: str = Depends(get_current_user_id),
+    session: AsyncSession = Depends(get_session)
+) -> Dict[str, Any]:
+    """
+    Get task statistics summary.
+
+    Returns:
+        - total_tasks: Total number of tasks
+        - completed_tasks: Number of completed tasks
+        - in_progress_tasks: Number of in-progress tasks
+        - overdue_tasks: Number of overdue tasks
+        - completion_rate: Percentage of completed tasks
+        - priority_distribution: Count by priority
+        - tasks_by_status: Count by completion status
+        - weekly_stats: Tasks created/completed this week
+        - trend: Trend indicators
+    """
+    return await StatsService.get_task_summary(user_id, session)
 
 
 @router.patch(
