@@ -18,6 +18,8 @@ import TaskDetailModal from '@/components/tasks/TaskDetailModal';
 import FilterPanel from '@/components/dashboard/FilterPanel';
 import SortDropdown from '@/components/dashboard/SortDropdown';
 import ProgressBar from '@/components/dashboard/ProgressBar';
+import StatsSkeleton from '@/components/dashboard/StatsSkeleton';
+import TaskListSkeleton from '@/components/dashboard/TaskListSkeleton';
 import NotificationSettings from '@/components/notifications/NotificationSettings';
 import NotificationBell from '@/components/notifications/NotificationBell';
 import TemplateManager from '@/components/templates/TemplateManager';
@@ -339,75 +341,79 @@ export default function DashboardPage() {
           </p>
 
           {/* Stats Grid */}
-          <div className="dashboard-stats-grid">
-            <div className="dashboard-stat-card stat-card-animated">
-              <div className="dashboard-stat-header">
-                <div className="dashboard-stat-label">Total Tasks</div>
-                <div className="dashboard-stat-icon total">
-                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                  </svg>
+          {isLoading ? (
+            <StatsSkeleton />
+          ) : (
+            <div className="dashboard-stats-grid">
+              <div className="dashboard-stat-card stat-card-animated">
+                <div className="dashboard-stat-header">
+                  <div className="dashboard-stat-label">Total Tasks</div>
+                  <div className="dashboard-stat-icon total">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                  </div>
                 </div>
+                <div className="dashboard-stat-value">{totalTasks}</div>
+                <div className="dashboard-stat-change">All your tasks</div>
               </div>
-              <div className="dashboard-stat-value">{totalTasks}</div>
-              <div className="dashboard-stat-change">All your tasks</div>
-            </div>
 
-            <div className="dashboard-stat-card stat-card-animated" style={{ animationDelay: '0.1s' }}>
-              <div className="dashboard-stat-header">
-                <div className="dashboard-stat-label">In Progress</div>
-                <div className="dashboard-stat-icon progress">
-                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
+              <div className="dashboard-stat-card stat-card-animated" style={{ animationDelay: '0.1s' }}>
+                <div className="dashboard-stat-header">
+                  <div className="dashboard-stat-label">In Progress</div>
+                  <div className="dashboard-stat-icon progress">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="dashboard-stat-value">{inProgressTasks}</div>
+                <div className="dashboard-stat-progress">
+                  <ProgressBar
+                    value={inProgressPercentage}
+                    color="primary"
+                    showLabel={false}
+                    height="sm"
+                  />
+                  <span className="dashboard-progress-text">{inProgressPercentage}% of total</span>
                 </div>
               </div>
-              <div className="dashboard-stat-value">{inProgressTasks}</div>
-              <div className="dashboard-stat-progress">
-                <ProgressBar
-                  value={inProgressPercentage}
-                  color="primary"
-                  showLabel={false}
-                  height="sm"
-                />
-                <span className="dashboard-progress-text">{inProgressPercentage}% of total</span>
-              </div>
-            </div>
 
-            <div className="dashboard-stat-card stat-card-animated" style={{ animationDelay: '0.2s' }}>
-              <div className="dashboard-stat-header">
-                <div className="dashboard-stat-label">Completed</div>
-                <div className="dashboard-stat-icon completed">
-                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+              <div className="dashboard-stat-card stat-card-animated" style={{ animationDelay: '0.2s' }}>
+                <div className="dashboard-stat-header">
+                  <div className="dashboard-stat-label">Completed</div>
+                  <div className="dashboard-stat-icon completed">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="dashboard-stat-value">{completedTasks}</div>
+                <div className="dashboard-stat-progress">
+                  <ProgressBar
+                    value={completedPercentage}
+                    color="success"
+                    showLabel={false}
+                    height="sm"
+                  />
+                  <span className="dashboard-progress-text">{completedPercentage}% completion rate</span>
                 </div>
               </div>
-              <div className="dashboard-stat-value">{completedTasks}</div>
-              <div className="dashboard-stat-progress">
-                <ProgressBar
-                  value={completedPercentage}
-                  color="success"
-                  showLabel={false}
-                  height="sm"
-                />
-                <span className="dashboard-progress-text">{completedPercentage}% completion rate</span>
-              </div>
-            </div>
 
-            <div className="dashboard-stat-card stat-card-animated" style={{ animationDelay: '0.3s' }}>
-              <div className="dashboard-stat-header">
-                <div className="dashboard-stat-label">Pending</div>
-                <div className="dashboard-stat-icon pending">
-                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+              <div className="dashboard-stat-card stat-card-animated" style={{ animationDelay: '0.3s' }}>
+                <div className="dashboard-stat-header">
+                  <div className="dashboard-stat-label">Pending</div>
+                  <div className="dashboard-stat-icon pending">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
                 </div>
+                <div className="dashboard-stat-value">{pendingTasks}</div>
+                <div className="dashboard-stat-change">Awaiting action</div>
               </div>
-              <div className="dashboard-stat-value">{pendingTasks}</div>
-              <div className="dashboard-stat-change">Awaiting action</div>
             </div>
-          </div>
+          )}
 
           {/* Tasks Section */}
           <div className="dashboard-tasks-section">
@@ -471,9 +477,7 @@ export default function DashboardPage() {
 
             {/* Task List */}
             {isLoading ? (
-              <div className="dashboard-loading">
-                <div className="dashboard-spinner"></div>
-              </div>
+              <TaskListSkeleton />
             ) : filteredTasks.length === 0 ? (
               <div className="dashboard-empty-state">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
