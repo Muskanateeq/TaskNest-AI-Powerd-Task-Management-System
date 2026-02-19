@@ -5,7 +5,7 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTasks } from '@/hooks/useTasks';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNotifications } from '@/hooks/useNotifications';
@@ -22,6 +22,8 @@ import StatsSkeleton from '@/components/dashboard/StatsSkeleton';
 import TaskListSkeleton from '@/components/dashboard/TaskListSkeleton';
 import BulkActionsToolbar from '@/components/dashboard/BulkActionsToolbar';
 import GroupByDropdown, { GroupByOption } from '@/components/dashboard/GroupByDropdown';
+import ExportDropdown from '@/components/dashboard/ExportDropdown';
+import KeyboardShortcutsModal from '@/components/dashboard/KeyboardShortcutsModal';
 import NotificationSettings from '@/components/notifications/NotificationSettings';
 import NotificationBell from '@/components/notifications/NotificationBell';
 import TemplateManager from '@/components/templates/TemplateManager';
@@ -30,6 +32,7 @@ import Modal from '@/components/ui/Modal';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { groupTasks } from '@/lib/taskGrouping';
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import '../../dashboard.css';
 
 export default function DashboardPage() {
@@ -87,6 +90,8 @@ export default function DashboardPage() {
   const [bulkSelectionMode, setBulkSelectionMode] = useState(false);
   const [selectedTaskIds, setSelectedTaskIds] = useState<Set<number>>(new Set());
   const [groupBy, setGroupBy] = useState<GroupByOption>('none');
+  const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   /**
    * Initialize state from URL parameters
@@ -329,6 +334,46 @@ export default function DashboardPage() {
   };
 
   /**
+   * Setup keyboard shortcuts
+   */
+  useKeyboardShortcuts({
+    shortcuts: [
+      {
+        key: 'n',
+        description: 'Create new task',
+        action: () => setIsCreateModalOpen(true),
+      },
+      {
+        key: 's',
+        description: 'Focus search bar',
+        action: () => searchInputRef.current?.focus(),
+      },
+      {
+        key: 'f',
+        description: 'Toggle filter panel',
+        action: () => setShowFilterPanel(!showFilterPanel),
+      },
+      {
+        key: 'Escape',
+        description: 'Close modal or panel',
+        action: () => {
+          if (isCreateModalOpen) setIsCreateModalOpen(false);
+          if (isEditModalOpen) handleCloseEdit();
+          if (isDetailModalOpen) setIsDetailModalOpen(false);
+          if (showFilterPanel) setShowFilterPanel(false);
+          if (bulkSelectionMode) handleCancelBulkSelection();
+        },
+      },
+      {
+        key: '?',
+        description: 'Show keyboard shortcuts',
+        action: () => setIsShortcutsModalOpen(true),
+      },
+    ],
+    enabled: !isSubmitting,
+  });
+
+  /**
    * Show loading state while checking authentication
    */
   if (authLoading) {
@@ -378,6 +423,7 @@ export default function DashboardPage() {
               placeholder="Search tasks by title or description..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              ref={searchInputRef}
             />
             {searchQuery && (
               <button
@@ -576,6 +622,9 @@ export default function DashboardPage() {
                   value={groupBy}
                   onChange={setGroupBy}
                 />
+
+                {/* Export Dropdown */}
+                <ExportDropdown tasks={filteredTasks} />
               </div>
             </div>
 
@@ -792,6 +841,12 @@ export default function DashboardPage() {
         onMarkIncomplete={handleBulkMarkIncomplete}
         onDelete={handleBulkDelete}
         onCancel={handleCancelBulkSelection}
+      />
+
+      {/* Keyboard Shortcuts Modal */}
+      <KeyboardShortcutsModal
+        isOpen={isShortcutsModalOpen}
+        onClose={() => setIsShortcutsModalOpen(false)}
       />
     </div>
   );
