@@ -259,7 +259,7 @@ export default function ChatKitModal({ isOpen, onClose }: ChatKitModalProps) {
                 />
               </svg>
               <h3>Start a conversation</h3>
-              <p>Try: "Add a task to buy groceries tomorrow"</p>
+              <p>Try: &quot;Add a task to buy groceries tomorrow&quot;</p>
             </div>
           ) : (
             <>
