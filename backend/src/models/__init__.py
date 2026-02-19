@@ -9,6 +9,7 @@ from sqlmodel import SQLModel
 
 # Import all models here so Alembic can detect them for migrations
 from src.models.user import User, UserPublic
+from src.models.user_settings import UserSettings, UserSettingsUpdate, UserProfileUpdate, ChangePasswordRequest
 from src.models.task import Task, TaskPublic, TaskCreate, TaskUpdate, TaskCompletionToggle
 from src.models.tag import Tag, TagPublic, TagCreate, TagUpdate
 from src.models.task_tag import TaskTag
@@ -31,6 +32,10 @@ __all__ = [
     "SQLModel",
     "User",
     "UserPublic",
+    "UserSettings",
+    "UserSettingsUpdate",
+    "UserProfileUpdate",
+    "ChangePasswordRequest",
     "Task",
     "TaskPublic",
     "TaskCreate",

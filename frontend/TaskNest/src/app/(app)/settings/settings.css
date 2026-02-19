@@ -388,6 +388,103 @@
 }
 
 .about-link {
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(228, 155, 15, 0.2);
+    border-radius: 8px;
+    color: #E49B0F;
+    text-decoration: none;
+    text-align: center;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.about-link:hover {
+    background: rgba(228, 155, 15, 0.1);
+    transform: translateY(-2px);
+}
+
+.about-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.about-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(228, 155, 15, 0.1);
+    border-radius: 8px;
+}
+
+.about-item strong {
+    color: #FFFFFF;
+    font-weight: 600;
+}
+
+.about-item span {
+    color: #A0A0A0;
+}
+
+.about-footer {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
+
+.about-footer p {
+    color: #666666;
+    font-size: 0.875rem;
+    margin: 0.5rem 0;
+}
+
+/* Input with Button */
+.input-with-button {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+
+.input-with-button .setting-input {
+    flex: 1;
+}
+
+.input-with-button .btn-secondary {
+    flex-shrink: 0;
+}
+
+/* Loading and Error States */
+.settings-loading,
+.settings-error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    font-size: 1.125rem;
+    color: #A0A0A0;
+}
+
+.settings-error {
+    color: #EF4444;
+}
+
+/* Danger Hint */
+.setting-hint.danger {
+    color: #EF4444;
+}
+
+/* Disabled Button */
+.btn-secondary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.about-link {
     padding: 1rem;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(228, 155, 15, 0.2);

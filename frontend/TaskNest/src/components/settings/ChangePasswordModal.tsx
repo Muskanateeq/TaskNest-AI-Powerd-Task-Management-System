@@ -1,13 +1,15 @@
 /**
  * ChangePasswordModal Component
- * Modal for changing user password
+ * Modal for changing user password with backend integration
  * Dark Golden Theme - Modern SaaS Design
  */
 
 'use client';
 
 import React, { useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import Modal from '@/components/ui/Modal';
+import { changePassword } from '@/lib/settingsApi';
 import './ChangePasswordModal.css';
 
 export interface ChangePasswordModalProps {
@@ -16,6 +18,7 @@ export interface ChangePasswordModalProps {
 }
 
 export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordModalProps) {
+  const { getToken } = useAuth();
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -48,14 +51,22 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
     setIsSubmitting(true);
 
     try {
-      // In a real app, this would call the backend API
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const token = await getToken();
+      if (!token) {
+        setError('Authentication required. Please log in again.');
+        return;
+      }
 
-      // Simulate success
+      await changePassword(token, {
+        current_password: currentPassword,
+        new_password: newPassword,
+      });
+
       alert('Password changed successfully!');
       handleClose();
     } catch (err) {
-      setError('Failed to change password. Please try again.');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to change password. Please try again.';
+      setError(errorMessage);
     } finally {
       setIsSubmitting(false);
     }

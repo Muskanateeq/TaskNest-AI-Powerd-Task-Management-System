@@ -56,6 +56,7 @@ from src.api.assignments import router as assignments_router
 from src.api.notifications import router as notifications_router
 from src.api.projects import router as projects_router
 from src.api.milestones import router as milestones_router
+from src.api.settings import router as settings_router
 from src.api.v1.chat import router as chat_router
 
 app.include_router(auth_router, prefix=f"{settings.API_V1_PREFIX}")
@@ -67,4 +68,5 @@ app.include_router(assignments_router, prefix=f"{settings.API_V1_PREFIX}")
 app.include_router(notifications_router, prefix=f"{settings.API_V1_PREFIX}")
 app.include_router(projects_router, prefix=f"{settings.API_V1_PREFIX}")
 app.include_router(milestones_router, prefix=f"{settings.API_V1_PREFIX}")
+app.include_router(settings_router, prefix=f"{settings.API_V1_PREFIX}")
 app.include_router(chat_router, prefix=f"{settings.API_V1_PREFIX}")

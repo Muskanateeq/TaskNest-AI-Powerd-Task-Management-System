@@ -1,86 +1,143 @@
 /**
  * Settings Page - TaskNest
- * Comprehensive user preferences and account settings
+ * Comprehensive user preferences and account settings with backend integration
  * Dark Golden Theme - Modern SaaS Design
  */
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { clearActivities } from '@/lib/activityTracker';
 import ChangePasswordModal from '@/components/settings/ChangePasswordModal';
+import {
+  getSettings,
+  updateSettings,
+  updateProfile,
+  exportUserData,
+  deleteAccount,
+  type UserSettings,
+  type SettingsUpdate,
+} from '@/lib/settingsApi';
 import './settings.css';
 
 type SettingsTab = 'profile' | 'notifications' | 'appearance' | 'tasks' | 'data' | 'about';
 
 export default function SettingsPage() {
   const router = useRouter();
-  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
+  const { user, isAuthenticated, isLoading: authLoading, getToken, logout } = useAuth();
   const [activeTab, setActiveTab] = useState<SettingsTab>('profile');
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
-  const [settings, setSettings] = useState({
-    // Notification Settings
-    emailNotifications: true,
-    browserNotifications: true,
-    taskDueReminders: true,
-    taskAssignedNotifications: true,
-    dndEnabled: false,
-    dndStartHour: 22,
-    dndEndHour: 8,
-
-    // Appearance Settings
-    theme: 'dark',
-    fontSize: 'medium',
-    viewMode: 'comfortable',
-
-    // Task Preferences
-    defaultPriority: 'medium',
-    defaultSortBy: 'created_at',
-    defaultSortOrder: 'desc',
-    autoArchiveDays: 30,
-    showCompletedByDefault: true,
-  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [userName, setUserName] = useState('');
+  const [settings, setSettings] = useState<UserSettings | null>(null);
 
   /**
    * Redirect if not authenticated
    */
-  React.useEffect(() => {
+  useEffect(() => {
     if (!authLoading && !isAuthenticated) {
       router.push('/login');
     }
   }, [authLoading, isAuthenticated, router]);
 
   /**
-   * Handle setting change
+   * Load settings from backend
    */
-  const handleSettingChange = (key: string, value: any) => {
-    setSettings(prev => ({ ...prev, [key]: value }));
-    // In a real app, this would save to backend
-    localStorage.setItem('taskNestSettings', JSON.stringify({ ...settings, [key]: value }));
+  useEffect(() => {
+    const loadSettings = async () => {
+      if (!isAuthenticated) return;
+
+      try {
+        const token = await getToken();
+        if (!token) return;
+
+        const userSettings = await getSettings(token);
+        setSettings(userSettings);
+        setUserName(user?.name || '');
+      } catch (error) {
+        console.error('Failed to load settings:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadSettings();
+  }, [isAuthenticated, getToken, user]);
+
+  /**
+   * Handle setting change with backend sync
+   */
+  const handleSettingChange = async (updates: SettingsUpdate) => {
+    if (!settings) return;
+
+    try {
+      setIsSaving(true);
+      const token = await getToken();
+      if (!token) return;
+
+      const updatedSettings = await updateSettings(token, updates);
+      setSettings(updatedSettings);
+    } catch (error) {
+      console.error('Failed to update settings:', error);
+      alert('Failed to save settings. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  /**
+   * Handle profile name update
+   */
+  const handleNameUpdate = async () => {
+    if (!userName.trim()) {
+      alert('Name cannot be empty');
+      return;
+    }
+
+    try {
+      setIsSaving(true);
+      const token = await getToken();
+      if (!token) return;
+
+      await updateProfile(token, { name: userName });
+      alert('Profile updated successfully');
+    } catch (error) {
+      console.error('Failed to update profile:', error);
+      alert('Failed to update profile. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   /**
    * Handle export data
    */
-  const handleExportData = () => {
-    // In a real app, this would fetch all user data from backend
-    const data = {
-      user: user,
-      exportDate: new Date().toISOString(),
-      tasks: [], // Would fetch from backend
-      tags: [],
-      activities: [],
-    };
+  const handleExportData = async () => {
+    try {
+      setIsSaving(true);
+      const token = await getToken();
+      if (!token) return;
 
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `tasknest-data-${new Date().toISOString().split('T')[0]}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+      const data = await exportUserData(token);
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `tasknest-data-${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+
+      alert('Data exported successfully');
+    } catch (error) {
+      console.error('Failed to export data:', error);
+      alert('Failed to export data. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   /**
@@ -93,8 +150,50 @@ export default function SettingsPage() {
     }
   };
 
-  if (authLoading || !isAuthenticated) {
-    return null;
+  /**
+   * Handle account deletion
+   */
+  const handleDeleteAccount = async () => {
+    const confirmation = prompt(
+      'This action is permanent and cannot be undone. All your data will be deleted.\n\nType your email to confirm:'
+    );
+
+    if (confirmation !== user?.email) {
+      alert('Email does not match. Account deletion cancelled.');
+      return;
+    }
+
+    try {
+      setIsSaving(true);
+      const token = await getToken();
+      if (!token) return;
+
+      await deleteAccount(token);
+      alert('Account deleted successfully');
+      logout();
+      router.push('/');
+    } catch (error) {
+      console.error('Failed to delete account:', error);
+      alert('Failed to delete account. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  if (authLoading || !isAuthenticated || isLoading) {
+    return (
+      <div className="settings-page">
+        <div className="settings-loading">Loading settings...</div>
+      </div>
+    );
+  }
+
+  if (!settings) {
+    return (
+      <div className="settings-page">
+        <div className="settings-error">Failed to load settings</div>
+      </div>
+    );
   }
 
   const tabs = [
@@ -139,13 +238,23 @@ export default function SettingsPage() {
 
               <div className="settings-group">
                 <label className="setting-label">Name</label>
-                <input
-                  type="text"
-                  value={user?.name || ''}
-                  disabled
-                  className="setting-input disabled"
-                />
-                <p className="setting-hint">Contact support to change your name</p>
+                <div className="input-with-button">
+                  <input
+                    type="text"
+                    value={userName}
+                    onChange={(e) => setUserName(e.target.value)}
+                    className="setting-input"
+                    placeholder="Enter your name"
+                  />
+                  <button
+                    onClick={handleNameUpdate}
+                    disabled={isSaving || userName === user?.name}
+                    className="btn-secondary"
+                  >
+                    {isSaving ? 'Saving...' : 'Update'}
+                  </button>
+                </div>
+                <p className="setting-hint">Your display name across TaskNest</p>
               </div>
 
               <div className="settings-group">
@@ -187,8 +296,9 @@ export default function SettingsPage() {
                   <label className="toggle-switch">
                     <input
                       type="checkbox"
-                      checked={settings.emailNotifications}
-                      onChange={(e) => handleSettingChange('emailNotifications', e.target.checked)}
+                      checked={settings.email_notifications}
+                      onChange={(e) => handleSettingChange({ email_notifications: e.target.checked })}
+                      disabled={isSaving}
                     />
                     <span className="toggle-slider"></span>
                   </label>
@@ -204,8 +314,9 @@ export default function SettingsPage() {
                   <label className="toggle-switch">
                     <input
                       type="checkbox"
-                      checked={settings.browserNotifications}
-                      onChange={(e) => handleSettingChange('browserNotifications', e.target.checked)}
+                      checked={settings.browser_notifications}
+                      onChange={(e) => handleSettingChange({ browser_notifications: e.target.checked })}
+                      disabled={isSaving}
                     />
                     <span className="toggle-slider"></span>
                   </label>
@@ -221,8 +332,9 @@ export default function SettingsPage() {
                   <label className="toggle-switch">
                     <input
                       type="checkbox"
-                      checked={settings.taskDueReminders}
-                      onChange={(e) => handleSettingChange('taskDueReminders', e.target.checked)}
+                      checked={settings.task_reminders}
+                      onChange={(e) => handleSettingChange({ task_reminders: e.target.checked })}
+                      disabled={isSaving}
                     />
                     <span className="toggle-slider"></span>
                   </label>
@@ -235,24 +347,22 @@ export default function SettingsPage() {
                   <div>
                     <label>Start</label>
                     <input
-                      type="number"
-                      min="0"
-                      max="23"
-                      value={settings.dndStartHour}
-                      onChange={(e) => handleSettingChange('dndStartHour', parseInt(e.target.value))}
+                      type="time"
+                      value={settings.dnd_start || '22:00'}
+                      onChange={(e) => handleSettingChange({ dnd_start: e.target.value })}
                       className="setting-input small"
+                      disabled={isSaving}
                     />
                   </div>
                   <span>to</span>
                   <div>
                     <label>End</label>
                     <input
-                      type="number"
-                      min="0"
-                      max="23"
-                      value={settings.dndEndHour}
-                      onChange={(e) => handleSettingChange('dndEndHour', parseInt(e.target.value))}
+                      type="time"
+                      value={settings.dnd_end || '08:00'}
+                      onChange={(e) => handleSettingChange({ dnd_end: e.target.value })}
                       className="setting-input small"
+                      disabled={isSaving}
                     />
                   </div>
                 </div>
@@ -272,15 +382,17 @@ export default function SettingsPage() {
                 <div className="setting-options">
                   <button
                     className={`option-btn ${settings.theme === 'dark' ? 'active' : ''}`}
-                    onClick={() => handleSettingChange('theme', 'dark')}
+                    onClick={() => handleSettingChange({ theme: 'dark' })}
+                    disabled={isSaving}
                   >
                     🌙 Dark
                   </button>
                   <button
-                    className="option-btn disabled"
-                    disabled
+                    className={`option-btn ${settings.theme === 'light' ? 'active' : ''}`}
+                    onClick={() => handleSettingChange({ theme: 'light' })}
+                    disabled={isSaving}
                   >
-                    ☀️ Light (Coming Soon)
+                    ☀️ Light
                   </button>
                 </div>
               </div>
@@ -291,8 +403,9 @@ export default function SettingsPage() {
                   {['small', 'medium', 'large'].map((size) => (
                     <button
                       key={size}
-                      className={`option-btn ${settings.fontSize === size ? 'active' : ''}`}
-                      onClick={() => handleSettingChange('fontSize', size)}
+                      className={`option-btn ${settings.font_size === size ? 'active' : ''}`}
+                      onClick={() => handleSettingChange({ font_size: size })}
+                      disabled={isSaving}
                     >
                       {size.charAt(0).toUpperCase() + size.slice(1)}
                     </button>
@@ -303,11 +416,12 @@ export default function SettingsPage() {
               <div className="settings-group">
                 <label className="setting-label">View Mode</label>
                 <div className="setting-options">
-                  {['compact', 'comfortable'].map((mode) => (
+                  {['compact', 'comfortable', 'spacious'].map((mode) => (
                     <button
                       key={mode}
-                      className={`option-btn ${settings.viewMode === mode ? 'active' : ''}`}
-                      onClick={() => handleSettingChange('viewMode', mode)}
+                      className={`option-btn ${settings.view_mode === mode ? 'active' : ''}`}
+                      onClick={() => handleSettingChange({ view_mode: mode })}
+                      disabled={isSaving}
                     >
                       {mode.charAt(0).toUpperCase() + mode.slice(1)}
                     </button>
@@ -326,9 +440,10 @@ export default function SettingsPage() {
               <div className="settings-group">
                 <label className="setting-label">Default Priority</label>
                 <select
-                  value={settings.defaultPriority}
-                  onChange={(e) => handleSettingChange('defaultPriority', e.target.value)}
+                  value={settings.default_priority}
+                  onChange={(e) => handleSettingChange({ default_priority: e.target.value })}
                   className="setting-select"
+                  disabled={isSaving}
                 >
                   <option value="high">High</option>
                   <option value="medium">Medium</option>
@@ -339,11 +454,12 @@ export default function SettingsPage() {
               <div className="settings-group">
                 <label className="setting-label">Default Sort By</label>
                 <select
-                  value={settings.defaultSortBy}
-                  onChange={(e) => handleSettingChange('defaultSortBy', e.target.value)}
+                  value={settings.default_sort}
+                  onChange={(e) => handleSettingChange({ default_sort: e.target.value })}
                   className="setting-select"
+                  disabled={isSaving}
                 >
-                  <option value="created_at">Created Date</option>
+                  <option value="created_date">Created Date</option>
                   <option value="due_date">Due Date</option>
                   <option value="priority">Priority</option>
                   <option value="title">Title</option>
@@ -359,8 +475,9 @@ export default function SettingsPage() {
                   <label className="toggle-switch">
                     <input
                       type="checkbox"
-                      checked={settings.showCompletedByDefault}
-                      onChange={(e) => handleSettingChange('showCompletedByDefault', e.target.checked)}
+                      checked={settings.show_completed}
+                      onChange={(e) => handleSettingChange({ show_completed: e.target.checked })}
+                      disabled={isSaving}
                     />
                     <span className="toggle-slider"></span>
                   </label>
@@ -373,30 +490,43 @@ export default function SettingsPage() {
           {activeTab === 'data' && (
             <div className="settings-section">
               <h2 className="section-title">Data & Privacy</h2>
-              <p className="section-description">Manage your data and privacy settings</p>
+              <p className="section-description">Manage your data and account</p>
 
               <div className="settings-group">
                 <label className="setting-label">Export Data</label>
-                <button onClick={handleExportData} className="btn-secondary">
-                  📥 Export All Data (JSON)
+                <button
+                  onClick={handleExportData}
+                  disabled={isSaving}
+                  className="btn-secondary"
+                >
+                  {isSaving ? 'Exporting...' : 'Download All Data'}
                 </button>
-                <p className="setting-hint">Download all your tasks, tags, and activity history</p>
+                <p className="setting-hint">Download all your tasks, tags, and settings as JSON</p>
               </div>
 
               <div className="settings-group">
-                <label className="setting-label">Clear Activity History</label>
-                <button onClick={handleClearHistory} className="btn-danger">
-                  🗑️ Clear History
+                <label className="setting-label">Clear History</label>
+                <button
+                  onClick={handleClearHistory}
+                  className="btn-secondary"
+                >
+                  Clear Activity History
                 </button>
-                <p className="setting-hint">Permanently delete all activity logs</p>
+                <p className="setting-hint">Remove all local activity tracking data</p>
               </div>
 
               <div className="settings-group danger-zone">
-                <label className="setting-label">Danger Zone</label>
-                <button className="btn-danger" disabled>
-                  ⚠️ Delete Account (Coming Soon)
+                <label className="setting-label">Delete Account</label>
+                <button
+                  onClick={handleDeleteAccount}
+                  disabled={isSaving}
+                  className="btn-danger"
+                >
+                  {isSaving ? 'Deleting...' : 'Delete Account'}
                 </button>
-                <p className="setting-hint">Permanently delete your account and all data</p>
+                <p className="setting-hint danger">
+                  Permanently delete your account and all data. This action cannot be undone.
+                </p>
               </div>
             </div>
           )}
@@ -407,25 +537,31 @@ export default function SettingsPage() {
               <h2 className="section-title">About TaskNest</h2>
               <p className="section-description">Application information and resources</p>
 
-              <div className="about-card">
-                <div className="about-logo">T</div>
-                <h3>TaskNest</h3>
-                <p className="about-version">Version 2.0.0</p>
-                <p className="about-description">
-                  A modern task management application for manage tasks built with Next.js, Python, FastAPI, BetterAuth and PostgreSQL.
-                </p>
-              </div>
+              <div className="about-content">
+                <div className="about-item">
+                  <strong>Version</strong>
+                  <span>1.0.0</span>
+                </div>
+                <div className="about-item">
+                  <strong>Build</strong>
+                  <span>Phase 2 - Full Stack</span>
+                </div>
+                <div className="about-item">
+                  <strong>Last Updated</strong>
+                  <span>{new Date().toLocaleDateString()}</span>
+                </div>
 
-              <div className="about-links">
-                <a href="#" className="about-link">📄 Terms of Service</a>
-                <a href="#" className="about-link">🔒 Privacy Policy</a>
-                <a href="#" className="about-link">📧 Contact Support</a>
-                <a href="#" className="about-link">💡 Feature Requests</a>
-              </div>
+                <div className="about-links">
+                  <a href="#" className="about-link">Documentation</a>
+                  <a href="#" className="about-link">Privacy Policy</a>
+                  <a href="#" className="about-link">Terms of Service</a>
+                  <a href="#" className="about-link">Support</a>
+                </div>
 
-              <div className="about-footer">
-                <p>© 2024 TaskNest. All rights reserved.</p>
-                <p>Made by ❤️ Muskan Full Stack Agentic AI Expert</p>
+                <div className="about-footer">
+                  <p>© 2024 TaskNest. All rights reserved.</p>
+                  <p>Built with Next.js, FastAPI, and PostgreSQL</p>
+                </div>
               </div>
             </div>
           )}
