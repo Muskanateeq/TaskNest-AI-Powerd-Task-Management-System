@@ -995,3 +995,63 @@
     border-color: #E49B0F;
     color: #E49B0F;
 }
+
+/* Task Group Styles */
+.task-group {
+  margin-bottom: 2rem;
+}
+
+.task-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba(228, 155, 15, 0.1);
+  border: 1px solid rgba(228, 155, 15, 0.2);
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.task-group-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e49b0f;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.task-group-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 8px;
+  background: rgba(228, 155, 15, 0.2);
+  color: #e49b0f;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 12px;
+}
+
+.task-group-tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .task-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .task-group-header {
+    padding: 10px 12px;
+  }
+
+  .task-group-title {
+    font-size: 0.9rem;
+  }
+}
