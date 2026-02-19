@@ -8,6 +8,7 @@
 import React from 'react';
 import { Task, TaskPriority } from '@/lib/types';
 import Modal from '@/components/ui/Modal';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 import './TaskDetailModal.css';
 
 interface TaskDetailModalProps {
@@ -111,13 +112,21 @@ export default function TaskDetailModal({
   onEdit,
   onDelete,
 }: TaskDetailModalProps) {
+  // Implement focus trap for accessibility
+  const modalRef = useFocusTrap<HTMLDivElement>({
+    isActive: isOpen,
+    onEscape: onClose,
+    initialFocus: true,
+    returnFocus: true,
+  });
+
   if (!task) return null;
 
   const overdue = isOverdue(task.due_date);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Task Details">
-      <div className="task-detail-modal">
+      <div className="task-detail-modal" ref={modalRef}>
         {/* Header with Title and Status */}
         <div className="task-detail-header">
           <h2 className="task-detail-title">{task.title}</h2>
