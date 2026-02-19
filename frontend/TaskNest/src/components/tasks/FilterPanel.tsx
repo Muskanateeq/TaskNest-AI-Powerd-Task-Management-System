@@ -8,7 +8,6 @@
 import React, { useState } from 'react';
 import { TaskPriority, TaskFilterOptions } from '@/lib/types';
 import { useTags } from '@/hooks/useTags';
-import TagBadge from '@/components/tags/TagBadge';
 import './FilterPanel.css';
 
 export interface FilterPanelProps {

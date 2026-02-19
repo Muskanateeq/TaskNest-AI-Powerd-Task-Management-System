@@ -72,7 +72,7 @@ export default function LiveRegion({
  * announce('Task completed successfully');
  * announce('Error: Failed to save task', 'assertive');
  */
-export function announce(message: string, priority: 'polite' | 'assertive' = 'polite') {
+export function announce(message: string, _priority: 'polite' | 'assertive' = 'polite') {
   const event = new CustomEvent('announce', { detail: message });
   window.dispatchEvent(event);
 }

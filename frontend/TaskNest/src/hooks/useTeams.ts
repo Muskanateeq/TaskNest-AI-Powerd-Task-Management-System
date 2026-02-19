@@ -8,7 +8,6 @@ import { useState, useEffect, useCallback } from 'react';
 import {
   createTeam as createTeamApi,
   getUserTeams,
-  getTeam,
   updateTeam as updateTeamApi,
   deleteTeam as deleteTeamApi,
   getTeamMembers as getTeamMembersApi,

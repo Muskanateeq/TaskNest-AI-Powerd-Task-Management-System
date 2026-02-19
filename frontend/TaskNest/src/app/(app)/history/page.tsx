@@ -63,7 +63,7 @@ export default function HistoryPage() {
         const stored = localStorage.getItem('taskNestActivities');
         if (stored) {
           const parsed = JSON.parse(stored);
-          const activitiesWithDates = parsed.map((a: any) => ({
+          const activitiesWithDates = parsed.map((a: Activity) => ({
             ...a,
             timestamp: new Date(a.timestamp),
           }));

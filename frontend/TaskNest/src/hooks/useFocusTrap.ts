@@ -102,6 +102,7 @@ export function useFocusTrap<T extends HTMLElement = HTMLElement>(
         previousActiveElement.current.focus();
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [options.isActive, options.onEscape, options.initialFocus, options.returnFocus]);
 
   return containerRef;

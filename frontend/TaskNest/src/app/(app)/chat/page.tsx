@@ -151,7 +151,7 @@ export default function ChatPage() {
         selectedConversation || undefined
       )) {
         if (event.type === 'conversation_id') {
-          newConversationId = event.conversation_id;
+          newConversationId = event.conversation_id as number;
           if (!selectedConversation) {
             setSelectedConversation(newConversationId);
             // Reload conversations to show new one

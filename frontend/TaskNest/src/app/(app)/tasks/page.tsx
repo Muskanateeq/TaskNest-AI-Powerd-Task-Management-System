@@ -52,6 +52,7 @@ export default function TasksPage() {
       setFilters({ ...filters, search: searchQuery });
     }, 300);
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
 
   /**
@@ -131,10 +132,6 @@ export default function TasksPage() {
     }
     return true;
   });
-
-  const completedCount = tasks.filter(t => t.completed).length;
-  const activeCount = tasks.length - completedCount;
-  const completionRate = tasks.length > 0 ? Math.round((completedCount / tasks.length) * 100) : 0;
 
   return (
     <div className="tasks-page">

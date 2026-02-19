@@ -66,20 +66,6 @@ export default function NotificationSettings({
   };
 
   /**
-   * Get permission status color
-   */
-  const getPermissionColor = () => {
-    switch (permission) {
-      case 'granted':
-        return 'text-green-600';
-      case 'denied':
-        return 'text-red-600';
-      default:
-        return 'text-gray-600';
-    }
-  };
-
-  /**
    * Get permission status text
    */
   const getPermissionText = () => {

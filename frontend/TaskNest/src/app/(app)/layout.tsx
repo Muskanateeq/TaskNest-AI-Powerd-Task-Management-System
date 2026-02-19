@@ -9,9 +9,8 @@
 
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useRouter, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import Button from '@/components/ui/Button';
 import { NotificationPermissionBanner } from '@/components/notifications/NotificationPermissionBanner';
 import { useNotifications } from '@/hooks/useNotifications';
 import '../app-layout.css';
@@ -37,7 +36,6 @@ interface NavItem {
  */
 export default function AppLayout({ children }: AppLayoutProps) {
   const { user, logout } = useAuth();
-  const router = useRouter();
   const pathname = usePathname();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 

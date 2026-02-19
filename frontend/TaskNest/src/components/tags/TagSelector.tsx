@@ -6,7 +6,6 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Tag } from '@/lib/types';
 import { useTags } from '@/hooks/useTags';
 import TagBadge from './TagBadge';
 import './TagSelector.css';

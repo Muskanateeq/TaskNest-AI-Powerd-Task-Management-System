@@ -59,6 +59,7 @@ export default function NotificationsPage() {
 
   useEffect(() => {
     loadNotifications();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, getToken]);
 
   /**
@@ -232,7 +233,7 @@ export default function NotificationsPage() {
         <div className="notifications-empty">
           <div className="empty-icon">🔔</div>
           <h3>No notifications</h3>
-          <p>You're all caught up!</p>
+          <p>You&apos;re all caught up!</p>
         </div>
       ) : (
         <div className="notifications-list">

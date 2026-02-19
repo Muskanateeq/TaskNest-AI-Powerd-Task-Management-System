@@ -15,7 +15,7 @@ import '../../teams.css';
 
 export default function TeamPage() {
   const router = useRouter();
-  const { isAuthenticated, isLoading: authLoading, user } = useAuth();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const {
     teams,
     isLoading,

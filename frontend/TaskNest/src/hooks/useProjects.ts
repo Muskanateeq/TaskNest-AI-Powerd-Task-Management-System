@@ -8,7 +8,6 @@ import { useState, useEffect, useCallback } from 'react';
 import {
   createProject as createProjectApi,
   getUserProjects,
-  getProject,
   updateProject as updateProjectApi,
   deleteProject as deleteProjectApi,
 } from '@/lib/projects-api';

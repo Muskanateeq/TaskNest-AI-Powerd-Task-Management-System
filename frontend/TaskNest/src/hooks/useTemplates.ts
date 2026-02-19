@@ -174,7 +174,7 @@ export function useTemplates(): UseTemplatesReturn {
         saveTemplates(updated);
 
         return newTemplate;
-      } catch (err) {
+      } catch {
         const message = 'Failed to create template';
         setError(message);
         throw new Error(message);

@@ -21,7 +21,6 @@ export default function CommentInput({
   placeholder = 'Write a comment...',
 }: CommentInputProps) {
   const [content, setContent] = useState('');
-  const [mentions, setMentions] = useState<string[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   /**

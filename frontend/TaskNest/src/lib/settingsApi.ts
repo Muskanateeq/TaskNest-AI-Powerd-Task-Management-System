@@ -61,8 +61,8 @@ export interface ChangePasswordData {
 export interface ExportData {
   user: UserProfile;
   settings: Omit<UserSettings, 'id' | 'user_id' | 'created_at' | 'updated_at'>;
-  tasks: any[];
-  tags: any[];
+  tasks: unknown[];
+  tags: unknown[];
   export_date: string;
 }
 
