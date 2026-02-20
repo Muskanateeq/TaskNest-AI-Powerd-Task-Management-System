@@ -13,6 +13,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { NotificationPermissionBanner } from '@/components/notifications/NotificationPermissionBanner';
 import { useNotifications } from '@/hooks/useNotifications';
+import FloatingChatButton from '@/components/chat/FloatingChatButton';
 import '../app-layout.css';
 
 /**
@@ -221,6 +222,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
+
+      {/* Floating Chat Button - Show on all pages except /chat */}
+      {pathname !== '/chat' && <FloatingChatButton />}
     </div>
   );
 }

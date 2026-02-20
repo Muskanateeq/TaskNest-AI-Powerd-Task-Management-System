@@ -191,6 +191,31 @@
   background: rgba(228, 155, 15, 0.05);
 }
 
+.success-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 8px;
+  color: #22C55E;
+  font-size: 0.875rem;
+  margin-top: 1rem;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .header-content {
   display: flex;
   align-items: center;
@@ -419,8 +444,10 @@
   font-size: 0.9375rem;
   font-family: inherit;
   resize: none;
+  min-height: 48px;
   max-height: 150px;
   transition: all 0.3s ease;
+  line-height: 1.5;
 }
 
 .chat-input:focus {

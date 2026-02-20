@@ -30,6 +30,7 @@ export default function ChatPage() {
   const [error, setError] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [conversationToDelete, setConversationToDelete] = useState<number | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   /**
@@ -247,6 +248,10 @@ export default function ChatPage() {
       // Close dialog
       setDeleteDialogOpen(false);
       setConversationToDelete(null);
+
+      // Show success message
+      setSuccessMessage(`Conversation ${conversationId} deleted successfully`);
+      setTimeout(() => setSuccessMessage(null), 3000);
     } catch (error) {
       console.error('Failed to delete conversation:', error);
       setError('Failed to delete conversation');
@@ -352,6 +357,14 @@ export default function ChatPage() {
               <p>Manage your tasks with natural language</p>
             </div>
           </div>
+          {successMessage && (
+            <div className="success-message">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+              </svg>
+              <span>{successMessage}</span>
+            </div>
+          )}
         </div>
 
         {/* Messages */}
