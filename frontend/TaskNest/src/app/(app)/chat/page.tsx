@@ -28,6 +28,8 @@ export default function ChatPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [conversationToDelete, setConversationToDelete] = useState<number | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   /**
@@ -227,8 +229,6 @@ export default function ChatPage() {
    * Delete conversation
    */
   const handleDeleteConversation = async (conversationId: number) => {
-    if (!confirm('Delete this conversation?')) return;
-
     try {
       const token = await getToken();
       if (!token) return;
@@ -243,10 +243,22 @@ export default function ChatPage() {
         setSelectedConversation(null);
         setMessages([]);
       }
+
+      // Close dialog
+      setDeleteDialogOpen(false);
+      setConversationToDelete(null);
     } catch (error) {
       console.error('Failed to delete conversation:', error);
       setError('Failed to delete conversation');
     }
+  };
+
+  /**
+   * Open delete confirmation dialog
+   */
+  const openDeleteDialog = (conversationId: number) => {
+    setConversationToDelete(conversationId);
+    setDeleteDialogOpen(true);
   };
 
   /**
@@ -305,13 +317,13 @@ export default function ChatPage() {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleDeleteConversation(conversation.id);
+                    openDeleteDialog(conversation.id);
                   }}
                   className="btn-delete-conversation"
                   title="Delete conversation"
                 >
                   <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                   </svg>
                 </button>
               </div>
@@ -432,6 +444,35 @@ export default function ChatPage() {
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      {deleteDialogOpen && (
+        <div className="delete-dialog-overlay" onClick={() => setDeleteDialogOpen(false)}>
+          <div className="delete-dialog" onClick={(e) => e.stopPropagation()}>
+            <div className="delete-dialog-icon">
+              <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </div>
+            <h3>Delete Conversation?</h3>
+            <p>This action cannot be undone. All messages in this conversation will be permanently deleted.</p>
+            <div className="delete-dialog-actions">
+              <button
+                onClick={() => setDeleteDialogOpen(false)}
+                className="btn-cancel"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => conversationToDelete && handleDeleteConversation(conversationToDelete)}
+                className="btn-delete"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

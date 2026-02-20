@@ -386,7 +386,8 @@
 .chat-input-container {
   border-top: 1px solid rgba(228, 155, 15, 0.2);
   background: rgba(228, 155, 15, 0.05);
-  padding: 1.5rem 2rem;
+  padding: 1rem 2rem 1.25rem;
+  flex-shrink: 0;
 }
 
 .chat-error {
@@ -535,7 +536,7 @@
   }
 
   .chat-input-container {
-    padding: 1rem;
+    padding: 0.75rem 1rem 1rem;
   }
 
   .chat-empty ul {
@@ -551,6 +552,127 @@
 .btn-new-chat:focus-visible,
 .btn-delete-conversation:focus-visible,
 .chat-send-button:focus-visible {
+  outline: 2px solid #E49B0F;
+  outline-offset: 2px;
+}
+
+/* Delete Confirmation Dialog */
+.delete-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.delete-dialog {
+  background: rgba(10, 10, 10, 0.98);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(239, 68, 68, 0.3);
+  padding: 2rem;
+  max-width: 420px;
+  width: 90%;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.delete-dialog-icon {
+  width: 64px;
+  height: 64px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 2px solid rgba(239, 68, 68, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #EF4444;
+  margin: 0 auto 1.5rem;
+}
+
+.delete-dialog h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0 0 1rem;
+  text-align: center;
+}
+
+.delete-dialog p {
+  font-size: 0.9375rem;
+  color: #A0A0A0;
+  line-height: 1.6;
+  margin: 0 0 2rem;
+  text-align: center;
+}
+
+.delete-dialog-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-cancel,
+.btn-delete {
+  flex: 1;
+  padding: 0.875rem 1.5rem;
+  border-radius: 10px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.btn-cancel {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+}
+
+.btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-delete {
+  background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+  color: #FFFFFF;
+}
+
+.btn-delete:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px 0 rgba(239, 68, 68, 0.6);
+}
+
+.btn-cancel:focus-visible,
+.btn-delete:focus-visible {
   outline: 2px solid #E49B0F;
   outline-offset: 2px;
 }
