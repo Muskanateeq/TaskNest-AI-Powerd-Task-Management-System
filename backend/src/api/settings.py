@@ -78,14 +78,16 @@ async def get_profile(
     """
     Get current user profile.
 
-    Returns public user information (excludes password_hash).
+    Returns public user information.
     """
     return UserPublic(
         id=current_user.id,
         email=current_user.email,
         name=current_user.name,
-        created_at=current_user.created_at,
-        updated_at=current_user.updated_at
+        emailVerified=current_user.emailVerified,
+        image=current_user.image,
+        createdAt=current_user.createdAt,
+        updatedAt=current_user.updatedAt
     )
 
 
@@ -110,8 +112,10 @@ async def update_profile(
             id=user.id,
             email=user.email,
             name=user.name,
-            created_at=user.created_at,
-            updated_at=user.updated_at
+            emailVerified=user.emailVerified,
+            image=user.image,
+            createdAt=user.createdAt,
+            updatedAt=user.updatedAt
         )
     except ValueError as e:
         raise HTTPException(

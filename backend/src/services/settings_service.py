@@ -121,6 +121,9 @@ class SettingsService:
         """
         Change user password.
 
+        Note: Better Auth manages passwords. This endpoint is deprecated.
+        Password changes should be handled through Better Auth on the frontend.
+
         Args:
             user_id: User ID
             current_password: Current password
@@ -131,25 +134,12 @@ class SettingsService:
             True if password changed successfully
 
         Raises:
-            ValueError: If current password is incorrect
+            ValueError: Password management is handled by Better Auth
         """
-        statement = select(User).where(User.id == user_id)
-        result = await session.execute(statement)
-        user = result.scalar_one_or_none()
-
-        if not user:
-            raise ValueError("User not found")
-
-        # Verify current password
-        if not pwd_context.verify(current_password, user.password_hash):
-            raise ValueError("Current password is incorrect")
-
-        # Hash and update new password
-        user.password_hash = pwd_context.hash(new_password)
-        session.add(user)
-        await session.commit()
-
-        return True
+        raise ValueError(
+            "Password management is handled by Better Auth. "
+            "Please use the Better Auth password reset flow on the frontend."
+        )
 
     @staticmethod
     async def export_user_data(user_id: str, session: AsyncSession) -> Dict[str, Any]:
@@ -186,8 +176,10 @@ class SettingsService:
                 "id": user.id,
                 "email": user.email,
                 "name": user.name,
-                "created_at": user.created_at.isoformat(),
-                "updated_at": user.updated_at.isoformat()
+                "emailVerified": user.emailVerified,
+                "image": user.image,
+                "createdAt": user.createdAt.isoformat(),
+                "updatedAt": user.updatedAt.isoformat()
             },
             "settings": {
                 "email_notifications": settings.email_notifications,

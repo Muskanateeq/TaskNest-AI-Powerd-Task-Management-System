@@ -17,6 +17,9 @@ class User(SQLModel, table=True):
 
     This model is managed by Better Auth on the frontend,
     but we define it here for database schema and backend queries.
+
+    Note: Better Auth uses camelCase column names (createdAt, updatedAt, emailVerified)
+    and does NOT store password_hash in the user table.
     """
     __tablename__ = "user"
 
@@ -28,25 +31,33 @@ class User(SQLModel, table=True):
         sa_column=Column(String(255), unique=True, nullable=False, index=True),
         description="User email address"
     )
-    password_hash: str = Field(
-        sa_column=Column(String(255), nullable=False),
-        description="Hashed password"
+    emailVerified: Optional[bool] = Field(
+        default=None,
+        sa_column=Column("emailVerified", nullable=True),
+        description="Email verification status"
     )
     name: Optional[str] = Field(
         default=None,
         sa_column=Column(String(255), nullable=True),
         description="User display name"
     )
-    created_at: datetime = Field(
+    image: Optional[str] = Field(
+        default=None,
+        sa_column=Column(String(255), nullable=True),
+        description="User profile image URL"
+    )
+    createdAt: datetime = Field(
         sa_column=Column(
+            "createdAt",
             TIMESTAMP,
             nullable=False,
             server_default=func.now()
         ),
         description="Account creation timestamp"
     )
-    updated_at: datetime = Field(
+    updatedAt: datetime = Field(
         sa_column=Column(
+            "updatedAt",
             TIMESTAMP,
             nullable=False,
             server_default=func.now(),
@@ -62,20 +73,24 @@ class User(SQLModel, table=True):
                 "id": "550e8400-e29b-41d4-a716-446655440000",
                 "email": "user@example.com",
                 "name": "John Doe",
-                "created_at": "2024-01-01T00:00:00Z",
-                "updated_at": "2024-01-01T00:00:00Z"
+                "emailVerified": True,
+                "image": None,
+                "createdAt": "2024-01-01T00:00:00Z",
+                "updatedAt": "2024-01-01T00:00:00Z"
             }
         }
 
 
 class UserPublic(SQLModel):
     """
-    Public user model (excludes sensitive fields).
+    Public user model for API responses.
 
-    Use this for API responses to avoid exposing password_hash.
+    Matches Better Auth schema with camelCase field names.
     """
     id: str
     email: str
     name: Optional[str] = None
-    created_at: datetime
-    updated_at: datetime
+    emailVerified: Optional[bool] = None
+    image: Optional[str] = None
+    createdAt: datetime
+    updatedAt: datetime
