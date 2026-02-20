@@ -34,12 +34,20 @@ async def get_settings(
     Returns user settings or creates default settings if they don't exist.
     """
     try:
+        print(f"[DEBUG] Getting settings for user: {current_user.id}")
+        print(f"[DEBUG] User object: id={current_user.id}, email={current_user.email}")
+
         settings = await SettingsService.get_or_create_settings(
             current_user.id,
             session
         )
+
+        print(f"[DEBUG] Settings retrieved successfully: {settings}")
         return settings
     except Exception as e:
+        print(f"[ERROR] Settings API failed: {type(e).__name__}: {str(e)}")
+        import traceback
+        traceback.print_exc()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to retrieve settings: {str(e)}"

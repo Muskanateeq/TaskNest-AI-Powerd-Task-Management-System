@@ -121,5 +121,45 @@ async def get_db_session(
     return session
 
 
-# Alias for backward compatibility
-get_current_user = get_current_user_id
+async def get_current_user(
+    user_id: str = Depends(get_current_user_id),
+    session: AsyncSession = Depends(get_session)
+):
+    """
+    Get current authenticated user as User object.
+
+    This dependency fetches the full User object from the database
+    using the user_id extracted from the JWT token.
+
+    Args:
+        user_id: User ID from JWT token
+        session: Database session
+
+    Returns:
+        User object
+
+    Raises:
+        HTTPException: 404 if user not found
+
+    Example:
+        @app.get("/api/v1/settings")
+        async def get_settings(current_user: User = Depends(get_current_user)):
+            # current_user is a full User object
+            return await get_user_settings(current_user.id)
+    """
+    from src.models.user import User
+    from sqlmodel import select
+
+    result = await session.execute(
+        select(User).where(User.id == user_id)
+    )
+    user = result.scalar_one_or_none()
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+
+    return user
+
