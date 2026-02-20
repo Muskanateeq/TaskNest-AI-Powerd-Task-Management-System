@@ -51,8 +51,10 @@ async def get_current_user(
             "id": "550e8400-e29b-41d4-a716-446655440000",
             "email": "user@example.com",
             "name": "John Doe",
-            "created_at": "2024-01-01T00:00:00Z",
-            "updated_at": "2024-01-01T00:00:00Z"
+            "emailVerified": true,
+            "image": null,
+            "createdAt": "2024-01-01T00:00:00Z",
+            "updatedAt": "2024-01-01T00:00:00Z"
         }
     """
     # Query user from database
@@ -72,8 +74,10 @@ async def get_current_user(
         id=user.id,
         email=user.email,
         name=user.name,
-        created_at=user.created_at,
-        updated_at=user.updated_at
+        emailVerified=user.emailVerified,
+        image=user.image,
+        createdAt=user.createdAt,
+        updatedAt=user.updatedAt
     )
 
 

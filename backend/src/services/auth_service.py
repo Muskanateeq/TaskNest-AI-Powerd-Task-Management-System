@@ -31,6 +31,9 @@ class AuthService:
         """
         Register a new user.
 
+        NOTE: This function is deprecated. Better Auth handles user registration.
+        This is kept for backward compatibility but should not be used.
+
         Args:
             data: Registration request data
             session: Database session
@@ -39,57 +42,11 @@ class AuthService:
             AuthResponse with user data and JWT token
 
         Raises:
-            HTTPException: If email already exists
+            HTTPException: Registration is handled by Better Auth
         """
-        # Check if user already exists
-        result = await session.execute(
-            select(User).where(User.email == data.email)
-        )
-        existing_user = result.scalar_one_or_none()
-
-        if existing_user:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Email already registered"
-            )
-
-        # Create new user
-        user_id = str(uuid.uuid4())
-        hashed_password = hash_password(data.password)
-
-        new_user = User(
-            id=user_id,
-            email=data.email,
-            password_hash=hashed_password,
-            name=data.name
-        )
-
-        session.add(new_user)
-        await session.commit()
-        await session.refresh(new_user)
-
-        # Generate JWT token
-        token_data = {
-            "user_id": new_user.id,
-            "email": new_user.email
-        }
-        access_token = create_access_token(token_data)
-
-        # Calculate expiration time in seconds
-        expires_in = settings.JWT_EXPIRATION_DAYS * 24 * 60 * 60
-
-        # Return auth response
-        return AuthResponse(
-            access_token=access_token,
-            token_type="bearer",
-            expires_in=expires_in,
-            user=UserResponse(
-                id=new_user.id,
-                email=new_user.email,
-                name=new_user.name,
-                created_at=new_user.created_at,
-                updated_at=new_user.updated_at
-            )
+        raise HTTPException(
+            status_code=status.HTTP_501_NOT_IMPLEMENTED,
+            detail="User registration is handled by Better Auth. Use the Better Auth sign-up flow."
         )
 
     @staticmethod
@@ -100,6 +57,9 @@ class AuthService:
         """
         Authenticate user and generate JWT token.
 
+        NOTE: This function is deprecated. Better Auth handles user login.
+        This is kept for backward compatibility but should not be used.
+
         Args:
             data: Login request data
             session: Database session
@@ -108,44 +68,11 @@ class AuthService:
             AuthResponse with user data and JWT token
 
         Raises:
-            HTTPException: If credentials are invalid
+            HTTPException: Login is handled by Better Auth
         """
-        # Find user by email
-        result = await session.execute(
-            select(User).where(User.email == data.email)
-        )
-        user = result.scalar_one_or_none()
-
-        # Verify user exists and password is correct
-        if not user or not verify_password(data.password, user.password_hash):
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid email or password",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-
-        # Generate JWT token
-        token_data = {
-            "user_id": user.id,
-            "email": user.email
-        }
-        access_token = create_access_token(token_data)
-
-        # Calculate expiration time in seconds
-        expires_in = settings.JWT_EXPIRATION_DAYS * 24 * 60 * 60
-
-        # Return auth response
-        return AuthResponse(
-            access_token=access_token,
-            token_type="bearer",
-            expires_in=expires_in,
-            user=UserResponse(
-                id=user.id,
-                email=user.email,
-                name=user.name,
-                created_at=user.created_at,
-                updated_at=user.updated_at
-            )
+        raise HTTPException(
+            status_code=status.HTTP_501_NOT_IMPLEMENTED,
+            detail="User login is handled by Better Auth. Use the Better Auth sign-in flow."
         )
 
     @staticmethod
@@ -173,8 +100,10 @@ class AuthService:
                 id=user.id,
                 email=user.email,
                 name=user.name,
-                created_at=user.created_at,
-                updated_at=user.updated_at
+                emailVerified=user.emailVerified,
+                image=user.image,
+                createdAt=user.createdAt,
+                updatedAt=user.updatedAt
             )
 
         return None
