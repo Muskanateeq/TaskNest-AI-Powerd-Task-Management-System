@@ -34,8 +34,8 @@ class SettingsService:
             UserSettings object
         """
         statement = select(UserSettings).where(UserSettings.user_id == user_id)
-        result = await session.exec(statement)
-        settings = result.first()
+        result = await session.execute(statement)
+        settings = result.scalar_one_or_none()
 
         if not settings:
             # Create default settings
@@ -94,8 +94,8 @@ class SettingsService:
             Updated User object
         """
         statement = select(User).where(User.id == user_id)
-        result = await session.exec(statement)
-        user = result.first()
+        result = await session.execute(statement)
+        user = result.scalar_one_or_none()
 
         if not user:
             raise ValueError("User not found")
@@ -134,8 +134,8 @@ class SettingsService:
             ValueError: If current password is incorrect
         """
         statement = select(User).where(User.id == user_id)
-        result = await session.exec(statement)
-        user = result.first()
+        result = await session.execute(statement)
+        user = result.scalar_one_or_none()
 
         if not user:
             raise ValueError("User not found")
@@ -165,21 +165,21 @@ class SettingsService:
         """
         # Get user profile
         user_statement = select(User).where(User.id == user_id)
-        user_result = await session.exec(user_statement)
-        user = user_result.first()
+        user_result = await session.execute(user_statement)
+        user = user_result.scalar_one_or_none()
 
         # Get user settings
         settings = await SettingsService.get_or_create_settings(user_id, session)
 
         # Get all tasks
         tasks_statement = select(Task).where(Task.user_id == user_id)
-        tasks_result = await session.exec(tasks_statement)
-        tasks = tasks_result.all()
+        tasks_result = await session.execute(tasks_statement)
+        tasks = tasks_result.scalars().all()
 
         # Get all tags
         tags_statement = select(Tag).where(Tag.user_id == user_id)
-        tags_result = await session.exec(tags_statement)
-        tags = tags_result.all()
+        tags_result = await session.execute(tags_statement)
+        tags = tags_result.scalars().all()
 
         return {
             "user": {
@@ -246,29 +246,29 @@ class SettingsService:
         """
         # Delete all tasks
         tasks_statement = select(Task).where(Task.user_id == user_id)
-        tasks_result = await session.exec(tasks_statement)
-        tasks = tasks_result.all()
+        tasks_result = await session.execute(tasks_statement)
+        tasks = tasks_result.scalars().all()
         for task in tasks:
             await session.delete(task)
 
         # Delete all tags
         tags_statement = select(Tag).where(Tag.user_id == user_id)
-        tags_result = await session.exec(tags_statement)
-        tags = tags_result.all()
+        tags_result = await session.execute(tags_statement)
+        tags = tags_result.scalars().all()
         for tag in tags:
             await session.delete(tag)
 
         # Delete settings
         settings_statement = select(UserSettings).where(UserSettings.user_id == user_id)
-        settings_result = await session.exec(settings_statement)
-        settings = settings_result.first()
+        settings_result = await session.execute(settings_statement)
+        settings = settings_result.scalar_one_or_none()
         if settings:
             await session.delete(settings)
 
         # Delete user
         user_statement = select(User).where(User.id == user_id)
-        user_result = await session.exec(user_statement)
-        user = user_result.first()
+        user_result = await session.execute(user_statement)
+        user = user_result.scalar_one_or_none()
         if user:
             await session.delete(user)
 
