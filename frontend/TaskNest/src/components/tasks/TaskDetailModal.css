@@ -17,7 +17,7 @@
   align-items: flex-start;
   gap: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(228, 155, 15, 0.2);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
 }
 
 .task-detail-title {
@@ -55,9 +55,9 @@
 }
 
 .status-badge.active {
-  background: rgba(228, 155, 15, 0.1);
-  color: #E49B0F;
-  border: 1px solid rgba(228, 155, 15, 0.3);
+  background: rgba(212, 175, 55, 0.1);
+  color: #d4af37;
+  border: 1px solid rgba(212, 175, 55, 0.3);
 }
 
 /* Sections */
@@ -94,9 +94,9 @@
 }
 
 .priority-badge.medium {
-  background: rgba(228, 155, 15, 0.1);
-  color: #E49B0F;
-  border: 1px solid rgba(228, 155, 15, 0.3);
+  background: rgba(212, 175, 55, 0.1);
+  color: #d4af37;
+  border: 1px solid rgba(212, 175, 55, 0.3);
 }
 
 .priority-badge.low {
@@ -121,7 +121,7 @@
   gap: 0.75rem;
   padding: 0.75rem;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(228, 155, 15, 0.2);
+  border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 8px;
   color: #FFFFFF;
   font-size: 0.875rem;
@@ -130,7 +130,7 @@
 .task-detail-due svg {
   width: 1.25rem;
   height: 1.25rem;
-  color: #E49B0F;
+  color: #d4af37;
   flex-shrink: 0;
 }
 
@@ -166,9 +166,9 @@
   display: inline-flex;
   align-items: center;
   padding: 0.375rem 0.75rem;
-  background: rgba(228, 155, 15, 0.1);
-  color: #E49B0F;
-  border: 1px solid rgba(228, 155, 15, 0.3);
+  background: rgba(212, 175, 55, 0.1);
+  color: #d4af37;
+  border: 1px solid rgba(212, 175, 55, 0.3);
   border-radius: 6px;
   font-size: 0.875rem;
   font-weight: 500;
@@ -181,7 +181,7 @@
   gap: 0.75rem;
   padding: 0.75rem;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(228, 155, 15, 0.2);
+  border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 8px;
   color: #FFFFFF;
   font-size: 0.875rem;
@@ -190,7 +190,7 @@
 .task-detail-recurrence svg {
   width: 1.25rem;
   height: 1.25rem;
-  color: #E49B0F;
+  color: #d4af37;
   flex-shrink: 0;
 }
 
@@ -205,7 +205,7 @@
   display: flex;
   gap: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid rgba(228, 155, 15, 0.2);
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
   margin-top: 0.5rem;
 }
 
@@ -230,14 +230,14 @@
 }
 
 .task-detail-btn.edit {
-  background: rgba(228, 155, 15, 0.1);
-  color: #E49B0F;
-  border: 1px solid rgba(228, 155, 15, 0.3);
+  background: rgba(212, 175, 55, 0.1);
+  color: #d4af37;
+  border: 1px solid rgba(212, 175, 55, 0.3);
 }
 
 .task-detail-btn.edit:hover {
-  background: rgba(228, 155, 15, 0.2);
-  border-color: #E49B0F;
+  background: rgba(212, 175, 55, 0.2);
+  border-color: #d4af37;
   transform: translateY(-2px);
 }
 
@@ -275,7 +275,7 @@
 
 /* Focus Styles for Accessibility */
 .task-detail-btn:focus {
-  outline: 2px solid #E49B0F;
+  outline: 2px solid #d4af37;
   outline-offset: 2px;
 }
 

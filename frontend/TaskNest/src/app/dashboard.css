@@ -54,8 +54,8 @@
 
 /* Header */
 .dashboard-header {
-    background: rgba(10, 10, 10, 0.8);
-    border-bottom: 1px solid rgba(228, 155, 15, 0.2);
+    background: rgba(26, 20, 16, 0.8);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
     padding: 0.875rem 2rem;
     display: flex;
     justify-content: space-between;
@@ -77,7 +77,7 @@
     width: 100%;
     padding: 0.75rem 1rem 0.75rem 2.5rem;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 8px;
     color: #FFFFFF;
     font-size: 0.95rem;
@@ -86,12 +86,12 @@
 
 .dashboard-search-input:focus {
     outline: none;
-    border-color: #E49B0F;
-    background: rgba(228, 155, 15, 0.05);
+    border-color: #d4af37;
+    background: rgba(212, 175, 55, 0.05);
 }
 
 .dashboard-search-input::placeholder {
-    color: #666666;
+    color: #CCCCCC;
 }
 
 .dashboard-search-icon {
@@ -101,7 +101,7 @@
     transform: translateY(-50%);
     width: 18px;
     height: 18px;
-    color: #666666;
+    color: #CCCCCC;
 }
 
 .dashboard-search-clear {
@@ -111,10 +111,10 @@
     transform: translateY(-50%);
     width: 28px;
     height: 28px;
-    background: rgba(228, 155, 15, 0.1);
+    background: rgba(212, 175, 55, 0.1);
     border: none;
     border-radius: 6px;
-    color: #E49B0F;
+    color: #d4af37;
     cursor: pointer;
     transition: all 0.3s;
     display: flex;
@@ -123,7 +123,7 @@
 }
 
 .dashboard-search-clear:hover {
-    background: rgba(228, 155, 15, 0.2);
+    background: rgba(212, 175, 55, 0.2);
 }
 
 .dashboard-search-clear svg {
@@ -139,7 +139,7 @@
 
 .dashboard-btn-new-task {
     padding: 0.75rem 1.5rem;
-    background: linear-gradient(135deg, #E49B0F, #C68508);
+    background: linear-gradient(135deg, #d4af37, #b8941f);
     border: none;
     border-radius: 8px;
     color: #000000;
@@ -154,14 +154,14 @@
 
 .dashboard-btn-new-task:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(228, 155, 15, 0.4);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
 }
 
 .dashboard-icon-btn {
     width: 40px;
     height: 40px;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 8px;
     color: #FFFFFF;
     cursor: pointer;
@@ -172,8 +172,8 @@
 }
 
 .dashboard-icon-btn:hover {
-    background: rgba(228, 155, 15, 0.1);
-    border-color: #E49B0F;
+    background: rgba(212, 175, 55, 0.1);
+    border-color: #d4af37;
 }
 
 .dashboard-icon-btn svg {
@@ -185,7 +185,7 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #E49B0F, #F5B942);
+    background: linear-gradient(135deg, #d4af37, #e6c34f);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -197,10 +197,10 @@
 
 .dashboard-btn-logout {
     padding: 0.75rem 1.5rem;
-    background: rgba(228, 155, 15, 0.1);
-    border: 1px solid rgba(228, 155, 15, 0.3);
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.3);
     border-radius: 8px;
-    color: #E49B0F;
+    color: #d4af37;
     font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
@@ -208,11 +208,11 @@
 }
 
 .dashboard-btn-logout:hover {
-    background: linear-gradient(135deg, #E49B0F, #C68508);
+    background: linear-gradient(135deg, #d4af37, #b8941f);
     color: #000000;
-    border-color: #E49B0F;
+    border-color: #d4af37;
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(228, 155, 15, 0.4);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
 }
 
 /* Content Area */
@@ -229,7 +229,7 @@
 }
 
 .dashboard-page-subtitle {
-    color: #A0A0A0;
+    color: #E0E0E0;
     margin-bottom: 2rem;
     font-size: 0.95rem;
 }
@@ -243,8 +243,8 @@
 }
 
 .dashboard-stat-card {
-    background: rgba(10, 10, 10, 0.8);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    background: rgba(26, 20, 16, 0.8);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 12px;
     padding: 1.5rem;
     transition: all 0.3s;
@@ -258,9 +258,9 @@
 }
 
 .dashboard-stat-card:hover {
-    border-color: #E49B0F;
+    border-color: #d4af37;
     transform: translateY(-4px);
-    box-shadow: 0 10px 30px rgba(228, 155, 15, 0.2);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
 }
 
 .dashboard-stat-header {
@@ -271,7 +271,7 @@
 }
 
 .dashboard-stat-label {
-    color: #A0A0A0;
+    color: #E0E0E0;
     font-size: 0.875rem;
     font-weight: 500;
     text-transform: uppercase;
@@ -299,8 +299,8 @@
 }
 
 .dashboard-stat-icon.progress {
-    background: rgba(228, 155, 15, 0.1);
-    color: #E49B0F;
+    background: rgba(212, 175, 55, 0.1);
+    color: #d4af37;
 }
 
 .dashboard-stat-icon.completed {
@@ -362,7 +362,7 @@
 }
 
 .dashboard-progress-fill.progress {
-    background: linear-gradient(90deg, #E49B0F, #F5B942);
+    background: linear-gradient(90deg, #d4af37, #e6c34f);
 }
 
 .dashboard-progress-fill.completed {
@@ -371,13 +371,13 @@
 
 .dashboard-progress-text {
     font-size: 0.75rem;
-    color: #A0A0A0;
+    color: #E0E0E0;
 }
 
 /* Tasks Section */
 .dashboard-tasks-section {
-    background: rgba(10, 10, 10, 0.8);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    background: rgba(26, 20, 16, 0.8);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 12px;
     padding: 1.5rem;
 }
@@ -405,23 +405,23 @@
 .dashboard-filter-tab {
     padding: 0.5rem 1rem;
     background: transparent;
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 6px;
-    color: #A0A0A0;
+    color: #E0E0E0;
     font-size: 0.875rem;
     cursor: pointer;
     transition: all 0.3s;
 }
 
 .dashboard-filter-tab:hover {
-    border-color: #E49B0F;
-    color: #E49B0F;
+    border-color: #d4af37;
+    color: #d4af37;
 }
 
 .dashboard-filter-tab.active {
-    background: rgba(228, 155, 15, 0.15);
-    border-color: #E49B0F;
-    color: #E49B0F;
+    background: rgba(212, 175, 55, 0.15);
+    border-color: #d4af37;
+    color: #d4af37;
 }
 
 /* Filter Toggle Button */
@@ -431,18 +431,18 @@
     gap: 0.5rem;
     padding: 0.5rem 1rem;
     background: transparent;
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 6px;
-    color: #A0A0A0;
+    color: #E0E0E0;
     font-size: 0.875rem;
     cursor: pointer;
     transition: all 0.3s;
 }
 
 .dashboard-filter-toggle:hover {
-    border-color: #E49B0F;
-    color: #E49B0F;
-    background: rgba(228, 155, 15, 0.05);
+    border-color: #d4af37;
+    color: #d4af37;
+    background: rgba(212, 175, 55, 0.05);
 }
 
 .dashboard-filter-toggle svg {
@@ -459,7 +459,7 @@
 
 .dashboard-task-item {
     background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(228, 155, 15, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.1);
     border-radius: 8px;
     padding: 1.25rem;
     display: flex;
@@ -470,15 +470,15 @@
 }
 
 .dashboard-task-item:hover {
-    background: rgba(228, 155, 15, 0.05);
-    border-color: rgba(228, 155, 15, 0.3);
+    background: rgba(212, 175, 55, 0.05);
+    border-color: rgba(212, 175, 55, 0.3);
     transform: translateX(4px);
 }
 
 .dashboard-task-checkbox {
     width: 20px;
     height: 20px;
-    border: 2px solid rgba(228, 155, 15, 0.5);
+    border: 2px solid rgba(212, 175, 55, 0.5);
     border-radius: 4px;
     cursor: pointer;
     transition: all 0.3s;
@@ -486,12 +486,12 @@
 }
 
 .dashboard-task-checkbox:hover {
-    border-color: #E49B0F;
+    border-color: #d4af37;
 }
 
 .dashboard-task-checkbox.checked {
-    background: #E49B0F;
-    border-color: #E49B0F;
+    background: #d4af37;
+    border-color: #d4af37;
     position: relative;
 }
 
@@ -525,7 +525,7 @@
     display: flex;
     gap: 1rem;
     font-size: 0.875rem;
-    color: #A0A0A0;
+    color: #E0E0E0;
     flex-wrap: wrap;
 }
 
@@ -574,7 +574,7 @@
     height: 32px;
     padding: 0;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(228, 155, 15, 0.3);
+    border: 1px solid rgba(212, 175, 55, 0.3);
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -591,12 +591,12 @@
 }
 
 .dashboard-task-action-btn.edit:hover {
-    background: rgba(228, 155, 15, 0.2);
-    border-color: #E49B0F;
+    background: rgba(212, 175, 55, 0.2);
+    border-color: #d4af37;
 }
 
 .dashboard-task-action-btn.edit:hover svg {
-    color: #E49B0F;
+    color: #d4af37;
 }
 
 .dashboard-task-action-btn.delete:hover {
@@ -620,7 +620,7 @@
 .dashboard-empty-state {
     text-align: center;
     padding: 3rem 1rem;
-    color: #A0A0A0;
+    color: #E0E0E0;
 }
 
 .dashboard-empty-state svg {
@@ -651,8 +651,8 @@
 .dashboard-spinner {
     width: 40px;
     height: 40px;
-    border: 3px solid rgba(228, 155, 15, 0.2);
-    border-top-color: #E49B0F;
+    border: 3px solid rgba(212, 175, 55, 0.2);
+    border-top-color: #d4af37;
     border-radius: 50%;
     animation: dashboard-spin 0.8s linear infinite;
 }
@@ -769,6 +769,12 @@
     min-width: 300px;
 }
 
+.tasks-controls-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
 .tasks-controls-bottom {
     width: 100%;
 }
@@ -784,14 +790,14 @@
     left: 1rem;
     width: 20px;
     height: 20px;
-    color: #666666;
+    color: #CCCCCC;
 }
 
 .search-input {
     width: 100%;
     padding: 0.75rem 1rem 0.75rem 3rem;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 8px;
     color: #FFFFFF;
     font-size: 0.95rem;
@@ -800,12 +806,12 @@
 
 .search-input:focus {
     outline: none;
-    border-color: #E49B0F;
-    background: rgba(228, 155, 15, 0.05);
+    border-color: #d4af37;
+    background: rgba(212, 175, 55, 0.05);
 }
 
 .search-input::placeholder {
-    color: #666666;
+    color: #CCCCCC;
 }
 
 .tasks-list {
@@ -831,7 +837,7 @@
 .tasks-title {
     font-size: 2rem;
     font-weight: 700;
-    background: linear-gradient(135deg, #E49B0F, #F5B942);
+    background: linear-gradient(135deg, #d4af37, #e6c34f);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -839,13 +845,13 @@
 
 .tasks-subtitle {
     font-size: 0.95rem;
-    color: #A0A0A0;
+    color: #E0E0E0;
     margin-top: 0.25rem;
 }
 
 .btn-create-task {
     padding: 0.75rem 1.5rem;
-    background: linear-gradient(135deg, #E49B0F, #C68508);
+    background: linear-gradient(135deg, #d4af37, #b8941f);
     border: none;
     border-radius: 8px;
     color: #000000;
@@ -860,7 +866,7 @@
 
 .btn-create-task:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(228, 155, 15, 0.4);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
 }
 
 .error-banner {
@@ -885,8 +891,8 @@
 .spinner {
     width: 40px;
     height: 40px;
-    border: 3px solid rgba(228, 155, 15, 0.2);
-    border-top-color: #E49B0F;
+    border: 3px solid rgba(212, 175, 55, 0.2);
+    border-top-color: #d4af37;
     border-radius: 50%;
     animation: dashboard-spin 0.8s linear infinite;
 }
@@ -894,7 +900,7 @@
 .empty-state {
     text-align: center;
     padding: 3rem 1rem;
-    color: #A0A0A0;
+    color: #E0E0E0;
 }
 
 .empty-state svg {
@@ -902,7 +908,7 @@
     height: 80px;
     margin: 0 auto 1rem;
     opacity: 0.5;
-    color: #666666;
+    color: #CCCCCC;
 }
 
 .empty-state h3 {
@@ -918,7 +924,7 @@
 
 .btn-create-empty {
     padding: 0.75rem 1.5rem;
-    background: linear-gradient(135deg, #E49B0F, #C68508);
+    background: linear-gradient(135deg, #d4af37, #b8941f);
     border: none;
     border-radius: 8px;
     color: #000000;
@@ -930,7 +936,7 @@
 
 .btn-create-empty:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(228, 155, 15, 0.4);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
 }
 
 @media (max-width: 768px) {
@@ -958,7 +964,7 @@
 .dashboard-task-bulk-checkbox {
     width: 24px;
     height: 24px;
-    border: 2px solid rgba(228, 155, 15, 0.3);
+    border: 2px solid rgba(212, 175, 55, 0.3);
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.3s;
@@ -970,13 +976,13 @@
 }
 
 .dashboard-task-bulk-checkbox:hover {
-    border-color: #E49B0F;
-    background: rgba(228, 155, 15, 0.1);
+    border-color: #d4af37;
+    background: rgba(212, 175, 55, 0.1);
 }
 
 .dashboard-task-bulk-checkbox.checked {
-    background: linear-gradient(135deg, #E49B0F, #F5B942);
-    border-color: #E49B0F;
+    background: linear-gradient(135deg, #d4af37, #e6c34f);
+    border-color: #d4af37;
 }
 
 .dashboard-task-bulk-checkbox svg {
@@ -986,14 +992,14 @@
 }
 
 .dashboard-task-item.selected {
-    background: rgba(228, 155, 15, 0.1);
-    border-color: #E49B0F;
+    background: rgba(212, 175, 55, 0.1);
+    border-color: #d4af37;
 }
 
 .dashboard-filter-toggle.active {
-    background: rgba(228, 155, 15, 0.2);
-    border-color: #E49B0F;
-    color: #E49B0F;
+    background: rgba(212, 175, 55, 0.2);
+    border-color: #d4af37;
+    color: #d4af37;
 }
 
 /* Task Group Styles */
@@ -1006,8 +1012,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  background: rgba(228, 155, 15, 0.1);
-  border: 1px solid rgba(228, 155, 15, 0.2);
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 8px;
   margin-bottom: 12px;
 }
@@ -1015,7 +1021,7 @@
 .task-group-title {
   font-size: 1rem;
   font-weight: 600;
-  color: #e49b0f;
+  color: #d4af37;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -1028,8 +1034,8 @@
   min-width: 24px;
   height: 24px;
   padding: 0 8px;
-  background: rgba(228, 155, 15, 0.2);
-  color: #e49b0f;
+  background: rgba(212, 175, 55, 0.2);
+  color: #d4af37;
   font-size: 12px;
   font-weight: 700;
   border-radius: 12px;

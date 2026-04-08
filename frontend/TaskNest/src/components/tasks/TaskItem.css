@@ -6,7 +6,7 @@
 .task-item {
     position: relative;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 12px;
     transition: all 0.3s ease;
     overflow: hidden;
@@ -14,21 +14,21 @@
 }
 
 .task-item:hover {
-    box-shadow: 0 8px 32px rgba(228, 155, 15, 0.2);
+    box-shadow: 0 8px 32px rgba(212, 175, 55, 0.2);
     transform: scale(1.01);
 }
 
 .task-item.selected {
-    border-left: 4px solid #E49B0F;
-    background: rgba(228, 155, 15, 0.08);
+    border-left: 4px solid #d4af37;
+    background: rgba(212, 175, 55, 0.08);
 }
 
 .task-item.priority-high:not(.selected) {
-    border-left: 4px solid rgba(228, 155, 15, 0.5);
+    border-left: 4px solid rgba(212, 175, 55, 0.5);
 }
 
 .task-item:hover {
-    border-color: rgba(228, 155, 15, 0.5);
+    border-color: rgba(212, 175, 55, 0.5);
 }
 
 .task-item.completed {
@@ -44,7 +44,7 @@
 .task-item-gradient {
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, rgba(228, 155, 15, 0.05), transparent);
+    background: linear-gradient(90deg, rgba(212, 175, 55, 0.05), transparent);
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -73,7 +73,7 @@
     width: 28px;
     height: 28px;
     border-radius: 8px;
-    border: 2px solid rgba(228, 155, 15, 0.3);
+    border: 2px solid rgba(212, 175, 55, 0.3);
     background: transparent;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -83,15 +83,15 @@
 }
 
 .task-item-checkbox:hover {
-    border-color: #E49B0F;
-    box-shadow: 0 4px 12px rgba(228, 155, 15, 0.3);
+    border-color: #d4af37;
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
     transform: scale(1.1);
 }
 
 .task-item-checkbox.checked {
-    background: linear-gradient(135deg, #E49B0F, #C28608);
-    border-color: #E49B0F;
-    box-shadow: 0 4px 16px rgba(228, 155, 15, 0.3);
+    background: linear-gradient(135deg, #d4af37, #C28608);
+    border-color: #d4af37;
+    box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
 }
 
 .task-item-checkbox.disabled {
@@ -121,12 +121,12 @@
 }
 
 .task-item:hover .task-item-title {
-    color: #E49B0F;
+    color: #d4af37;
 }
 
 .task-item-title.completed {
     text-decoration: line-through;
-    color: #666666;
+    color: #CCCCCC;
 }
 
 /* Badges Container */
@@ -151,20 +151,20 @@
 }
 
 .task-item-priority.high {
-    background: #E49B0F;
+    background: #d4af37;
     color: #000000;
-    border-color: #E49B0F;
+    border-color: #d4af37;
 }
 
 .task-item-priority.medium {
     background: rgba(255, 255, 255, 0.1);
-    color: #A0A0A0;
+    color: #E0E0E0;
     border-color: rgba(255, 255, 255, 0.2);
 }
 
 .task-item-priority.low {
     background: rgba(255, 255, 255, 0.05);
-    color: #666666;
+    color: #CCCCCC;
     border-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -187,9 +187,9 @@
 }
 
 .task-item-due.today {
-    background: #E49B0F;
+    background: #d4af37;
     color: #000000;
-    border-color: #E49B0F;
+    border-color: #d4af37;
 }
 
 .task-item-due.upcoming {
@@ -207,7 +207,7 @@
     font-size: 0.75rem;
     font-weight: 500;
     background: rgba(255, 255, 255, 0.05);
-    color: #A0A0A0;
+    color: #E0E0E0;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -229,7 +229,7 @@
 .task-item-description {
     margin-top: 0.75rem;
     font-size: 0.875rem;
-    color: #A0A0A0;
+    color: #E0E0E0;
     white-space: pre-wrap;
     line-height: 1.5;
 }
@@ -242,7 +242,7 @@
 
 .task-item-action {
     padding: 0.625rem;
-    color: #A0A0A0;
+    color: #E0E0E0;
     background: transparent;
     border: none;
     border-radius: 10px;
@@ -259,8 +259,8 @@
 }
 
 .task-item-action.edit:hover {
-    color: #E49B0F;
-    background: rgba(228, 155, 15, 0.1);
+    color: #d4af37;
+    background: rgba(212, 175, 55, 0.1);
 }
 
 .task-item-action.delete:hover {
@@ -282,7 +282,7 @@
 .task-item-expand {
     margin-top: 0.5rem;
     font-size: 0.75rem;
-    color: #666666;
+    color: #CCCCCC;
     background: transparent;
     border: none;
     cursor: pointer;
@@ -290,5 +290,5 @@
 }
 
 .task-item-expand:hover {
-    color: #E49B0F;
+    color: #d4af37;
 }

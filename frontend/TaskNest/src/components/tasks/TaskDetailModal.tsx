@@ -6,7 +6,7 @@
 'use client';
 
 import React from 'react';
-import { Task, TaskPriority } from '@/lib/types';
+import { Task, TaskPriority, RecurrencePattern } from '@/lib/types';
 import Modal from '@/components/ui/Modal';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import './TaskDetailModal.css';
@@ -88,20 +88,15 @@ function getPriorityIcon(priority: TaskPriority): string {
 /**
  * Format recurrence pattern for display
  */
-function formatRecurrence(pattern?: string): string {
+function formatRecurrence(pattern?: RecurrencePattern): string {
   if (!pattern) return 'None';
 
-  try {
-    const parsed = JSON.parse(pattern);
-    const { frequency, interval } = parsed;
+  const { type, interval } = pattern;
 
-    if (interval === 1) {
-      return `Every ${frequency.toLowerCase()}`;
-    } else {
-      return `Every ${interval} ${frequency.toLowerCase()}s`;
-    }
-  } catch {
-    return 'Custom pattern';
+  if (interval === 1) {
+    return `Every ${type}`;
+  } else {
+    return `Every ${interval} ${type}${interval > 1 ? 's' : ''}`;
   }
 }
 

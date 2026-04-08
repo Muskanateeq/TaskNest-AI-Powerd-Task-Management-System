@@ -34,7 +34,7 @@
 /* Variant Styles */
 .tag-badge.variant-default {
     background: rgba(255, 255, 255, 0.05);
-    color: #A0A0A0;
+    color: #E0E0E0;
     border-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -44,19 +44,19 @@
 }
 
 .tag-badge.variant-primary {
-    background: rgba(228, 155, 15, 0.15);
-    color: #E49B0F;
-    border-color: rgba(228, 155, 15, 0.3);
+    background: rgba(212, 175, 55, 0.15);
+    color: #d4af37;
+    border-color: rgba(212, 175, 55, 0.3);
 }
 
 .tag-badge.variant-primary:hover {
-    background: rgba(228, 155, 15, 0.25);
-    border-color: rgba(228, 155, 15, 0.5);
+    background: rgba(212, 175, 55, 0.25);
+    border-color: rgba(212, 175, 55, 0.5);
 }
 
 .tag-badge.variant-outline {
     background: transparent;
-    color: #A0A0A0;
+    color: #E0E0E0;
     border-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -113,7 +113,7 @@
 
 .tag-badge-remove:focus {
     outline: none;
-    box-shadow: 0 0 0 2px rgba(228, 155, 15, 0.5);
+    box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.5);
 }
 
 .tag-badge.size-sm .tag-badge-remove svg {

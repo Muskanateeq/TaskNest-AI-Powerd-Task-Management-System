@@ -2,14 +2,14 @@
 
 /**
  * TaskNest Global Styles
- * Color Scheme: Black (#000000), White (#FFFFFF), Gamboge (#E49B0F)
+ * Color Scheme: Black (#000000), White (#FFFFFF), Gamboge (#d4af37)
  */
 
 :root {
   /* Primary Colors */
   --color-black: #000000;
   --color-white: #ffffff;
-  --color-gamboge: #e49b0f;
+  --color-gamboge: #d4af37;
 
   /* Gamboge Variations */
   --color-gamboge-light: #f5b942;
@@ -41,7 +41,7 @@
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-  --shadow-gamboge: 0 4px 14px 0 rgba(228, 155, 15, 0.39);
+  --shadow-gamboge: 0 4px 14px 0 rgba(212, 175, 55, 0.39);
 }
 
 @theme inline {

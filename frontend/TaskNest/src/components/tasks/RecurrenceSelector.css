@@ -26,7 +26,7 @@
     width: 20px;
     height: 20px;
     background: rgba(255, 255, 255, 0.05);
-    border: 2px solid rgba(228, 155, 15, 0.3);
+    border: 2px solid rgba(212, 175, 55, 0.3);
     border-radius: 6px;
     cursor: pointer;
     position: relative;
@@ -34,12 +34,12 @@
 }
 
 .recurrence-checkbox:hover {
-    border-color: #E49B0F;
+    border-color: #d4af37;
 }
 
 .recurrence-checkbox.checked {
-    background: #E49B0F;
-    border-color: #E49B0F;
+    background: #d4af37;
+    border-color: #d4af37;
 }
 
 .recurrence-checkbox.checked::after {
@@ -68,14 +68,14 @@
 .recurrence-toggle-icon {
     width: 20px;
     height: 20px;
-    color: #E49B0F;
+    color: #d4af37;
 }
 
 /* Options Container */
 .recurrence-options {
     padding: 1.25rem;
     background: rgba(10, 10, 10, 0.8);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 12px;
     animation: slideDown 0.3s ease;
 }
@@ -102,9 +102,9 @@
 .recurrence-type-btn {
     padding: 0.75rem 0.5rem;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 8px;
-    color: #A0A0A0;
+    color: #E0E0E0;
     font-size: 0.8rem;
     font-weight: 600;
     cursor: pointer;
@@ -113,14 +113,14 @@
 }
 
 .recurrence-type-btn:hover:not(:disabled) {
-    border-color: #E49B0F;
-    background: rgba(228, 155, 15, 0.08);
+    border-color: #d4af37;
+    background: rgba(212, 175, 55, 0.08);
 }
 
 .recurrence-type-btn.active {
-    border-color: #E49B0F;
-    background: rgba(228, 155, 15, 0.15);
-    color: #E49B0F;
+    border-color: #d4af37;
+    background: rgba(212, 175, 55, 0.15);
+    color: #d4af37;
 }
 
 .recurrence-type-btn:disabled {
@@ -151,7 +151,7 @@
     width: 80px;
     padding: 0.625rem 0.75rem;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 8px;
     color: #FFFFFF;
     font-size: 0.875rem;
@@ -160,9 +160,9 @@
 }
 
 .recurrence-input:focus {
-    border-color: #E49B0F;
-    background: rgba(228, 155, 15, 0.08);
-    box-shadow: 0 0 0 3px rgba(228, 155, 15, 0.1);
+    border-color: #d4af37;
+    background: rgba(212, 175, 55, 0.08);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
 }
 
 .recurrence-input:disabled {
@@ -172,7 +172,7 @@
 
 .recurrence-interval-text {
     font-size: 0.875rem;
-    color: #A0A0A0;
+    color: #E0E0E0;
 }
 
 /* Days of Week Selector */
@@ -185,9 +185,9 @@
 .recurrence-day-btn {
     padding: 0.625rem 0.25rem;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 8px;
-    color: #A0A0A0;
+    color: #E0E0E0;
     font-size: 0.75rem;
     font-weight: 600;
     cursor: pointer;
@@ -196,14 +196,14 @@
 }
 
 .recurrence-day-btn:hover:not(:disabled) {
-    border-color: #E49B0F;
-    background: rgba(228, 155, 15, 0.08);
+    border-color: #d4af37;
+    background: rgba(212, 175, 55, 0.08);
 }
 
 .recurrence-day-btn.active {
-    border-color: #E49B0F;
-    background: rgba(228, 155, 15, 0.15);
-    color: #E49B0F;
+    border-color: #d4af37;
+    background: rgba(212, 175, 55, 0.15);
+    color: #d4af37;
 }
 
 .recurrence-day-btn:disabled {

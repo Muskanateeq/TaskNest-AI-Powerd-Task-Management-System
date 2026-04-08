@@ -25,7 +25,6 @@ export default function ChatPage() {
   const [selectedConversation, setSelectedConversation] = useState<number | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -43,13 +42,12 @@ export default function ChatPage() {
   }, [authLoading, isAuthenticated, router]);
 
   /**
-   * Load conversations
+   * Load conversations (no loading state - instant display)
    */
   const loadConversations = React.useCallback(async () => {
     if (!isAuthenticated) return;
 
     try {
-      setIsLoading(true);
       const token = await getToken();
       if (!token) return;
 
@@ -63,8 +61,6 @@ export default function ChatPage() {
     } catch (error) {
       console.error('Failed to load conversations:', error);
       setError('Failed to load conversations');
-    } finally {
-      setIsLoading(false);
     }
   }, [isAuthenticated, getToken, selectedConversation]);
 
@@ -184,7 +180,7 @@ export default function ChatPage() {
           // Streaming complete
           setIsSending(false);
         } else if (event.type === 'error') {
-          throw new Error(event.error);
+          throw new Error(String(event.error));
         }
       }
     } catch (err) {
@@ -227,34 +223,50 @@ export default function ChatPage() {
   };
 
   /**
-   * Delete conversation
+   * Delete conversation with optimistic UI update
    */
   const handleDeleteConversation = async (conversationId: number) => {
+    // Save current state for rollback
+    const previousConversations = conversations;
+    const previousSelectedConversation = selectedConversation;
+    const previousMessages = messages;
+
+    // Optimistically update UI immediately
+    setConversations(prev => prev.filter(c => c.id !== conversationId));
+
+    // Show success message immediately
+    setSuccessMessage(`Conversation ${conversationId} deleted successfully`);
+    setTimeout(() => setSuccessMessage(null), 3000);
+
+    // Close dialog immediately
+    setDeleteDialogOpen(false);
+    setConversationToDelete(null);
+
+    // Clear selection if deleted
+    if (selectedConversation === conversationId) {
+      setSelectedConversation(null);
+      setMessages([]);
+    }
+
+    // Call API in background
     try {
       const token = await getToken();
-      if (!token) return;
+      if (!token) throw new Error('Authentication required');
 
       await deleteConversation(token, conversationId);
-
-      // Remove from list
-      setConversations(prev => prev.filter(c => c.id !== conversationId));
-
-      // Clear selection if deleted
-      if (selectedConversation === conversationId) {
-        setSelectedConversation(null);
-        setMessages([]);
-      }
-
-      // Close dialog
-      setDeleteDialogOpen(false);
-      setConversationToDelete(null);
-
-      // Show success message
-      setSuccessMessage(`Conversation ${conversationId} deleted successfully`);
-      setTimeout(() => setSuccessMessage(null), 3000);
+      // Success - UI already updated
     } catch (error) {
+      // Rollback on error
       console.error('Failed to delete conversation:', error);
-      setError('Failed to delete conversation');
+      setConversations(previousConversations);
+      setSuccessMessage(null);
+      setError('Failed to delete conversation. Please try again.');
+
+      // Restore selection if it was deleted
+      if (previousSelectedConversation === conversationId) {
+        setSelectedConversation(previousSelectedConversation);
+        setMessages(previousMessages);
+      }
     }
   };
 
@@ -292,9 +304,7 @@ export default function ChatPage() {
         </div>
 
         <div className="conversations-list">
-          {isLoading ? (
-            <div className="loading-state">Loading...</div>
-          ) : conversations.length === 0 ? (
+          {conversations.length === 0 ? (
             <div className="empty-state">
               <p>No conversations yet</p>
               <p className="empty-hint">Start a new chat to begin</p>

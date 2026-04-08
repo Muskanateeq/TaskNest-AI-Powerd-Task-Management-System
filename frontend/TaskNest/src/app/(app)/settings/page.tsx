@@ -9,7 +9,9 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
-import { clearActivities } from '@/lib/activityTracker';
+import { clearAllActivities } from '@/lib/activities-api';
+import { getTrash, restoreTask, permanentDeleteTask, emptyTrash } from '@/lib/trash-api';
+import { Task } from '@/lib/types';
 import ChangePasswordModal from '@/components/settings/ChangePasswordModal';
 import {
   getSettings,
@@ -22,7 +24,7 @@ import {
 } from '@/lib/settingsApi';
 import './settings.css';
 
-type SettingsTab = 'profile' | 'notifications' | 'appearance' | 'tasks' | 'data' | 'about';
+type SettingsTab = 'profile' | 'notifications' | 'appearance' | 'tasks' | 'data' | 'trash' | 'about';
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -33,6 +35,8 @@ export default function SettingsPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [userName, setUserName] = useState('');
   const [settings, setSettings] = useState<UserSettings | null>(null);
+  const [trashedTasks, setTrashedTasks] = useState<Task[]>([]);
+  const [isLoadingTrash, setIsLoadingTrash] = useState(false);
 
   /**
    * Redirect if not authenticated
@@ -141,12 +145,96 @@ export default function SettingsPage() {
   };
 
   /**
+   * Load trash when trash tab is active
+   */
+  useEffect(() => {
+    const loadTrash = async () => {
+      if (activeTab !== 'trash' || !isAuthenticated) return;
+
+      try {
+        setIsLoadingTrash(true);
+        const tasks = await getTrash({ limit: 100 });
+        setTrashedTasks(tasks);
+      } catch (error) {
+        console.error('Failed to load trash:', error);
+      } finally {
+        setIsLoadingTrash(false);
+      }
+    };
+
+    loadTrash();
+  }, [activeTab, isAuthenticated]);
+
+  /**
    * Handle clear history
    */
-  const handleClearHistory = () => {
-    if (confirm('Are you sure you want to clear all activity history? This cannot be undone.')) {
-      clearActivities();
+  const handleClearHistory = async () => {
+    if (!confirm('Are you sure you want to clear all activity history? This cannot be undone.')) return;
+
+    try {
+      setIsSaving(true);
+      await clearAllActivities();
       alert('Activity history cleared successfully');
+    } catch (error) {
+      console.error('Failed to clear history:', error);
+      alert('Failed to clear history. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  /**
+   * Handle restore task
+   */
+  const handleRestoreTask = async (taskId: number) => {
+    try {
+      setIsSaving(true);
+      await restoreTask(taskId);
+      setTrashedTasks(prev => prev.filter(t => t.id !== taskId));
+      alert('Task restored successfully');
+    } catch (error) {
+      console.error('Failed to restore task:', error);
+      alert('Failed to restore task. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  /**
+   * Handle permanent delete
+   */
+  const handlePermanentDelete = async (taskId: number) => {
+    if (!confirm('Permanently delete this task? This cannot be undone.')) return;
+
+    try {
+      setIsSaving(true);
+      await permanentDeleteTask(taskId);
+      setTrashedTasks(prev => prev.filter(t => t.id !== taskId));
+      alert('Task permanently deleted');
+    } catch (error) {
+      console.error('Failed to delete task:', error);
+      alert('Failed to delete task. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  /**
+   * Handle empty trash
+   */
+  const handleEmptyTrash = async () => {
+    if (!confirm('Permanently delete all tasks in trash? This cannot be undone.')) return;
+
+    try {
+      setIsSaving(true);
+      const result = await emptyTrash();
+      setTrashedTasks([]);
+      alert(result.message);
+    } catch (error) {
+      console.error('Failed to empty trash:', error);
+      alert('Failed to empty trash. Please try again.');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -201,6 +289,7 @@ export default function SettingsPage() {
     { id: 'notifications', label: 'Notifications', icon: '🔔' },
     { id: 'appearance', label: 'Appearance', icon: '🎨' },
     { id: 'tasks', label: 'Task Preferences', icon: '✅' },
+    { id: 'trash', label: 'Trash', icon: '🗑️' },
     { id: 'data', label: 'Data & Privacy', icon: '🔒' },
     { id: 'about', label: 'About', icon: 'ℹ️' },
   ];
@@ -483,6 +572,91 @@ export default function SettingsPage() {
                   </label>
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* Trash Management */}
+          {activeTab === 'trash' && (
+            <div className="settings-section">
+              <h2 className="section-title">Trash</h2>
+              <p className="section-description">Manage deleted tasks and restore them if needed</p>
+
+              {isLoadingTrash ? (
+                <div style={{ padding: '40px', textAlign: 'center', color: '#9ca3af' }}>
+                  Loading trash...
+                </div>
+              ) : trashedTasks.length === 0 ? (
+                <div style={{ padding: '40px', textAlign: 'center', color: '#9ca3af' }}>
+                  <div style={{ fontSize: '48px', marginBottom: '16px' }}>🗑️</div>
+                  <p>Trash is empty</p>
+                </div>
+              ) : (
+                <>
+                  <div className="settings-group">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                      <label className="setting-label">{trashedTasks.length} deleted task{trashedTasks.length !== 1 ? 's' : ''}</label>
+                      <button
+                        onClick={handleEmptyTrash}
+                        disabled={isSaving}
+                        className="btn-danger"
+                        style={{ padding: '6px 12px', fontSize: '13px' }}
+                      >
+                        {isSaving ? 'Emptying...' : 'Empty Trash'}
+                      </button>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      {trashedTasks.map((task) => (
+                        <div
+                          key={task.id}
+                          style={{
+                            background: 'rgba(255, 255, 255, 0.03)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            borderRadius: '8px',
+                            padding: '16px',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <div style={{ flex: 1 }}>
+                            <h4 style={{ margin: 0, fontSize: '15px', fontWeight: 500, color: '#f3f4f6' }}>
+                              {task.title}
+                            </h4>
+                            {task.description && (
+                              <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#9ca3af' }}>
+                                {task.description}
+                              </p>
+                            )}
+                            <div style={{ marginTop: '8px', display: 'flex', gap: '12px', fontSize: '12px', color: '#6b7280' }}>
+                              <span>Priority: {task.priority}</span>
+                              {task.due_date && <span>Due: {new Date(task.due_date).toLocaleDateString()}</span>}
+                            </div>
+                          </div>
+                          <div style={{ display: 'flex', gap: '8px' }}>
+                            <button
+                              onClick={() => handleRestoreTask(task.id)}
+                              disabled={isSaving}
+                              className="btn-secondary"
+                              style={{ padding: '6px 12px', fontSize: '13px' }}
+                            >
+                              ♻️ Restore
+                            </button>
+                            <button
+                              onClick={() => handlePermanentDelete(task.id)}
+                              disabled={isSaving}
+                              className="btn-danger"
+                              style={{ padding: '6px 12px', fontSize: '13px' }}
+                            >
+                              🗑️ Delete
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           )}
 

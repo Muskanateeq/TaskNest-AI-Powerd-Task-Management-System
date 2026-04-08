@@ -1,14 +1,14 @@
 /* TaskNest Landing Page Styles - Exact from HTML */
 
 :root {
-    --primary: #E49B0F;
-    --primary-dark: #C68508;
-    --secondary: #F5B942;
+    --primary: #d4af37;
+    --primary-dark: #b8941f;
+    --secondary: #e6c34f;
     --bg-dark: #0A0A0A;
     --bg-darker: #000000;
     --text-light: #FFFFFF;
     --text-gray: #A0A0A0;
-    --accent: #E49B0F;
+    --accent: #d4af37;
 }
 
 /* Grid Background */
@@ -19,8 +19,8 @@
     width: 100%;
     height: 100%;
     background-image:
-        linear-gradient(rgba(228, 155, 15, 0.1) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(228, 155, 15, 0.1) 1px, transparent 1px);
+        linear-gradient(rgba(212, 175, 55, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(212, 175, 55, 0.1) 1px, transparent 1px);
     background-size: 50px 50px;
     pointer-events: none;
     z-index: 0;
@@ -34,7 +34,7 @@
     background: rgba(10, 10, 10, 0.8);
     backdrop-filter: blur(10px);
     z-index: 1000;
-    border-bottom: 1px solid rgba(228, 155, 15, 0.2);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
 }
 
 .nav-container {
@@ -94,7 +94,7 @@
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(228, 155, 15, 0.4);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
 }
 
 .btn-outline {
@@ -104,10 +104,10 @@
 }
 
 .btn-outline:hover {
-    background: rgba(228, 155, 15, 0.05);
+    background: rgba(212, 175, 55, 0.05);
     border-color: var(--primary);
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(228, 155, 15, 0.3);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
 }
 
 /* Hero Section */
@@ -136,8 +136,8 @@
 .hero-badge {
     display: inline-block;
     padding: 0.5rem 1rem;
-    background: rgba(228, 155, 15, 0.1);
-    border: 1px solid rgba(228, 155, 15, 0.3);
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.3);
     border-radius: 50px;
     color: var(--primary);
     font-size: 0.875rem;
@@ -186,8 +186,8 @@
 .section-badge {
     display: inline-block;
     padding: 0.5rem 1rem;
-    background: rgba(228, 155, 15, 0.1);
-    border: 1px solid rgba(228, 155, 15, 0.3);
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.3);
     border-radius: 50px;
     color: var(--primary);
     font-size: 0.875rem;
@@ -214,7 +214,7 @@
 
 .feature-card {
     background: rgba(10, 10, 10, 0.5);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 16px;
     padding: 2.5rem;
     transition: all 0.3s ease;
@@ -223,15 +223,15 @@
 .feature-card:hover {
     transform: translateY(-5px);
     border-color: var(--primary);
-    box-shadow: 0 20px 40px rgba(228, 155, 15, 0.2);
-    background: rgba(228, 155, 15, 0.05);
+    box-shadow: 0 20px 40px rgba(212, 175, 55, 0.2);
+    background: rgba(212, 175, 55, 0.05);
 }
 
 .feature-card.featured {
     transform: translateY(-5px);
     border-color: var(--primary);
-    box-shadow: 0 20px 40px rgba(228, 155, 15, 0.2);
-    background: rgba(228, 155, 15, 0.05);
+    box-shadow: 0 20px 40px rgba(212, 175, 55, 0.2);
+    background: rgba(212, 175, 55, 0.05);
 }
 
 .feature-card.featured h3 {
@@ -324,7 +324,7 @@
 
 .testimonial-card {
     background: rgba(10, 10, 10, 0.5);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 16px;
     padding: 2rem;
     transition: all 0.3s ease;
@@ -333,8 +333,8 @@
 .testimonial-card:hover {
     transform: translateY(-5px);
     border-color: var(--primary);
-    box-shadow: 0 20px 40px rgba(228, 155, 15, 0.2);
-    background: rgba(228, 155, 15, 0.05);
+    box-shadow: 0 20px 40px rgba(212, 175, 55, 0.2);
+    background: rgba(212, 175, 55, 0.05);
 }
 
 .testimonial-card:hover .testimonial-info h4 {
@@ -386,7 +386,7 @@
 
 .pricing-card {
     background: rgba(10, 10, 10, 0.5);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 16px;
     padding: 2.5rem;
     text-align: center;
@@ -396,20 +396,20 @@
 .pricing-card:hover {
     transform: translateY(-5px);
     border-color: var(--primary);
-    box-shadow: 0 20px 40px rgba(228, 155, 15, 0.3);
-    background: rgba(228, 155, 15, 0.05);
+    box-shadow: 0 20px 40px rgba(212, 175, 55, 0.3);
+    background: rgba(212, 175, 55, 0.05);
 }
 
 .pricing-card.featured {
     border-color: var(--primary);
     transform: scale(1.05);
-    box-shadow: 0 20px 40px rgba(228, 155, 15, 0.3);
-    background: rgba(228, 155, 15, 0.05);
+    box-shadow: 0 20px 40px rgba(212, 175, 55, 0.3);
+    background: rgba(212, 175, 55, 0.05);
 }
 
 .pricing-card.featured:hover {
     transform: scale(1.05) translateY(-5px);
-    box-shadow: 0 25px 50px rgba(228, 155, 15, 0.4);
+    box-shadow: 0 25px 50px rgba(212, 175, 55, 0.4);
 }
 
 .pricing-card h3 {
@@ -470,7 +470,7 @@
 
 .faq-item {
     background: rgba(10, 10, 10, 0.5);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 12px;
     padding: 1.5rem;
     margin-bottom: 1rem;
@@ -479,7 +479,7 @@
 
 .faq-item:hover {
     border-color: var(--primary);
-    background: rgba(228, 155, 15, 0.05);
+    background: rgba(212, 175, 55, 0.05);
 }
 
 .faq-question-wrapper {
@@ -525,7 +525,7 @@
 /* Footer */
 .landing-footer {
     background: var(--bg-dark);
-    border-top: 1px solid rgba(228, 155, 15, 0.2);
+    border-top: 1px solid rgba(212, 175, 55, 0.2);
     padding: 4rem 2rem 2rem;
 }
 
@@ -555,8 +555,8 @@
 .cta-badge {
     display: inline-block;
     padding: 0.5rem 1rem;
-    background: rgba(228, 155, 15, 0.15);
-    border: 1px solid rgba(228, 155, 15, 0.4);
+    background: rgba(212, 175, 55, 0.15);
+    border: 1px solid rgba(212, 175, 55, 0.4);
     border-radius: 50px;
     color: var(--primary);
     font-size: 0.875rem;
@@ -599,7 +599,7 @@
 
 .btn-large:hover {
     transform: translateY(-3px);
-    box-shadow: 0 15px 40px rgba(228, 155, 15, 0.5);
+    box-shadow: 0 15px 40px rgba(212, 175, 55, 0.5);
 }
 
 .cta-note {
@@ -665,8 +665,8 @@
 .social-links a {
     width: 40px;
     height: 40px;
-    background: rgba(228, 155, 15, 0.1);
-    border: 1px solid rgba(228, 155, 15, 0.3);
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.3);
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -706,7 +706,7 @@
 
 .footer-bottom {
     padding-top: 2rem;
-    border-top: 1px solid rgba(228, 155, 15, 0.2);
+    border-top: 1px solid rgba(212, 175, 55, 0.2);
     text-align: center;
     color: var(--text-gray);
 }

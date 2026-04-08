@@ -5,18 +5,47 @@ This module initializes the FastAPI application with all necessary middleware,
 routers, and configuration for the TaskNest Phase 2 backend.
 """
 
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.config import settings
 
-# Create FastAPI application instance
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """
+    Lifespan context manager for startup and shutdown events.
+    """
+    # Startup
+    print("[App] Starting application...")
+    try:
+        from src.scheduler import scheduler
+        scheduler.start()
+        print("[App] Scheduler started successfully")
+    except Exception as e:
+        print(f"[App] Warning: Failed to start scheduler: {e}")
+
+    yield
+
+    # Shutdown
+    print("[App] Shutting down application...")
+    try:
+        from src.scheduler import scheduler
+        scheduler.shutdown()
+        print("[App] Scheduler stopped successfully")
+    except Exception as e:
+        print(f"[App] Warning: Failed to stop scheduler: {e}")
+
+
+# Create FastAPI application instance with lifespan
 app = FastAPI(
     title="TaskNest API",
     description="RESTful API for TaskNest Phase 2 - Full-Stack Task Management Application",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
+    lifespan=lifespan,
 )
 
 # Configure CORS middleware
@@ -59,6 +88,8 @@ from src.api.milestones import router as milestones_router
 from src.api.settings import router as settings_router
 from src.api.analytics import router as analytics_router
 from src.api.v1.chat import router as chat_router
+from src.api.v1.activities import router as activities_router
+from src.api.v1.trash import router as trash_router
 
 app.include_router(auth_router, prefix=f"{settings.API_V1_PREFIX}")
 app.include_router(tasks_router, prefix=f"{settings.API_V1_PREFIX}")
@@ -72,3 +103,5 @@ app.include_router(milestones_router, prefix=f"{settings.API_V1_PREFIX}")
 app.include_router(settings_router, prefix=f"{settings.API_V1_PREFIX}")
 app.include_router(analytics_router, prefix=f"{settings.API_V1_PREFIX}")
 app.include_router(chat_router, prefix=f"{settings.API_V1_PREFIX}")
+app.include_router(activities_router, prefix=f"{settings.API_V1_PREFIX}")
+app.include_router(trash_router, prefix=f"{settings.API_V1_PREFIX}")

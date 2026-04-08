@@ -32,7 +32,7 @@ class TeamInvitation(SQLModel, table=True):
         description="Email address of invitee"
     )
     inviter_id: str = Field(
-        sa_column=Column(String(255), ForeignKey("users.id"), nullable=False),
+        sa_column=Column(String(255), ForeignKey("user.id"), nullable=False),
         description="User ID who sent the invitation"
     )
     status: str = Field(

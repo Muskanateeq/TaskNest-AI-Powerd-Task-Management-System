@@ -1,9 +1,9 @@
 /* Teams CSS - Following landing.css patterns */
 
 :root {
-    --primary: #E49B0F;
-    --primary-dark: #C68508;
-    --secondary: #F5B942;
+    --primary: #d4af37;
+    --primary-dark: #b8941f;
+    --secondary: #e6c34f;
     --bg-dark: #0A0A0A;
     --bg-darker: #000000;
     --text-light: #FFFFFF;
@@ -43,7 +43,7 @@
 
 .team-card {
     background: rgba(10, 10, 10, 0.5);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 16px;
     padding: 1.5rem;
     transition: all 0.3s ease;
@@ -53,7 +53,7 @@
 .team-card:hover {
     transform: translateY(-5px);
     border-color: var(--primary);
-    box-shadow: 0 20px 40px rgba(228, 155, 15, 0.2);
+    box-shadow: 0 20px 40px rgba(212, 175, 55, 0.2);
 }
 
 .team-card-header {
@@ -81,7 +81,7 @@
     display: flex;
     gap: 1.5rem;
     padding-top: 1rem;
-    border-top: 1px solid rgba(228, 155, 15, 0.1);
+    border-top: 1px solid rgba(212, 175, 55, 0.1);
 }
 
 .team-stat {
@@ -100,7 +100,7 @@
 /* Team Members */
 .members-section {
     background: rgba(10, 10, 10, 0.5);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 16px;
     padding: 2rem;
     margin-bottom: 2rem;
@@ -130,14 +130,14 @@
     gap: 1rem;
     padding: 1rem;
     background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(228, 155, 15, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.1);
     border-radius: 12px;
     transition: all 0.3s ease;
 }
 
 .member-item:hover {
-    background: rgba(228, 155, 15, 0.05);
-    border-color: rgba(228, 155, 15, 0.3);
+    background: rgba(212, 175, 55, 0.05);
+    border-color: rgba(212, 175, 55, 0.3);
 }
 
 .member-avatar {
@@ -170,8 +170,8 @@
 
 .member-role {
     padding: 0.25rem 0.75rem;
-    background: rgba(228, 155, 15, 0.2);
-    border: 1px solid rgba(228, 155, 15, 0.3);
+    background: rgba(212, 175, 55, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.3);
     border-radius: 6px;
     color: var(--primary);
     font-size: 0.75rem;
@@ -186,8 +186,8 @@
 
 .member-action-btn {
     padding: 0.5rem;
-    background: rgba(228, 155, 15, 0.1);
-    border: 1px solid rgba(228, 155, 15, 0.3);
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.3);
     border-radius: 6px;
     color: var(--primary);
     cursor: pointer;
@@ -217,7 +217,7 @@
 
 .invite-modal-content {
     background: var(--bg-dark);
-    border: 1px solid rgba(228, 155, 15, 0.3);
+    border: 1px solid rgba(212, 175, 55, 0.3);
     border-radius: 16px;
     padding: 2rem;
     max-width: 500px;
@@ -263,7 +263,7 @@
 .invite-input {
     padding: 0.75rem 1rem;
     background: rgba(10, 10, 10, 0.5);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 8px;
     color: var(--text-light);
     font-size: 1rem;
@@ -273,7 +273,7 @@
 .invite-input:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(228, 155, 15, 0.1);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
 }
 
 .invite-btn {
@@ -289,7 +289,7 @@
 
 .invite-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(228, 155, 15, 0.4);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
 }
 
 /* Responsive */

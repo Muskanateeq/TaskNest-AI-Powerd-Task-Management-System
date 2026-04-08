@@ -35,6 +35,21 @@ export default function NotificationBell() {
   }, [isOpen, showUnreadOnly, fetchNotifications]);
 
   /**
+   * Auto-refresh notifications every 30 seconds
+   */
+  useEffect(() => {
+    // Initial fetch
+    fetchNotifications(false);
+
+    // Set up polling interval
+    const interval = setInterval(() => {
+      fetchNotifications(false);
+    }, 30000); // 30 seconds
+
+    return () => clearInterval(interval);
+  }, [fetchNotifications]);
+
+  /**
    * Close dropdown when clicking outside
    */
   useEffect(() => {

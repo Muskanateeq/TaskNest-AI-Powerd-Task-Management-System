@@ -26,14 +26,14 @@
   gap: 16px;
   padding: 12px;
   background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(228, 155, 15, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.1);
   border-radius: 8px;
   transition: all 0.2s ease;
 }
 
 .keyboard-shortcut-item:hover {
-  background: rgba(228, 155, 15, 0.05);
-  border-color: rgba(228, 155, 15, 0.2);
+  background: rgba(212, 175, 55, 0.05);
+  border-color: rgba(212, 175, 55, 0.2);
 }
 
 .keyboard-shortcut-key {
@@ -42,10 +42,10 @@
   justify-content: center;
   min-width: 60px;
   padding: 6px 12px;
-  background: rgba(228, 155, 15, 0.1);
-  border: 1px solid rgba(228, 155, 15, 0.3);
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.3);
   border-radius: 6px;
-  color: #e49b0f;
+  color: #d4af37;
   font-size: 13px;
   font-weight: 600;
   font-family: 'Courier New', monospace;
@@ -65,15 +65,15 @@
   align-items: flex-start;
   gap: 12px;
   padding: 12px;
-  background: rgba(228, 155, 15, 0.05);
-  border: 1px solid rgba(228, 155, 15, 0.2);
+  background: rgba(212, 175, 55, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 8px;
 }
 
 .keyboard-shortcuts-note svg {
   width: 20px;
   height: 20px;
-  color: #e49b0f;
+  color: #d4af37;
   flex-shrink: 0;
   margin-top: 2px;
 }

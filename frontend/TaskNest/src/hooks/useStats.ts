@@ -41,7 +41,7 @@ export function useStats() {
     try {
       setIsLoading(true);
       setError(null);
-      const response = await api.get('/tasks/stats/summary');
+      const response = await api.get('/tasks/stats/summary') as { data: TaskStatistics };
       setStats(response.data);
     } catch (err) {
       console.error('Failed to fetch statistics:', err);

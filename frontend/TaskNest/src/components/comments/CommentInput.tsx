@@ -62,7 +62,6 @@ export default function CommentInput({
 
       // Clear form
       setContent('');
-      setMentions([]);
     } catch (error) {
       console.error('Failed to submit comment:', error);
     }

@@ -5,7 +5,7 @@
 
 .notification-settings-container {
     background: rgba(10, 10, 10, 0.8);
-    border: 1px solid rgba(228, 155, 15, 0.3);
+    border: 1px solid rgba(212, 175, 55, 0.3);
     border-radius: 16px;
     padding: 1.5rem;
     display: flex;
@@ -23,7 +23,7 @@
 .notification-settings-title {
     font-size: 1.5rem;
     font-weight: 700;
-    background: linear-gradient(135deg, #E49B0F, #F5B942);
+    background: linear-gradient(135deg, #d4af37, #e6c34f);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -31,14 +31,14 @@
 
 .notification-settings-subtitle {
     font-size: 0.875rem;
-    color: #A0A0A0;
+    color: #E0E0E0;
     margin-top: 0.25rem;
 }
 
 .notification-settings-icon {
     width: 48px;
     height: 48px;
-    background: linear-gradient(135deg, #E49B0F, #C28608);
+    background: linear-gradient(135deg, #d4af37, #C28608);
     border-radius: 12px;
     display: flex;
     align-items: center;
@@ -49,7 +49,7 @@
 /* Permission Status */
 .notification-settings-permission {
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 12px;
     padding: 1rem;
 }
@@ -64,7 +64,7 @@
 .notification-settings-permission-label {
     font-size: 0.875rem;
     font-weight: 600;
-    color: #A0A0A0;
+    color: #E0E0E0;
 }
 
 .notification-settings-permission-status {
@@ -82,7 +82,7 @@
 }
 
 .notification-settings-permission-status.default {
-    color: #A0A0A0;
+    color: #E0E0E0;
 }
 
 .notification-settings-permission-error {
@@ -99,7 +99,7 @@
     justify-content: space-between;
     padding: 1rem;
     background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 12px;
 }
 
@@ -110,7 +110,7 @@
 
 .notification-settings-toggle-description {
     font-size: 0.875rem;
-    color: #A0A0A0;
+    color: #E0E0E0;
     margin-top: 0.25rem;
 }
 
@@ -128,7 +128,7 @@
 }
 
 .notification-settings-toggle.enabled {
-    background: #E49B0F;
+    background: #d4af37;
 }
 
 .notification-settings-toggle.disabled {
@@ -141,7 +141,7 @@
 }
 
 .notification-settings-toggle:focus {
-    outline: 2px solid #E49B0F;
+    outline: 2px solid #d4af37;
     outline-offset: 2px;
 }
 
@@ -167,8 +167,8 @@
     flex-direction: column;
     gap: 1rem;
     padding: 1rem;
-    background: rgba(228, 155, 15, 0.05);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    background: rgba(212, 175, 55, 0.05);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 12px;
 }
 
@@ -200,7 +200,7 @@
     appearance: none;
     width: 20px;
     height: 20px;
-    background: #E49B0F;
+    background: #d4af37;
     border-radius: 50%;
     cursor: pointer;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -209,7 +209,7 @@
 .notification-settings-slider::-moz-range-thumb {
     width: 20px;
     height: 20px;
-    background: #E49B0F;
+    background: #d4af37;
     border-radius: 50%;
     cursor: pointer;
     border: none;
@@ -227,7 +227,7 @@
     width: 64px;
     padding: 0.5rem 0.75rem;
     background: rgba(255, 255, 255, 0.05);
-    border: 2px solid rgba(228, 155, 15, 0.3);
+    border: 2px solid rgba(212, 175, 55, 0.3);
     border-radius: 8px;
     color: #FFFFFF;
     text-align: center;
@@ -238,32 +238,32 @@
 }
 
 .notification-settings-number-input:focus {
-    border-color: #E49B0F;
-    background: rgba(228, 155, 15, 0.1);
+    border-color: #d4af37;
+    background: rgba(212, 175, 55, 0.1);
 }
 
 .notification-settings-timing-unit {
     font-size: 0.875rem;
-    color: #A0A0A0;
+    color: #E0E0E0;
     font-weight: 500;
 }
 
 .notification-settings-timing-hint {
     font-size: 0.75rem;
-    color: #666666;
+    color: #CCCCCC;
     margin-top: 0.5rem;
 }
 
 /* Test Section */
 .notification-settings-test {
     padding-top: 1rem;
-    border-top: 1px solid rgba(228, 155, 15, 0.2);
+    border-top: 1px solid rgba(212, 175, 55, 0.2);
 }
 
 /* Info Box */
 .notification-settings-info {
-    background: rgba(228, 155, 15, 0.05);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    background: rgba(212, 175, 55, 0.05);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 12px;
     padding: 1rem;
 }
@@ -277,7 +277,7 @@
     flex-shrink: 0;
     width: 20px;
     height: 20px;
-    color: #E49B0F;
+    color: #d4af37;
 }
 
 .notification-settings-info-text {
@@ -298,7 +298,7 @@
     flex-direction: column;
     gap: 0.25rem;
     font-size: 0.75rem;
-    color: #A0A0A0;
+    color: #E0E0E0;
 }
 
 /* Responsive */

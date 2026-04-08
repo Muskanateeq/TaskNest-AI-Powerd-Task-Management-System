@@ -8,6 +8,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTasks } from '@/hooks/useTasks';
 import { useAuth } from '@/contexts/AuthContext';
+import { useRefresh } from '@/contexts/RefreshContext';
 import { useRouter } from 'next/navigation';
 import { Task, TaskCreateRequest, TaskUpdateRequest } from '@/lib/types';
 import TaskForm from '@/components/tasks/TaskForm';
@@ -20,6 +21,7 @@ import '../../dashboard.css';
 export default function TasksPage() {
   const router = useRouter();
   const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { registerRefresh, unregisterRefresh } = useRefresh();
   const {
     tasks,
     isLoading,
@@ -33,6 +35,7 @@ export default function TasksPage() {
     deleteTask,
     toggleComplete,
     clearError,
+    refreshTasks,
   } = useTasks();
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -54,6 +57,17 @@ export default function TasksPage() {
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
+
+  /**
+   * Register refresh callbacks for chatbot auto-refresh
+   */
+  useEffect(() => {
+    registerRefresh('tasks-page', refreshTasks);
+
+    return () => {
+      unregisterRefresh('tasks-page');
+    };
+  }, [registerRefresh, unregisterRefresh, refreshTasks]);
 
   /**
    * Redirect if not authenticated
@@ -94,6 +108,13 @@ export default function TasksPage() {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  /**
+   * Handle toggle complete (wrapper for type compatibility)
+   */
+  const handleToggleComplete = async (id: number, completed: boolean): Promise<void> => {
+    await toggleComplete(id, completed);
   };
 
   /**
@@ -172,10 +193,10 @@ export default function TasksPage() {
               className="search-input"
             />
           </div>
-          <SortDropdown currentSort={sort} onChange={setSort} />
-        </div>
-        <div className="tasks-controls-bottom">
-          <FilterPanel filters={filters} onFilterChange={setFilters} taskCount={tasks.length} />
+          <div className="tasks-controls-actions">
+            <FilterPanel filters={filters} onFilterChange={setFilters} taskCount={tasks.length} />
+            <SortDropdown currentSort={sort} onChange={setSort} />
+          </div>
         </div>
       </div>
 
@@ -201,7 +222,7 @@ export default function TasksPage() {
             <TaskItem
               key={task.id}
               task={task}
-              onToggleComplete={toggleComplete}
+              onToggleComplete={handleToggleComplete}
               onEdit={openEditModal}
               onDelete={handleDeleteTask}
               isSelected={task.id === selectedTaskId}

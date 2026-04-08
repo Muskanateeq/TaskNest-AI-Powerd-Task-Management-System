@@ -23,7 +23,7 @@
 
 .template-selector-count {
     font-size: 0.8rem;
-    color: #A0A0A0;
+    color: #E0E0E0;
 }
 
 /* Grid */
@@ -47,12 +47,12 @@
 }
 
 .template-selector-grid::-webkit-scrollbar-thumb {
-    background: rgba(228, 155, 15, 0.3);
+    background: rgba(212, 175, 55, 0.3);
     border-radius: 3px;
 }
 
 .template-selector-grid::-webkit-scrollbar-thumb:hover {
-    background: rgba(228, 155, 15, 0.5);
+    background: rgba(212, 175, 55, 0.5);
 }
 
 /* Template Card */
@@ -60,7 +60,7 @@
     position: relative;
     padding: 1rem;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 12px;
     text-align: left;
     cursor: pointer;
@@ -68,16 +68,16 @@
 }
 
 .template-card:hover {
-    border-color: #E49B0F;
-    background: rgba(228, 155, 15, 0.08);
+    border-color: #d4af37;
+    background: rgba(212, 175, 55, 0.08);
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(228, 155, 15, 0.2);
+    box-shadow: 0 8px 24px rgba(212, 175, 55, 0.2);
 }
 
 .template-card.selected {
-    border-color: #E49B0F;
-    background: rgba(228, 155, 15, 0.15);
-    box-shadow: 0 8px 24px rgba(228, 155, 15, 0.3);
+    border-color: #d4af37;
+    background: rgba(212, 175, 55, 0.15);
+    box-shadow: 0 8px 24px rgba(212, 175, 55, 0.3);
 }
 
 /* Template Header */
@@ -91,7 +91,7 @@
 .template-icon {
     width: 40px;
     height: 40px;
-    background: rgba(228, 155, 15, 0.15);
+    background: rgba(212, 175, 55, 0.15);
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -101,7 +101,7 @@
 }
 
 .template-card.selected .template-icon {
-    background: rgba(228, 155, 15, 0.25);
+    background: rgba(212, 175, 55, 0.25);
 }
 
 .template-info {
@@ -118,7 +118,7 @@
 
 .template-description {
     font-size: 0.8rem;
-    color: #A0A0A0;
+    color: #E0E0E0;
     line-height: 1.4;
 }
 
@@ -145,9 +145,9 @@
 }
 
 .template-badge.priority-medium {
-    background: rgba(228, 155, 15, 0.15);
-    color: #E49B0F;
-    border-color: rgba(228, 155, 15, 0.3);
+    background: rgba(212, 175, 55, 0.15);
+    color: #d4af37;
+    border-color: rgba(212, 175, 55, 0.3);
 }
 
 .template-badge.priority-low {
@@ -164,7 +164,7 @@
 
 .template-badge.usage {
     background: rgba(255, 255, 255, 0.05);
-    color: #A0A0A0;
+    color: #E0E0E0;
     border-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -175,7 +175,7 @@
     right: 0.75rem;
     width: 24px;
     height: 24px;
-    background: #E49B0F;
+    background: #d4af37;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -216,7 +216,7 @@
 .template-empty-icon svg {
     width: 32px;
     height: 32px;
-    color: #666666;
+    color: #CCCCCC;
 }
 
 .template-empty-title {
@@ -228,7 +228,7 @@
 
 .template-empty-text {
     font-size: 0.8rem;
-    color: #A0A0A0;
+    color: #E0E0E0;
 }
 
 /* Responsive */

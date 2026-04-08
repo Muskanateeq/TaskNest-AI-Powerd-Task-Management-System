@@ -1,9 +1,9 @@
 /* Settings CSS - Following landing.css patterns */
 
 :root {
-    --primary: #E49B0F;
-    --primary-dark: #C68508;
-    --secondary: #F5B942;
+    --primary: #d4af37;
+    --primary-dark: #b8941f;
+    --secondary: #e6c34f;
     --bg-dark: #0A0A0A;
     --bg-darker: #000000;
     --text-light: #FFFFFF;
@@ -46,7 +46,7 @@
 /* Settings Sidebar */
 .settings-sidebar {
     background: rgba(10, 10, 10, 0.5);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 16px;
     padding: 1.5rem;
     height: fit-content;
@@ -76,12 +76,12 @@
 }
 
 .settings-nav-item:hover {
-    background: rgba(228, 155, 15, 0.1);
+    background: rgba(212, 175, 55, 0.1);
     color: var(--primary);
 }
 
 .settings-nav-item.active {
-    background: rgba(228, 155, 15, 0.15);
+    background: rgba(212, 175, 55, 0.15);
     color: var(--primary);
     border-left: 3px solid var(--primary);
 }
@@ -89,7 +89,7 @@
 /* Settings Content */
 .settings-content {
     background: rgba(10, 10, 10, 0.5);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 16px;
     padding: 2rem;
 }
@@ -132,7 +132,7 @@
     width: 100%;
     padding: 0.75rem 1rem;
     background: rgba(10, 10, 10, 0.5);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 8px;
     color: var(--text-light);
     font-size: 1rem;
@@ -142,7 +142,7 @@
 .settings-input:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(228, 155, 15, 0.1);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
 }
 
 .settings-input:disabled {
@@ -155,7 +155,7 @@
     min-height: 100px;
     padding: 0.75rem 1rem;
     background: rgba(10, 10, 10, 0.5);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 8px;
     color: var(--text-light);
     font-size: 1rem;
@@ -166,14 +166,14 @@
 .settings-textarea:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(228, 155, 15, 0.1);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
 }
 
 .settings-select {
     width: 100%;
     padding: 0.75rem 1rem;
     background: rgba(10, 10, 10, 0.5);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 8px;
     color: var(--text-light);
     font-size: 1rem;
@@ -184,7 +184,7 @@
 .settings-select:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(228, 155, 15, 0.1);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
 }
 
 /* Toggle Switch */
@@ -194,7 +194,7 @@
     justify-content: space-between;
     padding: 1rem;
     background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(228, 155, 15, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.1);
     border-radius: 8px;
     margin-bottom: 1rem;
 }
@@ -272,8 +272,8 @@
 
 .settings-btn-upload {
     padding: 0.5rem 1rem;
-    background: rgba(228, 155, 15, 0.1);
-    border: 1px solid rgba(228, 155, 15, 0.3);
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.3);
     border-radius: 6px;
     color: var(--primary);
     cursor: pointer;
@@ -292,7 +292,7 @@
     gap: 1rem;
     margin-top: 2rem;
     padding-top: 2rem;
-    border-top: 1px solid rgba(228, 155, 15, 0.1);
+    border-top: 1px solid rgba(212, 175, 55, 0.1);
 }
 
 .settings-btn-primary {
@@ -308,13 +308,13 @@
 
 .settings-btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(228, 155, 15, 0.4);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
 }
 
 .settings-btn-secondary {
     padding: 0.75rem 1.5rem;
     background: transparent;
-    border: 1px solid rgba(228, 155, 15, 0.3);
+    border: 1px solid rgba(212, 175, 55, 0.3);
     border-radius: 8px;
     color: var(--primary);
     font-weight: 600;
@@ -323,7 +323,7 @@
 }
 
 .settings-btn-secondary:hover {
-    background: rgba(228, 155, 15, 0.1);
+    background: rgba(212, 175, 55, 0.1);
 }
 
 .settings-btn-danger {

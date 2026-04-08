@@ -37,13 +37,28 @@ build/
 out/
 .cache/
 
-# Environment variables
+# Environment variables & Secrets
 .env
+.env.*
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+.env.docker
 *.env
+**/secrets/
+**/secret.yaml
+**/secrets.yaml
+**/*-secret.yaml
+**/*-secrets.yaml
+*.pem
+*.key
+*.cert
+*.crt
+*.p12
+*.pfx
+.secrets/
+secrets/
 
 # IDEs
 .vscode/

@@ -1,10 +1,11 @@
 /**
  * FilterPanel Styles
+ * Dark Golden Theme
  */
 
 .filter-panel {
-  background: white;
-  border: 1px solid #e5e7eb;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 24px;
@@ -23,7 +24,7 @@
   gap: 8px;
   font-size: 16px;
   font-weight: 600;
-  color: #111827;
+  color: #FFFFFF;
   margin: 0;
 }
 
@@ -34,8 +35,8 @@
   min-width: 20px;
   height: 20px;
   padding: 0 6px;
-  background: #e49b0f;
-  color: white;
+  background: #d4af37;
+  color: #000000;
   font-size: 12px;
   font-weight: 600;
   border-radius: 10px;
@@ -44,19 +45,18 @@
 .filter-panel-clear {
   padding: 6px 12px;
   background: transparent;
-  border: 1px solid #e5e7eb;
+  border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 6px;
   font-size: 13px;
   font-weight: 500;
-  color: #6b7280;
+  color: #d4af37;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .filter-panel-clear:hover {
-  border-color: #e49b0f;
-  color: #e49b0f;
-  background: #fffbf0;
+  border-color: #d4af37;
+  background: rgba(212, 175, 55, 0.1);
 }
 
 .filter-section {
@@ -71,7 +71,7 @@
   display: block;
   font-size: 13px;
   font-weight: 600;
-  color: #374151;
+  color: #FFFFFF;
   margin-bottom: 10px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -85,40 +85,44 @@
 
 .filter-option {
   padding: 8px 16px;
-  background: white;
-  border: 1px solid #e5e7eb;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
-  color: #374151;
+  color: #E0E0E0;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .filter-option:hover {
-  border-color: #e49b0f;
-  background: #fffbf0;
+  border-color: #d4af37;
+  background: rgba(212, 175, 55, 0.1);
+  color: #FFFFFF;
 }
 
 .filter-option.active {
-  background: #e49b0f;
-  border-color: #e49b0f;
-  color: white;
+  background: #d4af37;
+  border-color: #d4af37;
+  color: #000000;
 }
 
 .filter-option.priority-high.active {
   background: #ef4444;
   border-color: #ef4444;
+  color: #FFFFFF;
 }
 
 .filter-option.priority-medium.active {
-  background: #e49b0f;
-  border-color: #e49b0f;
+  background: #d4af37;
+  border-color: #d4af37;
+  color: #000000;
 }
 
 .filter-option.priority-low.active {
   background: #10b981;
   border-color: #10b981;
+  color: #FFFFFF;
 }
 
 .filter-tags {
@@ -130,21 +134,26 @@
 .filter-tag {
   padding: 6px 12px;
   background: transparent;
-  border: 1px solid #e5e7eb;
+  border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 16px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
+  color: #FFFFFF;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .filter-tag:hover {
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border-color: #d4af37;
+  color: #d4af37;
 }
 
 .filter-tag.active {
-  border-color: transparent;
+  border-color: #d4af37;
+  background: rgba(212, 175, 55, 0.1);
+  color: #d4af37;
 }
 
 /* Mobile responsive */

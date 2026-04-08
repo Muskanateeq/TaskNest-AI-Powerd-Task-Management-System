@@ -14,11 +14,11 @@
     top: 50%;
     transform: translateY(-50%);
     transition: color 0.3s ease;
-    color: #666666;
+    color: #CCCCCC;
 }
 
 .search-bar-icon.focused {
-    color: #E49B0F;
+    color: #d4af37;
 }
 
 .search-bar-icon svg {
@@ -31,7 +31,7 @@
     width: 100%;
     padding: 0.75rem 6rem 0.75rem 3rem;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 10px;
     color: #FFFFFF;
     font-size: 0.875rem;
@@ -40,17 +40,17 @@
 }
 
 .search-bar-input::placeholder {
-    color: #666666;
+    color: #CCCCCC;
 }
 
 .search-bar-input:hover {
-    border-color: rgba(228, 155, 15, 0.5);
+    border-color: rgba(212, 175, 55, 0.5);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .search-bar-input:focus {
-    border-color: #E49B0F;
-    box-shadow: 0 0 0 3px rgba(228, 155, 15, 0.2), 0 8px 24px rgba(228, 155, 15, 0.1);
+    border-color: #d4af37;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2), 0 8px 24px rgba(212, 175, 55, 0.1);
 }
 
 /* Right Side Actions */
@@ -81,11 +81,11 @@
 .search-bar-clear svg {
     width: 16px;
     height: 16px;
-    color: #666666;
+    color: #CCCCCC;
 }
 
 .search-bar-clear:hover svg {
-    color: #A0A0A0;
+    color: #E0E0E0;
 }
 
 /* Keyboard Shortcut Hint */
@@ -97,7 +97,7 @@
     background: rgba(255, 255, 255, 0.05);
     border-radius: 6px;
     font-size: 0.75rem;
-    color: #666666;
+    color: #CCCCCC;
     font-weight: 500;
 }
 
@@ -117,5 +117,5 @@
     bottom: -1.5rem;
     left: 0;
     font-size: 0.75rem;
-    color: #666666;
+    color: #CCCCCC;
 }

@@ -126,6 +126,9 @@ class TaskService:
         # Build query
         query = select(Task).where(Task.user_id == user_id)
 
+        # Exclude soft-deleted tasks
+        query = query.where(Task.deleted_at.is_(None))
+
         # Apply search filter
         if search:
             search_pattern = f"%{search}%"
@@ -286,7 +289,7 @@ class TaskService:
         """
         result = await session.execute(
             select(Task).where(
-                and_(Task.id == task_id, Task.user_id == user_id)
+                and_(Task.id == task_id, Task.user_id == user_id, Task.deleted_at.is_(None))
             )
         )
         task = result.scalar_one_or_none()
@@ -332,7 +335,7 @@ class TaskService:
         # Get task
         result = await session.execute(
             select(Task).where(
-                and_(Task.id == task_id, Task.user_id == user_id)
+                and_(Task.id == task_id, Task.user_id == user_id, Task.deleted_at.is_(None))
             )
         )
         task = result.scalar_one_or_none()
@@ -383,6 +386,29 @@ class TaskService:
         # Get tags for response
         tags = await TaskService._get_task_tags(task.id, session)
 
+        # Log activity
+        from src.services.activity_service import ActivityService
+        changes = []
+        if task_data.title is not None:
+            changes.append(f"Title updated")
+        if task_data.priority is not None:
+            changes.append(f"Priority changed to {task_data.priority}")
+        if task_data.due_date is not None:
+            changes.append(f"Due date updated")
+
+        await ActivityService.log_activity(
+            user_id=user_id,
+            activity_type="updated",
+            title="Task Updated",
+            description=f"Updated task: {task.title}",
+            meta={
+                "task_id": task_id,
+                "task_name": task.title,
+                "changes": changes
+            },
+            session=session
+        )
+
         return TaskPublic(
             id=task.id,
             title=task.title,
@@ -404,7 +430,7 @@ class TaskService:
         session: AsyncSession
     ) -> bool:
         """
-        Delete a task.
+        Soft delete a task (mark as deleted, don't remove from database).
 
         Args:
             task_id: Task ID
@@ -417,7 +443,7 @@ class TaskService:
         # Get task
         result = await session.execute(
             select(Task).where(
-                and_(Task.id == task_id, Task.user_id == user_id)
+                and_(Task.id == task_id, Task.user_id == user_id, Task.deleted_at.is_(None))
             )
         )
         task = result.scalar_one_or_none()
@@ -425,14 +451,20 @@ class TaskService:
         if not task:
             return False
 
-        # Manually delete task_tags first to avoid foreign key constraint violation
-        await session.execute(
-            delete(TaskTag).where(TaskTag.task_id == task_id)
-        )
-
-        # Delete task
-        await session.delete(task)
+        # Soft delete - set deleted_at timestamp
+        task.deleted_at = datetime.utcnow()
         await session.commit()
+
+        # Log activity
+        from src.services.activity_service import ActivityService
+        await ActivityService.log_activity(
+            user_id=user_id,
+            activity_type="deleted",
+            title="Task Deleted",
+            description=f"Deleted task: {task.title}",
+            meta={"task_id": task_id, "task_name": task.title},
+            session=session
+        )
 
         return True
 
@@ -460,7 +492,7 @@ class TaskService:
         # Get task
         result = await session.execute(
             select(Task).where(
-                and_(Task.id == task_id, Task.user_id == user_id)
+                and_(Task.id == task_id, Task.user_id == user_id, Task.deleted_at.is_(None))
             )
         )
         task = result.scalar_one_or_none()
@@ -481,6 +513,21 @@ class TaskService:
 
         # Get tags for response
         tags = await TaskService._get_task_tags(task.id, session)
+
+        # Log activity
+        from src.services.activity_service import ActivityService
+        activity_type = "completed" if completed else "uncompleted"
+        title = "Task Completed" if completed else "Task Uncompleted"
+        description = f"{'Completed' if completed else 'Marked incomplete'} task: {task.title}"
+
+        await ActivityService.log_activity(
+            user_id=user_id,
+            activity_type=activity_type,
+            title=title,
+            description=description,
+            meta={"task_id": task_id, "task_name": task.title},
+            session=session
+        )
 
         return TaskPublic(
             id=task.id,

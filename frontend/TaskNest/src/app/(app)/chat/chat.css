@@ -14,7 +14,7 @@
 .chat-sidebar {
   width: 320px;
   background: rgba(255, 255, 255, 0.02);
-  border-right: 1px solid rgba(228, 155, 15, 0.2);
+  border-right: 1px solid rgba(212, 175, 55, 0.2);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -24,9 +24,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.5rem;
-  border-bottom: 1px solid rgba(228, 155, 15, 0.2);
-  background: rgba(228, 155, 15, 0.05);
+  padding: 0.75rem 1.5rem 1rem 1.5rem;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  background: rgba(212, 175, 55, 0.05);
 }
 
 .sidebar-header h2 {
@@ -39,10 +39,10 @@
 .btn-new-chat {
   width: 36px;
   height: 36px;
-  background: rgba(228, 155, 15, 0.15);
-  border: 1px solid rgba(228, 155, 15, 0.3);
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.3);
   border-radius: 8px;
-  color: #E49B0F;
+  color: #d4af37;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -51,7 +51,7 @@
 }
 
 .btn-new-chat:hover {
-  background: rgba(228, 155, 15, 0.25);
+  background: rgba(212, 175, 55, 0.25);
   transform: translateY(-2px);
 }
 
@@ -66,16 +66,16 @@
 }
 
 .conversations-list::-webkit-scrollbar-track {
-  background: rgba(228, 155, 15, 0.05);
+  background: rgba(212, 175, 55, 0.05);
 }
 
 .conversations-list::-webkit-scrollbar-thumb {
-  background: rgba(228, 155, 15, 0.3);
+  background: rgba(212, 175, 55, 0.3);
   border-radius: 3px;
 }
 
 .conversations-list::-webkit-scrollbar-thumb:hover {
-  background: rgba(228, 155, 15, 0.5);
+  background: rgba(212, 175, 55, 0.5);
 }
 
 .conversation-item {
@@ -84,7 +84,7 @@
   gap: 0.75rem;
   padding: 1rem;
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(228, 155, 15, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.1);
   border-radius: 10px;
   margin-bottom: 0.5rem;
   cursor: pointer;
@@ -94,25 +94,25 @@
 
 .conversation-item:hover {
   background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(228, 155, 15, 0.3);
+  border-color: rgba(212, 175, 55, 0.3);
   transform: translateX(4px);
 }
 
 .conversation-item.active {
-  background: rgba(228, 155, 15, 0.15);
-  border-color: rgba(228, 155, 15, 0.4);
+  background: rgba(212, 175, 55, 0.15);
+  border-color: rgba(212, 175, 55, 0.4);
 }
 
 .conversation-icon {
   width: 40px;
   height: 40px;
-  background: rgba(228, 155, 15, 0.15);
-  border: 1px solid rgba(228, 155, 15, 0.3);
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.3);
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #E49B0F;
+  color: #d4af37;
   flex-shrink: 0;
 }
 
@@ -133,7 +133,7 @@
 
 .conversation-date {
   font-size: 0.8125rem;
-  color: #666666;
+  color: #CCCCCC;
 }
 
 .btn-delete-conversation {
@@ -161,7 +161,6 @@
   border-color: rgba(239, 68, 68, 0.4);
 }
 
-.loading-state,
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -169,7 +168,7 @@
   justify-content: center;
   padding: 2rem 1rem;
   text-align: center;
-  color: #A0A0A0;
+  color: #E0E0E0;
 }
 
 .empty-hint {
@@ -187,8 +186,8 @@
 
 .chat-header {
   padding: 1.5rem 2rem;
-  border-bottom: 1px solid rgba(228, 155, 15, 0.2);
-  background: rgba(228, 155, 15, 0.05);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  background: rgba(212, 175, 55, 0.05);
 }
 
 .success-message {
@@ -225,7 +224,7 @@
 .header-icon {
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, #E49B0F 0%, #F5B942 100%);
+  background: linear-gradient(135deg, #d4af37 0%, #e6c34f 100%);
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -238,7 +237,7 @@
   font-size: 1.5rem;
   font-weight: 700;
   margin: 0;
-  background: linear-gradient(135deg, #E49B0F, #F5B942);
+  background: linear-gradient(135deg, #d4af37, #e6c34f);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -247,7 +246,7 @@
 .chat-header p {
   font-size: 0.875rem;
   margin: 0.25rem 0 0;
-  color: #A0A0A0;
+  color: #E0E0E0;
 }
 
 /* Messages Area */
@@ -266,16 +265,16 @@
 }
 
 .chat-messages::-webkit-scrollbar-track {
-  background: rgba(228, 155, 15, 0.05);
+  background: rgba(212, 175, 55, 0.05);
 }
 
 .chat-messages::-webkit-scrollbar-thumb {
-  background: rgba(228, 155, 15, 0.3);
+  background: rgba(212, 175, 55, 0.3);
   border-radius: 4px;
 }
 
 .chat-messages::-webkit-scrollbar-thumb:hover {
-  background: rgba(228, 155, 15, 0.5);
+  background: rgba(212, 175, 55, 0.5);
 }
 
 /* Empty State */
@@ -286,11 +285,11 @@
   justify-content: center;
   height: 100%;
   text-align: center;
-  color: #A0A0A0;
+  color: #E0E0E0;
 }
 
 .chat-empty svg {
-  color: #E49B0F;
+  color: #d4af37;
   margin-bottom: 1.5rem;
   opacity: 0.5;
 }
@@ -316,12 +315,12 @@
 
 .chat-empty li {
   padding: 0.5rem 1rem;
-  background: rgba(228, 155, 15, 0.1);
-  border: 1px solid rgba(228, 155, 15, 0.2);
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 8px;
   margin-bottom: 0.5rem;
   font-size: 0.875rem;
-  color: #E49B0F;
+  color: #d4af37;
 }
 
 /* Message */
@@ -357,14 +356,14 @@
 }
 
 .message-user .message-avatar {
-  background: linear-gradient(135deg, #E49B0F 0%, #F5B942 100%);
+  background: linear-gradient(135deg, #d4af37 0%, #e6c34f 100%);
   color: #000000;
 }
 
 .message-assistant .message-avatar {
-  background: rgba(228, 155, 15, 0.1);
-  border: 1px solid rgba(228, 155, 15, 0.3);
-  color: #E49B0F;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: #d4af37;
 }
 
 .message-content {
@@ -389,28 +388,28 @@
 }
 
 .message-user .message-text {
-  background: linear-gradient(135deg, #E49B0F 0%, #F5B942 100%);
+  background: linear-gradient(135deg, #d4af37 0%, #e6c34f 100%);
   color: #000000;
   border-bottom-right-radius: 6px;
 }
 
 .message-assistant .message-text {
-  background: rgba(228, 155, 15, 0.1);
-  border: 1px solid rgba(228, 155, 15, 0.2);
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.2);
   color: #FFFFFF;
   border-bottom-left-radius: 6px;
 }
 
 .message-time {
   font-size: 0.75rem;
-  color: #666666;
+  color: #CCCCCC;
   padding: 0 0.5rem;
 }
 
 /* Input Area */
 .chat-input-container {
-  border-top: 1px solid rgba(228, 155, 15, 0.2);
-  background: rgba(228, 155, 15, 0.05);
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  background: rgba(212, 175, 55, 0.05);
   padding: 1rem 2rem 1.25rem;
   flex-shrink: 0;
 }
@@ -436,8 +435,8 @@
 
 .chat-input {
   flex: 1;
-  background: rgba(228, 155, 15, 0.1);
-  border: 2px solid rgba(228, 155, 15, 0.3);
+  background: rgba(212, 175, 55, 0.1);
+  border: 2px solid rgba(212, 175, 55, 0.3);
   border-radius: 12px;
   padding: 1rem 1.25rem;
   color: #FFFFFF;
@@ -452,8 +451,8 @@
 
 .chat-input:focus {
   outline: none;
-  border-color: #E49B0F;
-  background: rgba(228, 155, 15, 0.15);
+  border-color: #d4af37;
+  background: rgba(212, 175, 55, 0.15);
 }
 
 .chat-input::placeholder {
@@ -468,7 +467,7 @@
 .chat-send-button {
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, #E49B0F 0%, #F5B942 100%);
+  background: linear-gradient(135deg, #d4af37 0%, #e6c34f 100%);
   border: none;
   border-radius: 12px;
   color: #000000;
@@ -482,7 +481,7 @@
 
 .chat-send-button:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px 0 rgba(228, 155, 15, 0.6);
+  box-shadow: 0 6px 20px 0 rgba(212, 175, 55, 0.6);
 }
 
 .chat-send-button:active:not(:disabled) {
@@ -524,7 +523,7 @@
     width: 100%;
     height: 200px;
     border-right: none;
-    border-bottom: 1px solid rgba(228, 155, 15, 0.2);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
   }
 
   .conversations-list {
@@ -579,7 +578,7 @@
 .btn-new-chat:focus-visible,
 .btn-delete-conversation:focus-visible,
 .chat-send-button:focus-visible {
-  outline: 2px solid #E49B0F;
+  outline: 2px solid #d4af37;
   outline-offset: 2px;
 }
 
@@ -654,7 +653,7 @@
 
 .delete-dialog p {
   font-size: 0.9375rem;
-  color: #A0A0A0;
+  color: #E0E0E0;
   line-height: 1.6;
   margin: 0 0 2rem;
   text-align: center;
@@ -700,6 +699,6 @@
 
 .btn-cancel:focus-visible,
 .btn-delete:focus-visible {
-  outline: 2px solid #E49B0F;
+  outline: 2px solid #d4af37;
   outline-offset: 2px;
 }

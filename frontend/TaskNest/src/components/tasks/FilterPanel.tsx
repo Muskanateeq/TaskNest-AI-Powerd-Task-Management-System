@@ -1,11 +1,12 @@
 /**
  * FilterPanel Component
- * Dark Golden Theme - Modern SaaS Design
+ * Filter icon button with dropdown for task filtering
+ * Dark Golden Theme
  */
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { TaskPriority, TaskFilterOptions } from '@/lib/types';
 import { useTags } from '@/hooks/useTags';
 import './FilterPanel.css';
@@ -19,10 +20,30 @@ export interface FilterPanelProps {
 export default function FilterPanel({
   filters,
   onFilterChange,
-  taskCount,
+  taskCount: _taskCount,
 }: FilterPanelProps) {
   const { tags } = useTags();
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  /**
+   * Close dropdown when clicking outside
+   */
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
 
   /**
    * Toggle tag filter
@@ -76,116 +97,157 @@ export default function FilterPanel({
     (filters.tag_ids && filters.tag_ids.length > 0) ||
     (filters.status && filters.status !== 'all');
 
+  /**
+   * Count active filters
+   */
+  const activeFiltersCount = [
+    filters.priority ? 1 : 0,
+    filters.tag_ids?.length || 0,
+    filters.status && filters.status !== 'all' ? 1 : 0,
+  ].reduce((a, b) => a + b, 0);
+
+  /**
+   * Get priority icon
+   */
+  const getPriorityIcon = (priority: TaskPriority) => {
+    switch (priority) {
+      case TaskPriority.HIGH:
+        return '🔥';
+      case TaskPriority.MEDIUM:
+        return '⚡';
+      case TaskPriority.LOW:
+        return '📌';
+      default:
+        return '⚪';
+    }
+  };
+
   return (
-    <div className="filter-panel">
-      {/* Header */}
-      <div className="filter-panel-header">
-        <div className="filter-panel-header-content">
-          <div className="filter-panel-header-left">
-            <div className="filter-panel-icon">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-              </svg>
-            </div>
-            <div className="filter-panel-title-wrapper">
-              <h3 className="filter-panel-title">Filters</h3>
-              <p className="filter-panel-count">{taskCount} tasks</p>
-            </div>
+    <div className="filter-dropdown" ref={dropdownRef}>
+      {/* Filter Icon Button */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="filter-dropdown-trigger"
+        aria-label="Filters"
+      >
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+          />
+        </svg>
+        <span className="filter-dropdown-label">Filters</span>
+        {activeFiltersCount > 0 && (
+          <span className="filter-dropdown-badge">{activeFiltersCount}</span>
+        )}
+      </button>
+
+      {/* Dropdown Menu */}
+      {isOpen && (
+        <div className="filter-dropdown-menu">
+          {/* Header */}
+          <div className="filter-dropdown-header">
+            <h3 className="filter-dropdown-header-title">Filter Tasks</h3>
+            {hasActiveFilters && (
+              <button onClick={clearAllFilters} className="filter-dropdown-clear">
+                Clear All
+              </button>
+            )}
           </div>
 
-          {/* Mobile toggle */}
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className={`filter-panel-toggle ${isExpanded ? 'expanded' : ''}`}
-          >
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-
-          {/* Clear filters button */}
-          {hasActiveFilters && (
-            <button
-              onClick={clearAllFilters}
-              className="filter-panel-clear"
-            >
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-              Clear all
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Filter Content */}
-      <div className={`filter-panel-content ${isExpanded ? 'expanded' : ''}`}>
-        <div className="filter-panel-body">
-          {/* Status Filter */}
-          <div className="filter-section">
-            <label className="filter-section-label">Status</label>
-            <div className="filter-status-grid">
-              {(['all', 'pending', 'completed'] as const).map((status) => (
-                <button
-                  key={status}
-                  onClick={() => setStatusFilter(status)}
-                  className={`filter-status-btn ${
-                    (filters.status || 'all') === status ? 'active' : ''
-                  }`}
-                >
-                  {status.charAt(0).toUpperCase() + status.slice(1)}
-                </button>
-              ))}
+          {/* Filter Sections */}
+          <div className="filter-dropdown-body">
+            {/* Status Section */}
+            <div className="filter-dropdown-section">
+              <label className="filter-dropdown-section-label">Status</label>
+              <div className="filter-dropdown-radio-group">
+                <label className="filter-dropdown-radio">
+                  <input
+                    type="radio"
+                    name="status"
+                    checked={(filters.status || 'all') === 'all'}
+                    onChange={() => setStatusFilter('all')}
+                  />
+                  <span className="filter-dropdown-radio-custom"></span>
+                  <span className="filter-dropdown-radio-label">All Tasks</span>
+                </label>
+                <label className="filter-dropdown-radio">
+                  <input
+                    type="radio"
+                    name="status"
+                    checked={filters.status === 'pending'}
+                    onChange={() => setStatusFilter('pending')}
+                  />
+                  <span className="filter-dropdown-radio-custom"></span>
+                  <span className="filter-dropdown-radio-label">Pending</span>
+                </label>
+                <label className="filter-dropdown-radio">
+                  <input
+                    type="radio"
+                    name="status"
+                    checked={filters.status === 'completed'}
+                    onChange={() => setStatusFilter('completed')}
+                  />
+                  <span className="filter-dropdown-radio-custom"></span>
+                  <span className="filter-dropdown-radio-label">Completed</span>
+                </label>
+              </div>
             </div>
-          </div>
 
-          {/* Priority and Tags in Same Row */}
-          <div className="filter-section-row">
-            {/* Priority Filter */}
-            <div className="filter-section filter-section-half">
-              <label className="filter-section-label">Priority</label>
-              <div className="filter-priority-list">
-                <button
-                  onClick={() => setPriorityFilter(undefined)}
-                  className={`filter-priority-btn ${!filters.priority ? 'all' : ''}`}
-                >
-                  All priorities
-                </button>
+            {/* Priority Section */}
+            <div className="filter-dropdown-section">
+              <label className="filter-dropdown-section-label">Priority</label>
+              <div className="filter-dropdown-radio-group">
+                <label className="filter-dropdown-radio">
+                  <input
+                    type="radio"
+                    name="priority"
+                    checked={!filters.priority}
+                    onChange={() => setPriorityFilter(undefined)}
+                  />
+                  <span className="filter-dropdown-radio-custom"></span>
+                  <span className="filter-dropdown-radio-label">
+                    <span className="filter-priority-icon">⚪</span>
+                    All Priorities
+                  </span>
+                </label>
                 {Object.values(TaskPriority).map((priority) => (
-                  <button
-                    key={priority}
-                    onClick={() => setPriorityFilter(priority)}
-                    className={`filter-priority-btn ${
-                      filters.priority === priority ? 'active' : ''
-                    }`}
-                  >
-                    <span className="filter-priority-icon">
-                      {priority === TaskPriority.HIGH && '🔥'}
-                      {priority === TaskPriority.MEDIUM && '⚡'}
-                      {priority === TaskPriority.LOW && '📌'}
+                  <label key={priority} className="filter-dropdown-radio">
+                    <input
+                      type="radio"
+                      name="priority"
+                      checked={filters.priority === priority}
+                      onChange={() => setPriorityFilter(priority)}
+                    />
+                    <span className="filter-dropdown-radio-custom"></span>
+                    <span className="filter-dropdown-radio-label">
+                      <span className="filter-priority-icon">{getPriorityIcon(priority)}</span>
+                      {priority.charAt(0).toUpperCase() + priority.slice(1)}
                     </span>
-                    <span className="filter-priority-text">{priority}</span>
-                  </button>
+                  </label>
                 ))}
               </div>
             </div>
 
-            {/* Tags Filter */}
+            {/* Tags Section */}
             {tags.length > 0 && (
-              <div className="filter-section filter-section-half">
-                <label className="filter-section-label">Tags</label>
-                <div className="filter-tags-list">
+              <div className="filter-dropdown-section">
+                <label className="filter-dropdown-section-label">Tags</label>
+                <div className="filter-dropdown-checkbox-group">
                   {tags.map((tag) => {
                     const isSelected = filters.tag_ids?.includes(tag.id) || false;
                     return (
-                      <button
-                        key={tag.id}
-                        onClick={() => toggleTagFilter(tag.id)}
-                        className={`filter-tag-btn ${isSelected ? 'active' : ''}`}
-                      >
-                        <div className={`filter-tag-checkbox ${isSelected ? 'checked' : ''}`}>
+                      <label key={tag.id} className="filter-dropdown-checkbox">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => toggleTagFilter(tag.id)}
+                        />
+                        <span className="filter-dropdown-checkbox-custom">
                           {isSelected && (
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -194,30 +256,17 @@ export default function FilterPanel({
                               />
                             </svg>
                           )}
-                        </div>
-                        <span>{tag.name}</span>
-                      </button>
+                        </span>
+                        <span className="filter-dropdown-checkbox-label">{tag.name}</span>
+                      </label>
                     );
                   })}
                 </div>
               </div>
             )}
           </div>
-
-          {/* Clear filters button (mobile) */}
-          {hasActiveFilters && (
-            <button
-              onClick={clearAllFilters}
-              className="filter-panel-clear-mobile"
-            >
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-              Clear all filters
-            </button>
-          )}
         </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -74,11 +74,11 @@ export default function FloatingChatButton() {
           right: 2rem;
           width: 60px;
           height: 60px;
-          background: linear-gradient(135deg, #E49B0F 0%, #F5B942 100%);
+          background: linear-gradient(135deg, #d4af37 0%, #e6c34f 100%);
           color: #000000;
           border: none;
           border-radius: 50%;
-          box-shadow: 0 4px 14px 0 rgba(228, 155, 15, 0.39);
+          box-shadow: 0 4px 14px 0 rgba(212, 175, 55, 0.39);
           cursor: pointer;
           display: flex;
           align-items: center;
@@ -89,7 +89,7 @@ export default function FloatingChatButton() {
 
         .floating-chat-button:hover {
           transform: translateY(-4px);
-          box-shadow: 0 8px 24px 0 rgba(228, 155, 15, 0.6);
+          box-shadow: 0 8px 24px 0 rgba(212, 175, 55, 0.6);
         }
 
         .floating-chat-button:active {

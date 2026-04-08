@@ -5,9 +5,10 @@
 
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useTasks } from '@/hooks/useTasks';
 import { useAuth } from '@/contexts/AuthContext';
+import { useRefresh } from '@/contexts/RefreshContext';
 import { useNotifications } from '@/hooks/useNotifications';
 import { useTemplates } from '@/hooks/useTemplates';
 import { useStats } from '@/hooks/useStats';
@@ -35,10 +36,11 @@ import { groupTasks } from '@/lib/taskGrouping';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import '../../dashboard.css';
 
-export default function DashboardPage() {
+function DashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { registerRefresh, unregisterRefresh } = useRefresh();
   const {
     tasks,
     isLoading,
@@ -50,6 +52,7 @@ export default function DashboardPage() {
     createTask,
     updateTask,
     toggleComplete,
+    refreshTasks,
   } = useTasks();
 
   // Notification system
@@ -125,12 +128,25 @@ export default function DashboardPage() {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchQuery);
       // Update filters with search query
-      setFilters((prev) => ({ ...prev, search: searchQuery || undefined }));
+      setFilters({ ...filters, search: searchQuery || undefined });
     }, 300);
 
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
+
+  /**
+   * Register refresh callbacks for chatbot auto-refresh
+   */
+  useEffect(() => {
+    registerRefresh('dashboard-tasks', refreshTasks);
+    registerRefresh('dashboard-stats', refetchStats);
+
+    return () => {
+      unregisterRefresh('dashboard-tasks');
+      unregisterRefresh('dashboard-stats');
+    };
+  }, [registerRefresh, unregisterRefresh, refreshTasks, refetchStats]);
 
   /**
    * Redirect to login if not authenticated
@@ -849,5 +865,13 @@ export default function DashboardPage() {
         onClose={() => setIsShortcutsModalOpen(false)}
       />
     </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <DashboardContent />
+    </Suspense>
   );
 }

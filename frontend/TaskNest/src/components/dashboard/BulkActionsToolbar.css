@@ -7,8 +7,8 @@
   bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(10, 10, 10, 0.95);
-  border: 1px solid rgba(228, 155, 15, 0.3);
+  background: rgba(26, 20, 16, 0.95);
+  border: 1px solid rgba(212, 175, 55, 0.3);
   border-radius: 12px;
   padding: 16px 24px;
   display: flex;
@@ -37,7 +37,7 @@
   align-items: center;
   gap: 8px;
   padding-right: 16px;
-  border-right: 1px solid rgba(228, 155, 15, 0.2);
+  border-right: 1px solid rgba(212, 175, 55, 0.2);
 }
 
 .bulk-actions-count-badge {
@@ -47,7 +47,7 @@
   min-width: 28px;
   height: 28px;
   padding: 0 8px;
-  background: #e49b0f;
+  background: #d4af37;
   color: #000000;
   font-size: 14px;
   font-weight: 700;
@@ -72,7 +72,7 @@
   gap: 6px;
   padding: 8px 16px;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(228, 155, 15, 0.2);
+  border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 8px;
   color: #ffffff;
   font-size: 14px;
@@ -82,8 +82,8 @@
 }
 
 .bulk-action-btn:hover {
-  background: rgba(228, 155, 15, 0.1);
-  border-color: #e49b0f;
+  background: rgba(212, 175, 55, 0.1);
+  border-color: #d4af37;
   transform: translateY(-1px);
 }
 

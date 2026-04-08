@@ -1,11 +1,11 @@
 """
-Chat Service Layer
+Chat Service Layer - Smart Chatbot with MCP Integration
 
-Orchestrates AI chat functionality by coordinating:
-- LLM provider (Groq/Gemini/OpenAI)
-- MCP tools (function calling)
+Orchestrates AI chat functionality using:
+- TaskNestAgent (OpenAI GPT-4o with smart instructions)
+- MCP Server (Official MCP SDK for tool definitions)
+- Smart Parser (Natural language understanding)
 - Conversation persistence
-- Message history management
 - Streaming responses
 """
 
@@ -15,8 +15,8 @@ from typing import List, Dict, Any, Optional, AsyncIterator
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException, status
 
-from src.llm.provider_manager import ProviderManager
-from src.mcp.tools import get_all_tools, execute_tool
+from src.agents.tasknest_agent import get_agent
+from src.mcp.tools import execute_tool
 from src.services.conversation_service import ConversationService
 from src.models.message import MessageCreate
 
@@ -35,7 +35,7 @@ class ChatService:
         session: AsyncSession
     ) -> AsyncIterator[Dict[str, Any]]:
         """
-        Process a user message and stream AI response in real-time.
+        Process a user message and stream AI response in real-time using TaskNestAgent.
 
         Yields events:
         - {"type": "conversation_id", "conversation_id": int}
@@ -78,44 +78,48 @@ class ChatService:
                 session=session
             )
 
-            # Step 3: Build message history
+            # Step 3: Build message history with agent's system instructions
             message_history = await ChatService._build_message_history(
                 conversation_id, user_id, session
             )
 
-            # Step 4: Get LLM provider and tools
-            provider = ProviderManager.get_provider()
+            # Step 4: Get MCP tools (from src/mcp/tools.py)
+            from src.mcp.tools import get_all_tools
             tools = get_all_tools()
 
-            # Step 5: Stream LLM response
+            # Step 5: Stream agent response
             accumulated_content = ""
             tool_calls_data = None
 
-            async for chunk in provider.chat_completion_stream(
+            agent = get_agent()
+            stream = await agent.create_completion(
                 messages=message_history,
-                tools=tools
-            ):
+                tools=tools,
+                stream=True
+            )
+
+            async for chunk in stream:
                 # Extract content from chunk
-                if chunk.get("choices"):
-                    choice = chunk["choices"][0]
-                    delta = choice.get("delta", {})
+                if chunk.choices:
+                    choice = chunk.choices[0]
+                    delta = choice.delta
 
                     # Stream content
-                    if delta.get("content"):
-                        content = delta["content"]
+                    if delta.content:
+                        content = delta.content
                         accumulated_content += content
                         yield {"type": "content", "content": content}
 
                     # Check for tool calls
-                    if delta.get("tool_calls"):
-                        tool_calls_data = delta["tool_calls"]
+                    if delta.tool_calls:
+                        tool_calls_data = delta.tool_calls
 
             # Step 6: Handle tool calls if present
             tool_results = []
             if tool_calls_data:
                 for tool_call in tool_calls_data:
-                    function_name = tool_call["function"]["name"]
-                    function_args = json.loads(tool_call["function"]["arguments"])
+                    function_name = tool_call.function.name
+                    function_args = json.loads(tool_call.function.arguments)
 
                     # Notify about tool execution
                     yield {
@@ -153,35 +157,53 @@ class ChatService:
 
                 # If tools were executed, get final response
                 if tool_results:
+                    # Convert tool_calls_data to dict format for message history
+                    tool_calls_dict = [
+                        {
+                            "id": tc.id,
+                            "type": "function",
+                            "function": {
+                                "name": tc.function.name,
+                                "arguments": tc.function.arguments
+                            }
+                        }
+                        for tc in tool_calls_data
+                    ]
+
                     message_history.append({
                         "role": "assistant",
-                        "content": accumulated_content or "",
-                        "tool_calls": tool_calls_data
+                        "content": accumulated_content or None,
+                        "tool_calls": tool_calls_dict
                     })
 
                     for tool_result in tool_results:
                         message_history.append({
-                            "role": "function",
+                            "role": "tool",
+                            "tool_call_id": tool_calls_dict[0]["id"],
                             "name": tool_result["tool"],
                             "content": json.dumps(tool_result.get("result"))
                         })
 
                     # Stream final response
                     accumulated_content = ""
-                    async for chunk in provider.chat_completion_stream(
+                    agent = get_agent()
+                    stream = await agent.create_completion(
                         messages=message_history,
-                        tools=tools
-                    ):
-                        if chunk.get("choices"):
-                            choice = chunk["choices"][0]
-                            delta = choice.get("delta", {})
-                            if delta.get("content"):
-                                content = delta["content"]
+                        tools=tools,
+                        stream=True
+                    )
+
+                    async for chunk in stream:
+                        if chunk.choices:
+                            choice = chunk.choices[0]
+                            delta = choice.delta
+                            if delta.content:
+                                content = delta.content
                                 accumulated_content += content
                                 yield {"type": "content", "content": content}
 
             # Step 7: Save assistant response
-            final_content = accumulated_content or "I've completed the requested action."
+            final_content = accumulated_content or "Done!"
             assistant_msg = await ConversationService.add_message(
                 conversation_id=conversation_id,
                 user_id=user_id,
@@ -212,13 +234,13 @@ class ChatService:
         session: AsyncSession
     ) -> Dict[str, Any]:
         """
-        Process a user message and generate AI response.
+        Process a user message and generate AI response using TaskNestAgent.
 
         This method:
         1. Creates/retrieves conversation
         2. Saves user message
-        3. Builds message history
-        4. Calls LLM with tools
+        3. Builds message history with agent instructions
+        4. Calls agent with MCP tools
         5. Executes tool calls if needed
         6. Saves assistant response
         7. Returns complete response
@@ -262,48 +284,50 @@ class ChatService:
             session=session
         )
 
-        # Step 3: Build message history for LLM
+        # Step 3: Build message history with agent's system instructions
         message_history = await ChatService._build_message_history(
             conversation_id, user_id, session
         )
 
-        # Step 4: Get LLM provider and tools
-        provider = ProviderManager.get_provider()
+        # Step 4: Get MCP tools
+        from src.mcp.tools import get_all_tools
         tools = get_all_tools()
 
-        # Step 5: Call LLM
+        # Step 5: Call agent
         try:
-            logger.info(f"[ChatService] Calling LLM with {len(message_history)} messages and {len(tools)} tools")
-            llm_response = await provider.chat_completion(
+            logger.info(f"[ChatService] Calling agent with {len(message_history)} messages and {len(tools)} tools")
+            agent = get_agent()
+            response = await agent.create_completion(
                 messages=message_history,
                 tools=tools,
                 stream=False
             )
-            logger.info(f"[ChatService] LLM call successful")
+            logger.info(f"[ChatService] Agent call successful")
         except Exception as e:
-            logger.error(f"[ChatService] LLM call failed: {e}", exc_info=True)
+            logger.error(f"[ChatService] Agent call failed: {e}", exc_info=True)
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"LLM call failed: {str(e)}"
+                detail=f"Agent call failed: {str(e)}"
             )
 
         # Step 6: Process response and handle tool calls
         try:
-            assistant_message = llm_response["choices"][0]["message"]
-        except (KeyError, IndexError) as e:
-            logger.error(f"[ChatService] Invalid LLM response format: {e}", exc_info=True)
-            logger.error(f"[ChatService] LLM response: {llm_response}")
+            assistant_message = response.choices[0].message
+        except (AttributeError, IndexError) as e:
+            logger.error(f"[ChatService] Invalid agent response format: {e}", exc_info=True)
+            logger.error(f"[ChatService] Agent response: {response}")
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Invalid LLM response format: {str(e)}"
+                detail=f"Invalid agent response format: {str(e)}"
             )
+
         tool_results = []
 
-        # Check if LLM wants to call tools
-        if assistant_message.get("tool_calls"):
-            for tool_call in assistant_message["tool_calls"]:
-                function_name = tool_call["function"]["name"]
-                function_args = json.loads(tool_call["function"]["arguments"])
+        # Check if agent wants to call tools
+        if assistant_message.tool_calls:
+            for tool_call in assistant_message.tool_calls:
+                function_name = tool_call.function.name
+                function_args = json.loads(tool_call.function.arguments)
 
                 # Execute tool
                 try:
@@ -325,33 +349,48 @@ class ChatService:
                         "error": str(e)
                     })
 
-            # If tools were called, make another LLM call with results
+            # If tools were called, make another agent call with results
             if tool_results:
-                # Add tool results to message history
+                # Convert tool_calls to dict format for message history
+                tool_calls_dict = [
+                    {
+                        "id": tc.id,
+                        "type": "function",
+                        "function": {
+                            "name": tc.function.name,
+                            "arguments": tc.function.arguments
+                        }
+                    }
+                    for tc in assistant_message.tool_calls
+                ]
+
+                # Add assistant message with tool calls
                 message_history.append({
                     "role": "assistant",
-                    "content": assistant_message.get("content") or "",
-                    "tool_calls": assistant_message.get("tool_calls")
+                    "content": assistant_message.content or None,
+                    "tool_calls": tool_calls_dict
                 })
 
                 # Add tool results as separate messages
-                for tool_result in tool_results:
+                for i, tool_result in enumerate(tool_results):
                     message_history.append({
-                        "role": "function",
+                        "role": "tool",
+                        "tool_call_id": tool_calls_dict[i]["id"],
                         "name": tool_result["tool"],
                         "content": json.dumps(tool_result.get("result", tool_result.get("error")))
                     })
 
-                # Call LLM again to generate final response
-                final_response = await provider.chat_completion(
+                # Call agent again to generate final response
+                agent = get_agent()
+                final_response = await agent.create_completion(
                     messages=message_history,
                     tools=tools,
                     stream=False
                 )
-                assistant_message = final_response["choices"][0]["message"]
+                assistant_message = final_response.choices[0].message
 
         # Step 7: Save assistant response
-        assistant_content = assistant_message.get("content") or "I've completed the requested action."
+        assistant_content = assistant_message.content or "Done!"
         assistant_msg = await ConversationService.add_message(
             conversation_id=conversation_id,
             user_id=user_id,
@@ -379,7 +418,7 @@ class ChatService:
         max_messages: int = 20
     ) -> List[Dict[str, str]]:
         """
-        Build message history for LLM context.
+        Build message history for agent context.
 
         Args:
             conversation_id: Conversation ID
@@ -388,7 +427,7 @@ class ChatService:
             max_messages: Maximum number of messages to include
 
         Returns:
-            List of messages in OpenAI format with system prompt
+            List of messages in OpenAI format with agent's system instructions
         """
         # Get recent messages
         message_list = await ConversationService.get_conversation_messages(
@@ -399,21 +438,12 @@ class ChatService:
             offset=0
         )
 
-        # Build message history
+        # Build message history with agent's system instructions
+        agent = get_agent()
         messages = [
             {
                 "role": "system",
-                "content": (
-                    "You are a helpful AI assistant for TaskNest, a task management application. "
-                    "You can help users create, view, update, complete, and delete tasks using natural language. "
-                    "When users ask about their tasks, use the list_tasks tool. "
-                    "When users want to add a task, use the create_task tool. "
-                    "When users want to mark a task as done, use the complete_task tool. "
-                    "When users want to modify a task, use the update_task tool. "
-                    "When users want to remove a task, use the delete_task tool. "
-                    "Be conversational, friendly, and helpful. "
-                    "Always confirm actions after executing them."
-                )
+                "content": agent.get_system_instructions()
             }
         ]
 

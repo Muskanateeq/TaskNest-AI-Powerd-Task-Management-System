@@ -26,7 +26,7 @@ class Tag(SQLModel, table=True):
         description="Tag ID (auto-increment)"
     )
     user_id: str = Field(
-        sa_column=Column(String(255), ForeignKey("users.id"), nullable=False, index=True),
+        sa_column=Column(String(255), ForeignKey("user.id"), nullable=False, index=True),
         description="User ID who owns this tag"
     )
     name: str = Field(

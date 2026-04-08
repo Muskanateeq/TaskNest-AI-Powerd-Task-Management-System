@@ -13,7 +13,7 @@
 .task-skeleton {
     position: relative;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 12px;
     padding: 1.25rem;
     overflow: hidden;
@@ -89,7 +89,7 @@
     background: linear-gradient(
         90deg,
         transparent,
-        rgba(228, 155, 15, 0.1),
+        rgba(212, 175, 55, 0.1),
         transparent
     );
 }
@@ -115,7 +115,7 @@
     position: absolute;
     inset: 0;
     border-radius: 50%;
-    background: linear-gradient(135deg, rgba(228, 155, 15, 0.2), rgba(228, 155, 15, 0.05));
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.05));
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
@@ -123,7 +123,7 @@
     position: absolute;
     inset: 1rem;
     border-radius: 50%;
-    background: linear-gradient(135deg, rgba(228, 155, 15, 0.3), rgba(228, 155, 15, 0.1));
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(212, 175, 55, 0.1));
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     animation-delay: 0.2s;
 }
@@ -133,11 +133,11 @@
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #E49B0F, #C28608);
+    background: linear-gradient(135deg, #d4af37, #C28608);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 20px 40px rgba(228, 155, 15, 0.3);
+    box-shadow: 0 20px 40px rgba(212, 175, 55, 0.3);
     animation: bounceSlow 3s ease-in-out infinite;
 }
 
@@ -157,7 +157,7 @@
 
 .task-list-empty-text {
     font-size: 1rem;
-    color: #A0A0A0;
+    color: #E0E0E0;
     margin-bottom: 2rem;
     max-width: 28rem;
     margin-left: auto;
@@ -172,11 +172,11 @@
     align-items: center;
     gap: 0.75rem;
     padding: 0.75rem 1.5rem;
-    background: linear-gradient(90deg, #E49B0F, #C28608);
+    background: linear-gradient(90deg, #d4af37, #C28608);
     color: #000000;
     border-radius: 10px;
     font-weight: 600;
-    box-shadow: 0 8px 24px rgba(228, 155, 15, 0.5);
+    box-shadow: 0 8px 24px rgba(212, 175, 55, 0.5);
     animation: fadeInUp 0.8s ease-out;
     animation-delay: 0.4s;
     animation-fill-mode: both;
@@ -206,7 +206,7 @@
 .task-list-empty-feature {
     padding: 1rem;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 12px;
     animation: fadeInUp 0.8s ease-out;
     animation-fill-mode: both;
@@ -238,7 +238,7 @@
 
 .task-list-empty-feature-text {
     font-size: 0.875rem;
-    color: #A0A0A0;
+    color: #E0E0E0;
 }
 
 /* Task Count */
@@ -253,14 +253,14 @@
     gap: 0.5rem;
     padding: 0.5rem 1rem;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 9999px;
 }
 
 .task-list-count-dot {
     width: 8px;
     height: 8px;
-    background: linear-gradient(90deg, #E49B0F, #C28608);
+    background: linear-gradient(90deg, #d4af37, #C28608);
     border-radius: 50%;
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

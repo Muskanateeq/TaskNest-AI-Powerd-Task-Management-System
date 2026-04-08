@@ -94,6 +94,11 @@ class Task(SQLModel, table=True):
         ),
         description="Task last update timestamp"
     )
+    deleted_at: Optional[datetime] = Field(
+        default=None,
+        sa_column=Column(TIMESTAMP, nullable=True, index=True),
+        description="Soft delete timestamp (NULL if not deleted)"
+    )
 
     __table_args__ = (
         CheckConstraint(

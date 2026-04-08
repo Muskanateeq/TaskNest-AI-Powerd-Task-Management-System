@@ -14,7 +14,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database import get_session
-from src.api.deps import get_current_user
+from src.api.deps import get_current_user_id
 from src.services.notification_service import NotificationService
 from src.models.notification import NotificationPublic
 
@@ -25,7 +25,7 @@ router = APIRouter(prefix="/notifications", tags=["notifications"])
 async def get_notifications(
     unread_only: bool = Query(False, description="Only return unread notifications"),
     limit: int = Query(50, ge=1, le=100, description="Maximum number of notifications"),
-    current_user: str = Depends(get_current_user),
+    user_id: str = Depends(get_current_user_id),
     session: AsyncSession = Depends(get_session),
 ):
     """
@@ -34,7 +34,7 @@ async def get_notifications(
     Returns notifications ordered by creation time (newest first).
     """
     notifications = await NotificationService.get_user_notifications(
-        user_id=current_user,
+        user_id=user_id,
         session=session,
         unread_only=unread_only,
         limit=limit,
@@ -45,14 +45,14 @@ async def get_notifications(
 
 @router.get("/unread-count", response_model=dict)
 async def get_unread_count(
-    current_user: str = Depends(get_current_user),
+    user_id: str = Depends(get_current_user_id),
     session: AsyncSession = Depends(get_session),
 ):
     """
     Get count of unread notifications for the current user.
     """
     count = await NotificationService.get_unread_count(
-        user_id=current_user,
+        user_id=user_id,
         session=session,
     )
 
@@ -62,7 +62,7 @@ async def get_unread_count(
 @router.put("/{notification_id}/read", response_model=NotificationPublic)
 async def mark_notification_as_read(
     notification_id: int,
-    current_user: str = Depends(get_current_user),
+    user_id: str = Depends(get_current_user_id),
     session: AsyncSession = Depends(get_session),
 ):
     """
@@ -72,7 +72,7 @@ async def mark_notification_as_read(
     """
     notification = await NotificationService.mark_as_read(
         notification_id=notification_id,
-        user_id=current_user,
+        user_id=user_id,
         session=session,
     )
 
@@ -87,14 +87,14 @@ async def mark_notification_as_read(
 
 @router.put("/read-all", response_model=dict)
 async def mark_all_as_read(
-    current_user: str = Depends(get_current_user),
+    user_id: str = Depends(get_current_user_id),
     session: AsyncSession = Depends(get_session),
 ):
     """
     Mark all notifications as read for the current user.
     """
     count = await NotificationService.mark_all_as_read(
-        user_id=current_user,
+        user_id=user_id,
         session=session,
     )
 
@@ -104,7 +104,7 @@ async def mark_all_as_read(
 @router.delete("/{notification_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_notification(
     notification_id: int,
-    current_user: str = Depends(get_current_user),
+    user_id: str = Depends(get_current_user_id),
     session: AsyncSession = Depends(get_session),
 ):
     """
@@ -114,7 +114,7 @@ async def delete_notification(
     """
     success = await NotificationService.delete_notification(
         notification_id=notification_id,
-        user_id=current_user,
+        user_id=user_id,
         session=session,
     )
 

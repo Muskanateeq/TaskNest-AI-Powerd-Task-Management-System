@@ -5,31 +5,12 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
+import { useRefresh } from '@/contexts/RefreshContext';
+import { getActivities, deleteActivity, clearAllActivities, type Activity, type ActivityType } from '@/lib/activities-api';
 import './history.css';
-
-/**
- * Activity Type
- */
-type ActivityType = 'created' | 'updated' | 'deleted' | 'completed' | 'uncompleted' | 'tag_added' | 'tag_removed';
-
-/**
- * Activity Interface
- */
-interface Activity {
-  id: string;
-  type: ActivityType;
-  title: string;
-  description: string;
-  timestamp: Date;
-  metadata?: {
-    taskName?: string;
-    changes?: string[];
-    tagName?: string;
-  };
-}
 
 /**
  * Date Filter Type
@@ -39,11 +20,14 @@ type DateFilter = 'today' | 'week' | 'month' | 'all';
 export default function HistoryPage() {
   const router = useRouter();
   const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { registerRefresh, unregisterRefresh } = useRefresh();
   const [activities, setActivities] = useState<Activity[]>([]);
   const [filteredActivities, setFilteredActivities] = useState<Activity[]>([]);
   const [dateFilter, setDateFilter] = useState<DateFilter>('all');
   const [typeFilter, setTypeFilter] = useState<ActivityType | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   /**
    * Redirect if not authenticated
@@ -55,27 +39,33 @@ export default function HistoryPage() {
   }, [authLoading, isAuthenticated, router]);
 
   /**
-   * Load activities from localStorage
+   * Load activities from API
+   */
+  const loadActivities = useCallback(async () => {
+    if (!isAuthenticated) return;
+
+    try {
+      setIsLoading(true);
+      const data = await getActivities({ limit: 500 });
+      setActivities(data);
+    } catch (error) {
+      console.error('Failed to load activities:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    loadActivities();
+  }, [loadActivities]);
+
+  /**
+   * Register refresh callback for auto-refresh
    */
   useEffect(() => {
-    const loadActivities = () => {
-      try {
-        const stored = localStorage.getItem('taskNestActivities');
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          const activitiesWithDates = parsed.map((a: Activity) => ({
-            ...a,
-            timestamp: new Date(a.timestamp),
-          }));
-          setActivities(activitiesWithDates);
-        }
-      } catch (error) {
-        console.error('Failed to load activities:', error);
-      }
-    };
-
-    loadActivities();
-  }, []);
+    registerRefresh('history', loadActivities);
+    return () => unregisterRefresh('history');
+  }, [registerRefresh, unregisterRefresh, loadActivities]);
 
   /**
    * Apply filters
@@ -87,13 +77,13 @@ export default function HistoryPage() {
     const now = new Date();
     if (dateFilter === 'today') {
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      filtered = filtered.filter(a => a.timestamp >= today);
+      filtered = filtered.filter(a => new Date(a.created_at) >= today);
     } else if (dateFilter === 'week') {
       const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      filtered = filtered.filter(a => a.timestamp >= weekAgo);
+      filtered = filtered.filter(a => new Date(a.created_at) >= weekAgo);
     } else if (dateFilter === 'month') {
       const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-      filtered = filtered.filter(a => a.timestamp >= monthAgo);
+      filtered = filtered.filter(a => new Date(a.created_at) >= monthAgo);
     }
 
     // Type filter
@@ -107,15 +97,51 @@ export default function HistoryPage() {
       filtered = filtered.filter(a =>
         a.title.toLowerCase().includes(query) ||
         a.description.toLowerCase().includes(query) ||
-        a.metadata?.taskName?.toLowerCase().includes(query)
+        a.meta?.task_name?.toLowerCase().includes(query)
       );
     }
 
-    // Sort by timestamp (newest first)
-    filtered.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+    // Sort by created_at (newest first)
+    filtered.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
     setFilteredActivities(filtered);
   }, [activities, dateFilter, typeFilter, searchQuery]);
+
+  /**
+   * Handle delete activity
+   */
+  const handleDeleteActivity = async (id: number) => {
+    if (!confirm('Delete this activity?')) return;
+
+    try {
+      setIsDeleting(true);
+      await deleteActivity(id);
+      setActivities(prev => prev.filter(a => a.id !== id));
+    } catch (error) {
+      console.error('Failed to delete activity:', error);
+      alert('Failed to delete activity. Please try again.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  /**
+   * Handle clear all activities
+   */
+  const handleClearAll = async () => {
+    if (!confirm('Are you sure you want to clear all activity history? This cannot be undone.')) return;
+
+    try {
+      setIsDeleting(true);
+      await clearAllActivities();
+      setActivities([]);
+    } catch (error) {
+      console.error('Failed to clear activities:', error);
+      alert('Failed to clear activities. Please try again.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   /**
    * Get activity icon
@@ -132,10 +158,8 @@ export default function HistoryPage() {
         return '✔️';
       case 'uncompleted':
         return '🔄';
-      case 'tag_added':
-        return '🏷️';
-      case 'tag_removed':
-        return '🗑️';
+      case 'restored':
+        return '♻️';
       default:
         return '📝';
     }
@@ -156,10 +180,8 @@ export default function HistoryPage() {
         return 'green';
       case 'uncompleted':
         return 'yellow';
-      case 'tag_added':
+      case 'restored':
         return 'purple';
-      case 'tag_removed':
-        return 'gray';
       default:
         return 'gray';
     }
@@ -168,7 +190,8 @@ export default function HistoryPage() {
   /**
    * Format timestamp
    */
-  const formatTimestamp = (date: Date) => {
+  const formatTimestamp = (dateString: string) => {
+    const date = new Date(dateString);
     const now = new Date();
     const diff = now.getTime() - date.getTime();
     const minutes = Math.floor(diff / 60000);
@@ -191,7 +214,7 @@ export default function HistoryPage() {
    * Group activities by date
    */
   const groupedActivities = filteredActivities.reduce((groups, activity) => {
-    const date = activity.timestamp.toLocaleDateString('en-US', {
+    const date = new Date(activity.created_at).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -207,6 +230,14 @@ export default function HistoryPage() {
     return null;
   }
 
+  if (isLoading) {
+    return (
+      <div className="history-page">
+        <div className="history-loading">Loading activities...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="history-page">
       {/* Header */}
@@ -215,6 +246,16 @@ export default function HistoryPage() {
           <h1 className="history-title">Activity History</h1>
           <p className="history-subtitle">Track all your task activities and changes</p>
         </div>
+        {activities.length > 0 && (
+          <button
+            onClick={handleClearAll}
+            disabled={isDeleting}
+            className="btn-danger"
+            style={{ padding: '8px 16px', fontSize: '14px' }}
+          >
+            {isDeleting ? 'Clearing...' : 'Clear All'}
+          </button>
+        )}
       </div>
 
       {/* Filters */}
@@ -262,7 +303,7 @@ export default function HistoryPage() {
             >
               All
             </button>
-            {(['created', 'updated', 'deleted', 'completed'] as ActivityType[]).map((type) => (
+            {(['created', 'updated', 'deleted', 'completed', 'restored'] as ActivityType[]).map((type) => (
               <button
                 key={type}
                 onClick={() => setTypeFilter(type)}
@@ -298,12 +339,34 @@ export default function HistoryPage() {
                     <div className="activity-content">
                       <div className="activity-header">
                         <h4 className="activity-title">{activity.title}</h4>
-                        <span className="activity-time">{formatTimestamp(activity.timestamp)}</span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                          <span className="activity-time">{formatTimestamp(activity.created_at)}</span>
+                          <button
+                            onClick={() => handleDeleteActivity(activity.id)}
+                            disabled={isDeleting}
+                            className="activity-delete-btn"
+                            title="Delete activity"
+                            style={{
+                              background: 'transparent',
+                              border: 'none',
+                              color: '#ef4444',
+                              cursor: 'pointer',
+                              fontSize: '18px',
+                              padding: '4px',
+                              opacity: 0.7,
+                              transition: 'opacity 0.2s'
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+                            onMouseLeave={(e) => e.currentTarget.style.opacity = '0.7'}
+                          >
+                            🗑️
+                          </button>
+                        </div>
                       </div>
                       <p className="activity-description">{activity.description}</p>
-                      {activity.metadata?.changes && activity.metadata.changes.length > 0 && (
+                      {activity.meta?.changes && activity.meta.changes.length > 0 && (
                         <ul className="activity-changes">
-                          {activity.metadata.changes.map((change, idx) => (
+                          {activity.meta.changes.map((change, idx) => (
                             <li key={idx}>{change}</li>
                           ))}
                         </ul>

@@ -31,7 +31,7 @@
 
 .template-manager-subtitle {
     font-size: 0.875rem;
-    color: #A0A0A0;
+    color: #E0E0E0;
     margin-top: 0.25rem;
 }
 
@@ -40,19 +40,19 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.5rem;
-    background: linear-gradient(90deg, #E49B0F, #C28608);
+    background: linear-gradient(90deg, #d4af37, #C28608);
     color: #000000;
     border: none;
     border-radius: 10px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(228, 155, 15, 0.3);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
 }
 
 .template-manager-create-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(228, 155, 15, 0.4);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
 }
 
 .template-manager-create-btn svg {
@@ -63,7 +63,7 @@
 /* Template Form */
 .template-form-container {
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 12px;
     padding: 1.5rem;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -104,7 +104,7 @@
     width: 100%;
     padding: 0.75rem 1rem;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 10px;
     color: #FFFFFF;
     font-size: 0.875rem;
@@ -113,13 +113,13 @@
 }
 
 .template-form-input::placeholder {
-    color: #666666;
+    color: #CCCCCC;
 }
 
 .template-form-input:focus {
-    border-color: #E49B0F;
-    background: rgba(228, 155, 15, 0.08);
-    box-shadow: 0 0 0 3px rgba(228, 155, 15, 0.1);
+    border-color: #d4af37;
+    background: rgba(212, 175, 55, 0.08);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
 }
 
 .template-form-input:disabled {
@@ -131,7 +131,7 @@
     width: 100%;
     padding: 0.75rem 1rem;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 10px;
     color: #FFFFFF;
     font-size: 0.875rem;
@@ -142,13 +142,13 @@
 }
 
 .template-form-textarea::placeholder {
-    color: #666666;
+    color: #CCCCCC;
 }
 
 .template-form-textarea:focus {
-    border-color: #E49B0F;
-    background: rgba(228, 155, 15, 0.08);
-    box-shadow: 0 0 0 3px rgba(228, 155, 15, 0.1);
+    border-color: #d4af37;
+    background: rgba(212, 175, 55, 0.08);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
 }
 
 .template-form-textarea:disabled {
@@ -166,9 +166,9 @@
 .template-priority-btn {
     padding: 0.75rem 1rem;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 10px;
-    color: #A0A0A0;
+    color: #E0E0E0;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -176,15 +176,15 @@
 }
 
 .template-priority-btn:hover:not(:disabled) {
-    border-color: #E49B0F;
-    background: rgba(228, 155, 15, 0.1);
+    border-color: #d4af37;
+    background: rgba(212, 175, 55, 0.1);
 }
 
 .template-priority-btn.active {
-    background: #E49B0F;
+    background: #d4af37;
     color: #000000;
-    border-color: #E49B0F;
-    box-shadow: 0 4px 12px rgba(228, 155, 15, 0.3);
+    border-color: #d4af37;
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
     transform: scale(1.05);
 }
 
@@ -198,13 +198,13 @@
     display: flex;
     gap: 0.75rem;
     padding-top: 1rem;
-    border-top: 1px solid rgba(228, 155, 15, 0.2);
+    border-top: 1px solid rgba(212, 175, 55, 0.2);
 }
 
 .template-form-submit {
     flex: 1;
     padding: 0.75rem 1.5rem;
-    background: linear-gradient(90deg, #E49B0F, #C28608);
+    background: linear-gradient(90deg, #d4af37, #C28608);
     color: #000000;
     border: none;
     border-radius: 10px;
@@ -215,7 +215,7 @@
 
 .template-form-submit:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(228, 155, 15, 0.4);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
 }
 
 .template-form-submit:disabled {
@@ -228,7 +228,7 @@
     padding: 0.75rem 1.5rem;
     background: rgba(255, 255, 255, 0.05);
     color: #FFFFFF;
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 10px;
     font-weight: 600;
     cursor: pointer;
@@ -237,7 +237,7 @@
 
 .template-form-cancel:hover:not(:disabled) {
     background: rgba(255, 255, 255, 0.1);
-    border-color: #E49B0F;
+    border-color: #d4af37;
 }
 
 .template-form-cancel:disabled {
@@ -261,14 +261,14 @@
 /* Template Card */
 .template-card {
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 12px;
     padding: 1rem;
     transition: all 0.3s ease;
 }
 
 .template-card:hover {
-    border-color: rgba(228, 155, 15, 0.5);
+    border-color: rgba(212, 175, 55, 0.5);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
@@ -281,7 +281,7 @@
 .template-card-icon {
     width: 48px;
     height: 48px;
-    background: rgba(228, 155, 15, 0.15);
+    background: rgba(212, 175, 55, 0.15);
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -303,7 +303,7 @@
 
 .template-card-description {
     font-size: 0.875rem;
-    color: #A0A0A0;
+    color: #E0E0E0;
     margin-top: 0.25rem;
     line-height: 1.4;
 }
@@ -319,14 +319,14 @@
     font-size: 0.75rem;
     padding: 0.25rem 0.5rem;
     background: rgba(255, 255, 255, 0.05);
-    color: #A0A0A0;
+    color: #E0E0E0;
     border-radius: 6px;
     text-transform: capitalize;
 }
 
 .template-card-usage {
     font-size: 0.75rem;
-    color: #666666;
+    color: #CCCCCC;
 }
 
 .template-card-actions {
@@ -340,8 +340,8 @@
     padding: 0.5rem 0.75rem;
     font-size: 0.875rem;
     font-weight: 500;
-    color: #E49B0F;
-    background: rgba(228, 155, 15, 0.1);
+    color: #d4af37;
+    background: rgba(212, 175, 55, 0.1);
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -349,7 +349,7 @@
 }
 
 .template-card-edit:hover {
-    background: rgba(228, 155, 15, 0.2);
+    background: rgba(212, 175, 55, 0.2);
 }
 
 .template-card-delete {

@@ -1,9 +1,9 @@
 /* Notifications CSS - Following landing.css patterns */
 
 :root {
-    --primary: #E49B0F;
-    --primary-dark: #C68508;
-    --secondary: #F5B942;
+    --primary: #d4af37;
+    --primary-dark: #b8941f;
+    --secondary: #e6c34f;
     --bg-dark: #0A0A0A;
     --bg-darker: #000000;
     --text-light: #FFFFFF;
@@ -42,8 +42,8 @@
 
 .notifications-btn {
     padding: 0.5rem 1rem;
-    background: rgba(228, 155, 15, 0.1);
-    border: 1px solid rgba(228, 155, 15, 0.3);
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.3);
     border-radius: 8px;
     color: var(--primary);
     cursor: pointer;
@@ -66,7 +66,7 @@
     width: 40px;
     height: 40px;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -76,7 +76,7 @@
 }
 
 .notification-bell-button:hover {
-    background: rgba(228, 155, 15, 0.1);
+    background: rgba(212, 175, 55, 0.1);
     border-color: var(--primary);
 }
 
@@ -112,9 +112,9 @@
     width: 380px;
     max-height: 500px;
     background: rgba(10, 10, 10, 0.98);
-    border: 1px solid rgba(228, 155, 15, 0.3);
+    border: 1px solid rgba(212, 175, 55, 0.3);
     border-radius: 12px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(228, 155, 15, 0.1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(212, 175, 55, 0.1);
     z-index: 1000;
     animation: slideInDown 0.3s ease;
     overflow: hidden;
@@ -135,7 +135,7 @@
 
 .notification-dropdown-header {
     padding: 1rem 1.5rem;
-    border-bottom: 1px solid rgba(228, 155, 15, 0.2);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -146,7 +146,7 @@
     font-weight: 700;
     color: var(--text-light);
     font-size: 1rem;
-    background: linear-gradient(135deg, #E49B0F, #F5B942);
+    background: linear-gradient(135deg, #d4af37, #e6c34f);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -159,8 +159,8 @@
 
 .notification-mark-all-btn {
     padding: 0.375rem 0.75rem;
-    background: rgba(228, 155, 15, 0.1);
-    border: 1px solid rgba(228, 155, 15, 0.3);
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.3);
     border-radius: 6px;
     color: var(--primary);
     cursor: pointer;
@@ -173,7 +173,7 @@
     background: var(--primary);
     color: #000000;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(228, 155, 15, 0.3);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
 }
 
 .notification-dropdown-list {
@@ -192,12 +192,12 @@
 }
 
 .notification-dropdown-list::-webkit-scrollbar-thumb {
-    background: rgba(228, 155, 15, 0.3);
+    background: rgba(212, 175, 55, 0.3);
     border-radius: 3px;
 }
 
 .notification-dropdown-list::-webkit-scrollbar-thumb:hover {
-    background: rgba(228, 155, 15, 0.5);
+    background: rgba(212, 175, 55, 0.5);
 }
 
 /* Loading State */
@@ -211,7 +211,7 @@
 .notification-spinner {
     width: 40px;
     height: 40px;
-    border: 3px solid rgba(228, 155, 15, 0.2);
+    border: 3px solid rgba(212, 175, 55, 0.2);
     border-top-color: var(--primary);
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
@@ -261,7 +261,7 @@
 
 .notification-dropdown-footer {
     padding: 1rem 1.5rem;
-    border-top: 1px solid rgba(228, 155, 15, 0.2);
+    border-top: 1px solid rgba(212, 175, 55, 0.2);
     text-align: center;
 }
 
@@ -288,9 +288,9 @@
 .notification-filter-btn {
     padding: 0.5rem 1rem;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 8px;
-    color: #A0A0A0;
+    color: #E0E0E0;
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 0.875rem;
@@ -300,7 +300,7 @@
 .notification-filter-btn:hover {
     border-color: var(--primary);
     color: var(--primary);
-    background: rgba(228, 155, 15, 0.1);
+    background: rgba(212, 175, 55, 0.1);
 }
 
 .notification-filter-btn.active {
@@ -312,7 +312,7 @@
 /* Notification List */
 .notifications-list {
     background: rgba(10, 10, 10, 0.5);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 16px;
     overflow: hidden;
 }
@@ -321,7 +321,7 @@
     display: flex;
     gap: 1rem;
     padding: 1rem 1.5rem;
-    border-bottom: 1px solid rgba(228, 155, 15, 0.1);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.1);
     transition: all 0.3s ease;
     cursor: pointer;
 }
@@ -331,16 +331,16 @@
 }
 
 .notification-item:hover {
-    background: rgba(228, 155, 15, 0.08);
+    background: rgba(212, 175, 55, 0.08);
 }
 
 .notification-item.unread {
-    background: rgba(228, 155, 15, 0.05);
+    background: rgba(212, 175, 55, 0.05);
     border-left: 3px solid var(--primary);
 }
 
 .notification-item.unread:hover {
-    background: rgba(228, 155, 15, 0.12);
+    background: rgba(212, 175, 55, 0.12);
 }
 
 .notification-icon {
@@ -354,7 +354,7 @@
 }
 
 .notification-icon.task-update {
-    background: rgba(228, 155, 15, 0.2);
+    background: rgba(212, 175, 55, 0.2);
     color: var(--primary);
 }
 
@@ -404,8 +404,8 @@
 
 .notification-action-btn {
     padding: 0.25rem 0.5rem;
-    background: rgba(228, 155, 15, 0.1);
-    border: 1px solid rgba(228, 155, 15, 0.3);
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.3);
     border-radius: 4px;
     color: var(--primary);
     cursor: pointer;
@@ -421,7 +421,7 @@
 /* Notification Preferences */
 .notification-preferences {
     background: rgba(10, 10, 10, 0.5);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 16px;
     padding: 2rem;
     margin-bottom: 2rem;
@@ -454,7 +454,7 @@
     justify-content: space-between;
     padding: 1rem;
     background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(228, 155, 15, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.1);
     border-radius: 8px;
     margin-bottom: 1rem;
 }
@@ -513,7 +513,7 @@
 .dnd-time-input {
     padding: 0.75rem 1rem;
     background: rgba(10, 10, 10, 0.5);
-    border: 1px solid rgba(228, 155, 15, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 8px;
     color: var(--text-light);
     font-size: 1rem;
@@ -523,7 +523,7 @@
 .dnd-time-input:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(228, 155, 15, 0.1);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
 }
 
 /* Empty State */
@@ -561,7 +561,7 @@
 .notifications-spinner {
     width: 40px;
     height: 40px;
-    border: 3px solid rgba(228, 155, 15, 0.2);
+    border: 3px solid rgba(212, 175, 55, 0.2);
     border-top-color: var(--primary);
     border-radius: 50%;
     animation: spin 0.8s linear infinite;

@@ -25,7 +25,7 @@ class NotificationPreference(SQLModel, table=True):
         description="Preference ID (auto-increment)"
     )
     user_id: str = Field(
-        sa_column=Column(String(255), ForeignKey("users.id"), nullable=False, unique=True, index=True),
+        sa_column=Column(String(255), ForeignKey("user.id"), nullable=False, unique=True, index=True),
         description="User ID (one preference record per user)"
     )
     enabled_types: Dict = Field(
