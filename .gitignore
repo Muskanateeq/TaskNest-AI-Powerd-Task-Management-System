@@ -106,3 +106,6 @@ alembic/versions/__pycache__/
 # Misc
 .turbo/
 .vercel/
+
+# Claude Code local settings
+.claude/settings.local.json
