@@ -26,7 +26,7 @@ interface RefreshContextType {
   unregisterRefresh: (key: string) => void;
 }
 
-const RefreshContext = createContext<RefreshContextType | undefined>(undefined);
+const RefreshContext = createContext<RefreshContextType | null>(null);
 
 interface RefreshProviderProps {
   children: ReactNode;
@@ -73,8 +73,20 @@ export function RefreshProvider({ children }: RefreshProviderProps) {
  */
 export function useRefresh() {
   const context = useContext(RefreshContext);
+
+  // During SSR or when provider is not mounted, return safe defaults
   if (!context) {
+    // Check if we're on the server or during static generation
+    if (typeof window === 'undefined') {
+      // Return safe defaults for SSR
+      return {
+        refreshAll: () => {},
+        registerRefresh: () => {},
+        unregisterRefresh: () => {},
+      };
+    }
     throw new Error('useRefresh must be used within RefreshProvider');
   }
+
   return context;
 }

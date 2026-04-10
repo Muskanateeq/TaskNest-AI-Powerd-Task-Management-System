@@ -16,7 +16,6 @@ interface SocialLoginButtonsProps {
 }
 
 export default function SocialLoginButtons({
-  mode: _mode = 'login',
   onError
 }: SocialLoginButtonsProps) {
   const [isLoading, setIsLoading] = React.useState<string | null>(null);

@@ -24,8 +24,15 @@ export default function LiveRegion({
   role = 'status',
 }: LiveRegionProps) {
   const [message, setMessage] = useState('');
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
     // Listen for custom announcement events
     const handleAnnouncement = (event: CustomEvent<string>) => {
       setMessage(event.detail);
@@ -41,7 +48,7 @@ export default function LiveRegion({
     return () => {
       window.removeEventListener('announce' as keyof WindowEventMap, handleAnnouncement as EventListener);
     };
-  }, []);
+  }, [isMounted]);
 
   return (
     <div
@@ -72,7 +79,12 @@ export default function LiveRegion({
  * announce('Task completed successfully');
  * announce('Error: Failed to save task', 'assertive');
  */
-export function announce(message: string, _priority: 'polite' | 'assertive' = 'polite') {
+export function announce(message: string, priority: 'polite' | 'assertive' = 'polite') {
   const event = new CustomEvent('announce', { detail: message });
   window.dispatchEvent(event);
+
+  // Priority can be used for future enhancements
+  if (priority === 'assertive') {
+    console.log('[Announce] Assertive:', message);
+  }
 }

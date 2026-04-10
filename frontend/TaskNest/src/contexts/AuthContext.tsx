@@ -76,9 +76,9 @@ interface AuthContextState {
 }
 
 /**
- * Create Authentication Context
+ * Create Authentication Context with null default for SSR safety
  */
-const AuthContext = createContext<AuthContextState | undefined>(undefined);
+const AuthContext = createContext<AuthContextState | null>(null);
 
 /**
  * Authentication Provider Props
@@ -292,7 +292,25 @@ export function AuthProvider({ children }: AuthProviderProps) {
 export function useAuth(): AuthContextState {
   const context = useContext(AuthContext);
 
-  if (context === undefined) {
+  // During SSR or when provider is not mounted, return safe defaults
+  if (context === null) {
+    // Check if we're on the server or during static generation
+    if (typeof window === 'undefined') {
+      // Return safe defaults for SSR
+      return {
+        user: null,
+        session: null,
+        isAuthenticated: false,
+        isLoading: true,
+        error: null,
+        login: async () => {},
+        register: async () => {},
+        logout: async () => {},
+        refreshSession: async () => {},
+        getToken: async () => null,
+        clearError: () => {},
+      };
+    }
     throw new Error('useAuth must be used within an AuthProvider');
   }
 

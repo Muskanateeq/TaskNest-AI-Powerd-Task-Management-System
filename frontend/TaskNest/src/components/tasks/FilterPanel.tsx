@@ -20,7 +20,6 @@ export interface FilterPanelProps {
 export default function FilterPanel({
   filters,
   onFilterChange,
-  taskCount: _taskCount,
 }: FilterPanelProps) {
   const { tags } = useTags();
   const [isOpen, setIsOpen] = useState(false);

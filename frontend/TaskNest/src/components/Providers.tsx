@@ -3,6 +3,8 @@
  *
  * Client-side providers wrapper for the application.
  * Wraps all context providers (Auth, Refresh, Toast, etc.)
+ *
+ * SSR-safe: Mounting check handled by parent ClientLayout
  */
 
 'use client';

@@ -46,7 +46,9 @@ export default function ChatKitModal({ isOpen, onClose }: ChatKitModalProps) {
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [conversationToDelete, setConversationToDelete] = useState<number | null>(null);
-  const [_successMessage, setSuccessMessage] = useState<string | null>(null);
+  // Success message state for user feedback
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'chat' | 'history'>('chat'); // Track current view
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -403,7 +405,8 @@ export default function ChatKitModal({ isOpen, onClose }: ChatKitModalProps) {
   /**
    * Close conversation and go back to history
    */
-  const _closeConversation = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const closeConversation = () => {
     setViewMode('history');
     loadHistory();
   };
@@ -1138,12 +1141,12 @@ export default function ChatKitModal({ isOpen, onClose }: ChatKitModalProps) {
           display: flex;
           align-items: center;
           gap: 0.5rem;
-          padding: 0.875rem 1.75rem;
+          padding: 0.625rem 1.25rem;
           background: linear-gradient(135deg, #d4af37 0%, #e6c34f 100%);
           border: none;
           border-radius: 8px;
           color: #000000;
-          font-size: 0.9375rem;
+          font-size: 0.875rem;
           font-weight: 600;
           cursor: pointer;
           transition: all 0.2s;

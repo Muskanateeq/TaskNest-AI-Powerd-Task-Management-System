@@ -7,7 +7,7 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -36,6 +36,25 @@ interface NavItem {
  * App Layout Component
  */
 export default function AppLayout({ children }: AppLayoutProps) {
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Only run on client-side
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // During SSR, render children without layout
+  if (!isMounted) {
+    return <>{children}</>;
+  }
+
+  return <AppLayoutClient>{children}</AppLayoutClient>;
+}
+
+/**
+ * Client-side App Layout Component
+ */
+function AppLayoutClient({ children }: AppLayoutProps) {
   const { user, logout } = useAuth();
   const pathname = usePathname();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
