@@ -288,11 +288,12 @@ phase-2/
 4. **Run database migrations**
    ```bash
    uv run alembic upgrade head
+   uv run
    ```
 
 5. **Start the backend server**
    ```bash
-   uv run uvicorn src.main:app --reload --port 8000
+   uv run uvicorn src.main:app --reload --host 0.0.0.0 --port 8001  
    ```
 
 6. **Start MCP Server (optional, for AI agent integration)**
