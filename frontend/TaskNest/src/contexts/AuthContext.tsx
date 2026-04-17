@@ -189,8 +189,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
           setSession(sessionData as Session);
           clearTokenCache(); // Clear old token cache
         }
-        // Redirect to dashboard page
-        router.push('/dashboard');
+        // Use window.location.href for full page reload to ensure cookie is sent to server
+        window.location.href = '/dashboard';
       }
     } catch (err) {
       const errorMessage =
@@ -248,8 +248,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
           console.log("✅ [AUTH-CONTEXT] Session data received:", sessionData);
           setSession(sessionData as Session);
           clearTokenCache(); // Clear old token cache
-          console.log("🔵 [AUTH-CONTEXT] Redirecting to /dashboard...");
-          router.push('/dashboard');
+          console.log("🔵 [AUTH-CONTEXT] Redirecting to /dashboard with full page reload...");
+          // Use window.location.href for full page reload to ensure cookie is sent to server
+          window.location.href = '/dashboard';
         } else {
           console.error("❌ [AUTH-CONTEXT] No session data after signup!");
           if (sessionError) {
