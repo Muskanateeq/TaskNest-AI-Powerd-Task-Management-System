@@ -9,7 +9,6 @@ import React, { useState, useEffect } from 'react';
 import { useTasks } from '@/hooks/useTasks';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRefresh } from '@/contexts/RefreshContext';
-import { useRouter } from 'next/navigation';
 import { Task, TaskCreateRequest, TaskUpdateRequest } from '@/lib/types';
 import TaskForm from '@/components/tasks/TaskForm';
 import TaskItem from '@/components/tasks/TaskItem';
@@ -19,7 +18,6 @@ import Modal from '@/components/ui/Modal';
 import '../../dashboard.css';
 
 export default function TasksPage() {
-  const router = useRouter();
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const { registerRefresh, unregisterRefresh } = useRefresh();
   const {

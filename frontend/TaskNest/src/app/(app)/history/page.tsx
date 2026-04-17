@@ -29,13 +29,6 @@ export default function HistoryPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  /**
-  useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      // Auth handled by middleware;
-    }
-  }, [authLoading, isAuthenticated, router]);
-
   const loadActivities = useCallback(async () => {
     if (!isAuthenticated) return;
 

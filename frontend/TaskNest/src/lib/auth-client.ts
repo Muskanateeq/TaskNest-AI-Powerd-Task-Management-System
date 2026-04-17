@@ -88,6 +88,5 @@ export async function getAuthHeader(): Promise<Record<string, string>> {
   return {};
 }
 
-// Export auth client and cache utilities
+// Export auth client as default
 export default authClient;
-export { clearTokenCache };

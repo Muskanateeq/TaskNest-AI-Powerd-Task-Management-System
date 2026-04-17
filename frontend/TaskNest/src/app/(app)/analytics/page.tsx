@@ -27,13 +27,6 @@ export default function AnalyticsPage() {
   const { tasks, isLoading } = useTasks();
   const [timeRange, setTimeRange] = useState<TimeRange>('30days');
 
-  /**
-  useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      // Auth handled by middleware;
-    }
-  }, [authLoading, isAuthenticated, router]);
-
   const filteredTasks = useMemo(() => {
     if (timeRange === 'all') return tasks;
 

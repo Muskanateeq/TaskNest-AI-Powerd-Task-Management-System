@@ -38,13 +38,6 @@ export default function SettingsPage() {
   const [trashedTasks, setTrashedTasks] = useState<Task[]>([]);
   const [isLoadingTrash, setIsLoadingTrash] = useState(false);
 
-  /**
-  useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      // Auth handled by middleware;
-    }
-  }, [authLoading, isAuthenticated, router]);
-
   useEffect(() => {
     const loadSettings = async () => {
       if (!isAuthenticated) return;
