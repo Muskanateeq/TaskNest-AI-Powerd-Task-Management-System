@@ -14,19 +14,32 @@ import { Pool } from "pg";
  * Priority: env var > production URL (if on Vercel) > localhost
  */
 function getAuthBaseURL(): string {
+  console.log("🔧 [AUTH-SERVER] Detecting server baseURL...");
+  console.log("🔧 [AUTH-SERVER] BETTER_AUTH_URL:", process.env.BETTER_AUTH_URL);
+  console.log("🔧 [AUTH-SERVER] VERCEL:", process.env.VERCEL);
+  console.log("🔧 [AUTH-SERVER] VERCEL_URL:", process.env.VERCEL_URL);
+
   // If env var is set, use it
   if (process.env.BETTER_AUTH_URL) {
+    console.log("✅ [AUTH-SERVER] Using BETTER_AUTH_URL:", process.env.BETTER_AUTH_URL);
     return process.env.BETTER_AUTH_URL;
   }
 
   // Check if we're on Vercel (production)
   if (process.env.VERCEL || process.env.VERCEL_URL) {
+    console.log("✅ [AUTH-SERVER] Detected Vercel, using hardcoded URL");
     return "https://tasknest-ai-powerd.vercel.app";
   }
 
   // Default to localhost for development
+  console.log("✅ [AUTH-SERVER] Using localhost (development)");
   return "http://localhost:3000";
 }
+
+const authBaseURL = getAuthBaseURL();
+console.log("🚀 [AUTH-SERVER] Creating Better Auth with baseURL:", authBaseURL);
+console.log("🚀 [AUTH-SERVER] DATABASE_URL exists:", !!process.env.DATABASE_URL);
+console.log("🚀 [AUTH-SERVER] BETTER_AUTH_SECRET exists:", !!process.env.BETTER_AUTH_SECRET);
 
 export const auth = betterAuth({
   // Database connection - uses Neon PostgreSQL with pg Pool
@@ -38,7 +51,7 @@ export const auth = betterAuth({
   }),
 
   // Base URL for authentication endpoints with smart fallback
-  baseURL: getAuthBaseURL(),
+  baseURL: authBaseURL,
   basePath: "/api/auth",
 
   // Secret key for signing tokens (must match backend)

@@ -208,17 +208,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
    * Register new user with Better Auth
    */
   const register = useCallback(async (data: RegisterRequest) => {
+    console.log("🔵 [AUTH-CONTEXT] Register called with email:", data.email);
     setIsLoading(true);
     setError(null);
 
     try {
+      console.log("🔵 [AUTH-CONTEXT] Calling authClient.signUp.email...");
       const { data: responseData, error } = await authClient.signUp.email({
         email: data.email,
         password: data.password,
         name: data.name || '',
       });
 
+      console.log("🔵 [AUTH-CONTEXT] SignUp response:", { responseData, error });
+
       if (error) {
+        console.error("❌ [AUTH-CONTEXT] SignUp error:", error);
         // Check if this is a duplicate email error
         let errorMessage = error.message || 'Registration failed. Please try again.';
 
@@ -234,16 +239,28 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
 
       if (responseData) {
+        console.log("✅ [AUTH-CONTEXT] SignUp successful, fetching session...");
         // Refresh session to get proper session structure
-        const { data: sessionData } = await authClient.getSession();
+        const { data: sessionData, error: sessionError } = await authClient.getSession();
+        console.log("🔵 [AUTH-CONTEXT] GetSession response:", { sessionData, sessionError });
+
         if (sessionData) {
+          console.log("✅ [AUTH-CONTEXT] Session data received:", sessionData);
           setSession(sessionData as Session);
           clearTokenCache(); // Clear old token cache
+          console.log("🔵 [AUTH-CONTEXT] Redirecting to /dashboard...");
+          router.push('/dashboard');
+        } else {
+          console.error("❌ [AUTH-CONTEXT] No session data after signup!");
+          if (sessionError) {
+            console.error("❌ [AUTH-CONTEXT] Session error:", sessionError);
+          }
         }
-        // Redirect to dashboard page
-        router.push('/dashboard');
+      } else {
+        console.error("❌ [AUTH-CONTEXT] No response data from signup!");
       }
     } catch (err) {
+      console.error("❌ [AUTH-CONTEXT] Register exception:", err);
       const errorMessage =
         err instanceof Error
           ? err.message
@@ -252,6 +269,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       throw err;
     } finally {
       setIsLoading(false);
+      console.log("🔵 [AUTH-CONTEXT] Register completed");
     }
   }, [router]);
 

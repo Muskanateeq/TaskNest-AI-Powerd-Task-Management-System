@@ -13,31 +13,45 @@ import { jwtClient } from "better-auth/client/plugins";
  * Priority: env var > production URL (if on Vercel) > localhost
  */
 function getBaseURL(): string {
+  console.log("🔍 [AUTH-CLIENT] Detecting baseURL...");
+  console.log("🔍 [AUTH-CLIENT] NEXT_PUBLIC_APP_URL:", process.env.NEXT_PUBLIC_APP_URL);
+  console.log("🔍 [AUTH-CLIENT] VERCEL:", process.env.VERCEL);
+  console.log("🔍 [AUTH-CLIENT] NEXT_PUBLIC_VERCEL_URL:", process.env.NEXT_PUBLIC_VERCEL_URL);
+
   // If env var is set, use it
   if (process.env.NEXT_PUBLIC_APP_URL) {
+    console.log("✅ [AUTH-CLIENT] Using NEXT_PUBLIC_APP_URL:", process.env.NEXT_PUBLIC_APP_URL);
     return process.env.NEXT_PUBLIC_APP_URL;
   }
 
   // Check if we're on Vercel (production)
   if (process.env.VERCEL || process.env.NEXT_PUBLIC_VERCEL_URL) {
+    console.log("✅ [AUTH-CLIENT] Detected Vercel, using hardcoded URL");
     return "https://tasknest-ai-powerd.vercel.app";
   }
 
   // Client-side: check if hostname is vercel.app
   if (typeof window !== "undefined") {
+    console.log("🔍 [AUTH-CLIENT] Window hostname:", window.location.hostname);
     if (window.location.hostname.includes("vercel.app")) {
-      return `https://${window.location.hostname}`;
+      const url = `https://${window.location.hostname}`;
+      console.log("✅ [AUTH-CLIENT] Using window hostname:", url);
+      return url;
     }
   }
 
   // Default to localhost for development
+  console.log("✅ [AUTH-CLIENT] Using localhost (development)");
   return "http://localhost:3000";
 }
 
 // Create Better Auth client with JWT plugin
+const baseURL = getBaseURL();
+console.log("🚀 [AUTH-CLIENT] Creating authClient with baseURL:", baseURL);
+
 export const authClient = createAuthClient({
   // Base URL for auth endpoints with smart fallback
-  baseURL: getBaseURL(),
+  baseURL: baseURL,
   basePath: "/api/auth",
   // Add JWT plugin to client
   plugins: [jwtClient()],
