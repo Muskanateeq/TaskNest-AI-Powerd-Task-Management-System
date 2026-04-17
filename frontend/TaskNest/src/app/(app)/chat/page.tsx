@@ -33,15 +33,6 @@ export default function ChatPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   /**
-   * Redirect if not authenticated
-   */
-  useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      router.push('/login');
-    }
-  }, [authLoading, isAuthenticated, router]);
-
-  /**
    * Load conversations (no loading state - instant display)
    */
   const loadConversations = React.useCallback(async () => {

@@ -34,7 +34,8 @@
 }
 
 .login-container,
-.signup-container {
+.signup-container,
+.signin-container {
     width: 100%;
     max-width: 440px;
 }
@@ -55,7 +56,8 @@
 }
 
 .login-card,
-.signup-card {
+.signup-card,
+.signin-card {
     background: rgba(10, 10, 10, 0.8);
     border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 16px;
@@ -63,20 +65,23 @@
 }
 
 .login-header,
-.signup-header {
+.signup-header,
+.signin-header {
     text-align: center;
     margin-bottom: 2rem;
 }
 
 .login-header h1,
-.signup-header h1 {
+.signup-header h1,
+.signin-header h1 {
     font-size: 1.75rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
 }
 
 .login-header p,
-.signup-header p {
+.signup-header p,
+.signin-header p {
     color: #E0E0E0;
     font-size: 0.95rem;
 }
@@ -102,6 +107,41 @@
     color: #FFFFFF;
     font-size: 0.95rem;
     transition: all 0.3s;
+}
+
+/* Password Input Wrapper */
+.password-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.password-input-wrapper .form-input {
+    padding-right: 3rem;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: rgba(212, 175, 55, 0.7);
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s;
+}
+
+.password-toggle:hover {
+    color: #d4af37;
+}
+
+.password-toggle:focus {
+    outline: none;
+    color: #d4af37;
 }
 
 .form-input:focus {

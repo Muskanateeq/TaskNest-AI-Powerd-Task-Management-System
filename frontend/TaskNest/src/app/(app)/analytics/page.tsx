@@ -28,17 +28,12 @@ export default function AnalyticsPage() {
   const [timeRange, setTimeRange] = useState<TimeRange>('30days');
 
   /**
-   * Redirect if not authenticated
-   */
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
-      router.push('/login');
+      // Auth handled by middleware;
     }
   }, [authLoading, isAuthenticated, router]);
 
-  /**
-   * Filter tasks by time range
-   */
   const filteredTasks = useMemo(() => {
     if (timeRange === 'all') return tasks;
 
@@ -50,9 +45,6 @@ export default function AnalyticsPage() {
     return tasks.filter(task => new Date(task.created_at) >= cutoff);
   }, [tasks, timeRange]);
 
-  /**
-   * Calculate statistics
-   */
   const stats = useMemo(() => {
     const total = filteredTasks.length;
     const completed = filteredTasks.filter(t => t.completed).length;
@@ -91,9 +83,6 @@ export default function AnalyticsPage() {
     };
   }, [filteredTasks]);
 
-  /**
-   * Tasks by Status (Pie Chart)
-   */
   const statusChartData = useMemo(() => {
     return [{
       values: [stats.completed, stats.pending, stats.overdue],
@@ -108,9 +97,6 @@ export default function AnalyticsPage() {
     }];
   }, [stats]);
 
-  /**
-   * Tasks by Priority (Bar Chart)
-   */
   const priorityChartData = useMemo(() => {
     const high = filteredTasks.filter(t => t.priority === 'high').length;
     const medium = filteredTasks.filter(t => t.priority === 'medium').length;
@@ -129,9 +115,6 @@ export default function AnalyticsPage() {
     }];
   }, [filteredTasks]);
 
-  /**
-   * Tasks by Tags (Bar Chart)
-   */
   const tagsChartData = useMemo(() => {
     const tagCounts: Record<string, number> = {};
     filteredTasks.forEach(task => {
@@ -157,9 +140,6 @@ export default function AnalyticsPage() {
     }];
   }, [filteredTasks]);
 
-  /**
-   * Completion Trend (Line Chart)
-   */
   const trendChartData = useMemo(() => {
     const days = timeRange === '7days' ? 7 : timeRange === '30days' ? 30 : 90;
     const dates: string[] = [];
@@ -192,9 +172,6 @@ export default function AnalyticsPage() {
     }];
   }, [filteredTasks, timeRange]);
 
-  /**
-   * Common chart layout
-   */
   const chartLayout = {
     paper_bgcolor: 'rgba(0,0,0,0)',
     plot_bgcolor: 'rgba(0,0,0,0)',

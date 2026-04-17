@@ -18,7 +18,7 @@ export default function CalendarPage() {
    */
   React.useEffect(() => {
     if (!authLoading && !isAuthenticated) {
-      router.push('/login');
+      // Auth handled by middleware;
     }
   }, [authLoading, isAuthenticated, router]);
 

@@ -27,7 +27,7 @@ export default function CTA() {
               Start Free Trial
               <ArrowRight style={{ width: '1.25rem', height: '1.25rem', marginLeft: '0.5rem', display: 'inline' }} />
             </Link>
-            <Link href="/login" className="btn btn-outline btn-large">
+            <Link href="/signin" className="btn btn-outline btn-large">
               Sign In
             </Link>
           </div>

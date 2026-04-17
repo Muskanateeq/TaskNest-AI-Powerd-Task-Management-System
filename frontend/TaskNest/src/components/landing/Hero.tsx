@@ -23,7 +23,7 @@ export default function Hero() {
           <p>TaskNest helps teams collaborate seamlessly with intelligent task management, real-time updates, and powerful automation.</p>
           <div className="hero-cta">
             <Link href="/signup" className="btn btn-primary">Start Free Trial</Link>
-            <Link href="/login" className="btn btn-outline">Watch Demo</Link>
+            <Link href="/signin" className="btn btn-outline">Sign In</Link>
           </div>
         </div>
       </div>

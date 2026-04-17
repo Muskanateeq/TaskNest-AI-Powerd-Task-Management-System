@@ -109,3 +109,6 @@ alembic/versions/__pycache__/
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# Documents
+AUTH_FIX_SUMMARY.md

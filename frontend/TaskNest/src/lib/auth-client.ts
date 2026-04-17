@@ -18,29 +18,57 @@ export const authClient = createAuthClient({
 });
 
 /**
- * Get JWT token for API requests
+ * Token cache to prevent repeated API calls
+ */
+let cachedToken: string | null = null;
+let tokenExpiry: number = 0;
+
+/**
+ * Get JWT token for API requests with caching
  *
  * This function retrieves a JWT token from Better Auth
  * that can be sent to the FastAPI backend for authentication.
+ * Tokens are cached for 5 minutes to reduce API calls.
  *
  * @returns JWT token string or null if not authenticated
  */
 export async function getJWTToken(): Promise<string | null> {
   try {
-    // CORRECT METHOD: Use authClient.token() not getToken()
-    // This is the documented Better Auth API
+    // Check if cached token is still valid (with 1 minute buffer)
+    const now = Date.now();
+    if (cachedToken && tokenExpiry > now + 60000) {
+      return cachedToken;
+    }
+
+    // Fetch new token
     const { data, error } = await authClient.token();
 
     if (error) {
       console.error("Failed to get JWT token:", error);
+      cachedToken = null;
+      tokenExpiry = 0;
       return null;
     }
 
-    return data?.token || null;
+    // Cache token for 5 minutes
+    cachedToken = data?.token || null;
+    tokenExpiry = now + 5 * 60 * 1000;
+
+    return cachedToken;
   } catch (error) {
     console.error("Error getting JWT token:", error);
+    cachedToken = null;
+    tokenExpiry = 0;
     return null;
   }
+}
+
+/**
+ * Clear cached token (call on logout)
+ */
+export function clearTokenCache(): void {
+  cachedToken = null;
+  tokenExpiry = 0;
 }
 
 /**
@@ -60,5 +88,6 @@ export async function getAuthHeader(): Promise<Record<string, string>> {
   return {};
 }
 
-// Export auth client as default
+// Export auth client and cache utilities
 export default authClient;
+export { clearTokenCache };

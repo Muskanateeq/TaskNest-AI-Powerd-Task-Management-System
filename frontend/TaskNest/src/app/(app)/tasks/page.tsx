@@ -70,15 +70,6 @@ export default function TasksPage() {
   }, [registerRefresh, unregisterRefresh, refreshTasks]);
 
   /**
-   * Redirect if not authenticated
-   */
-  useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      router.push('/login');
-    }
-  }, [authLoading, isAuthenticated, router]);
-
-  /**
    * Handle create task
    */
   const handleCreateTask = async (data: TaskCreateRequest | TaskUpdateRequest) => {

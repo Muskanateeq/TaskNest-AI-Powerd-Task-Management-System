@@ -9,7 +9,7 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import authClient, { getJWTToken } from '@/lib/auth-client';
+import authClient, { getJWTToken, clearTokenCache } from '@/lib/auth-client';
 
 /**
  * User Interface (from Better Auth)
@@ -98,27 +98,41 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   /**
    * Initialize authentication state from Better Auth session
+   * Only runs once on mount to prevent repeated session checks
    */
   useEffect(() => {
+    let mounted = true;
+
     const initAuth = async () => {
       try {
         const { data, error } = await authClient.getSession();
+
+        if (!mounted) return;
 
         if (error) {
           console.error('Failed to get session:', error);
           setSession(null);
         } else if (data) {
           setSession(data as Session);
+        } else {
+          setSession(null);
         }
       } catch (err) {
+        if (!mounted) return;
         console.error('Failed to initialize auth:', err);
         setSession(null);
       } finally {
-        setIsLoading(false);
+        if (mounted) {
+          setIsLoading(false);
+        }
       }
     };
 
     initAuth();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   /**
@@ -154,7 +168,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
       });
 
       if (error) {
-        const errorMessage = error.message || 'Login failed. Please try again.';
+        // Check if this is an OAuth account trying to login with password
+        let errorMessage = error.message || 'Login failed. Please try again.';
+
+        // Detect OAuth account error
+        if (errorMessage.toLowerCase().includes('invalid') ||
+            errorMessage.toLowerCase().includes('credentials')) {
+          // Try to provide helpful message
+          errorMessage = `Invalid email or password. If you signed up with Google or GitHub, please use the social login buttons below.`;
+        }
+
         setError(errorMessage);
         throw new Error(errorMessage);
       }
@@ -164,6 +187,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const { data: sessionData } = await authClient.getSession();
         if (sessionData) {
           setSession(sessionData as Session);
+          clearTokenCache(); // Clear old token cache
         }
         // Redirect to dashboard page
         router.push('/dashboard');
@@ -195,7 +219,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
       });
 
       if (error) {
-        const errorMessage = error.message || 'Registration failed. Please try again.';
+        // Check if this is a duplicate email error
+        let errorMessage = error.message || 'Registration failed. Please try again.';
+
+        // Detect duplicate email / OAuth account
+        if (errorMessage.toLowerCase().includes('already') ||
+            errorMessage.toLowerCase().includes('exists') ||
+            errorMessage.toLowerCase().includes('duplicate')) {
+          errorMessage = `This email is already registered. If you signed up with Google or GitHub, please use the social login buttons below to sign in.`;
+        }
+
         setError(errorMessage);
         throw new Error(errorMessage);
       }
@@ -205,6 +238,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const { data: sessionData } = await authClient.getSession();
         if (sessionData) {
           setSession(sessionData as Session);
+          clearTokenCache(); // Clear old token cache
         }
         // Redirect to dashboard page
         router.push('/dashboard');
@@ -226,18 +260,27 @@ export function AuthProvider({ children }: AuthProviderProps) {
    */
   const logout = useCallback(async () => {
     try {
+      // Clear token cache first
+      clearTokenCache();
+
+      // Sign out from Better Auth
       await authClient.signOut();
+
+      // Clear local session state
       setSession(null);
       setError(null);
-      // Redirect to login page
-      router.push('/login');
+
+      // Redirect to home page
+      window.location.href = '/';
     } catch (err) {
       console.error('Logout failed:', err);
       // Force logout even if API call fails
+      clearTokenCache();
       setSession(null);
-      router.push('/login');
+      // Redirect to home page
+      window.location.href = '/';
     }
-  }, [router]);
+  }, []);
 
   /**
    * Get JWT token for API requests

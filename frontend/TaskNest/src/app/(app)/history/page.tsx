@@ -30,17 +30,12 @@ export default function HistoryPage() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   /**
-   * Redirect if not authenticated
-   */
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
-      router.push('/login');
+      // Auth handled by middleware;
     }
   }, [authLoading, isAuthenticated, router]);
 
-  /**
-   * Load activities from API
-   */
   const loadActivities = useCallback(async () => {
     if (!isAuthenticated) return;
 
@@ -59,17 +54,11 @@ export default function HistoryPage() {
     loadActivities();
   }, [loadActivities]);
 
-  /**
-   * Register refresh callback for auto-refresh
-   */
   useEffect(() => {
     registerRefresh('history', loadActivities);
     return () => unregisterRefresh('history');
   }, [registerRefresh, unregisterRefresh, loadActivities]);
 
-  /**
-   * Apply filters
-   */
   useEffect(() => {
     let filtered = [...activities];
 
@@ -107,9 +96,6 @@ export default function HistoryPage() {
     setFilteredActivities(filtered);
   }, [activities, dateFilter, typeFilter, searchQuery]);
 
-  /**
-   * Handle delete activity
-   */
   const handleDeleteActivity = async (id: number) => {
     if (!confirm('Delete this activity?')) return;
 
@@ -125,9 +111,6 @@ export default function HistoryPage() {
     }
   };
 
-  /**
-   * Handle clear all activities
-   */
   const handleClearAll = async () => {
     if (!confirm('Are you sure you want to clear all activity history? This cannot be undone.')) return;
 
@@ -143,9 +126,6 @@ export default function HistoryPage() {
     }
   };
 
-  /**
-   * Get activity icon
-   */
   const getActivityIcon = (type: ActivityType) => {
     switch (type) {
       case 'created':
@@ -165,9 +145,6 @@ export default function HistoryPage() {
     }
   };
 
-  /**
-   * Get activity color
-   */
   const getActivityColor = (type: ActivityType) => {
     switch (type) {
       case 'created':
@@ -187,9 +164,6 @@ export default function HistoryPage() {
     }
   };
 
-  /**
-   * Format timestamp
-   */
   const formatTimestamp = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -210,9 +184,6 @@ export default function HistoryPage() {
     });
   };
 
-  /**
-   * Group activities by date
-   */
   const groupedActivities = filteredActivities.reduce((groups, activity) => {
     const date = new Date(activity.created_at).toLocaleDateString('en-US', {
       year: 'numeric',

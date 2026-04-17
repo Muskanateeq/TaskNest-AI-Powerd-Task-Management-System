@@ -23,7 +23,7 @@ export default function Navigation() {
         </ul>
 
         <div className="nav-cta">
-          <Link href="/login" className="btn btn-outline">Sign In</Link>
+          <Link href="/signin" className="btn btn-outline">Sign In</Link>
           <Link href="/signup" className="btn btn-primary">Get Started</Link>
         </div>
       </div>
