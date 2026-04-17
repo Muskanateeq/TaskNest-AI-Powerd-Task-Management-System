@@ -9,6 +9,25 @@ import { betterAuth } from "better-auth";
 import { jwt } from "better-auth/plugins";
 import { Pool } from "pg";
 
+/**
+ * Get the base URL for Better Auth server
+ * Priority: env var > production URL (if on Vercel) > localhost
+ */
+function getAuthBaseURL(): string {
+  // If env var is set, use it
+  if (process.env.BETTER_AUTH_URL) {
+    return process.env.BETTER_AUTH_URL;
+  }
+
+  // Check if we're on Vercel (production)
+  if (process.env.VERCEL || process.env.VERCEL_URL) {
+    return "https://tasknest-ai-powerd.vercel.app";
+  }
+
+  // Default to localhost for development
+  return "http://localhost:3000";
+}
+
 export const auth = betterAuth({
   // Database connection - uses Neon PostgreSQL with pg Pool
   database: new Pool({
@@ -18,8 +37,8 @@ export const auth = betterAuth({
     },
   }),
 
-  // Base URL for authentication endpoints
-  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
+  // Base URL for authentication endpoints with smart fallback
+  baseURL: getAuthBaseURL(),
   basePath: "/api/auth",
 
   // Secret key for signing tokens (must match backend)
@@ -70,9 +89,9 @@ export const auth = betterAuth({
   plugins: [
     jwt({
       jwt: {
-        // JWT configuration
-        issuer: process.env.BETTER_AUTH_URL || "http://localhost:3000",
-        audience: process.env.BETTER_AUTH_URL || "http://localhost:3000",
+        // JWT configuration with smart fallback
+        issuer: getAuthBaseURL(),
+        audience: getAuthBaseURL(),
         expirationTime: "7d",
 
         // Define JWT payload structure
@@ -87,10 +106,11 @@ export const auth = betterAuth({
     }),
   ],
 
-  // Trusted origins for CORS
+  // Trusted origins for CORS with production URL
   trustedOrigins: [
     "http://localhost:3000",
     "http://localhost:3001",
+    "https://tasknest-ai-powerd.vercel.app",
     process.env.NEXT_PUBLIC_APP_URL || "",
   ].filter(Boolean),
 });

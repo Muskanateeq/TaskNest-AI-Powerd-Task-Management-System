@@ -42,7 +42,7 @@ export default function SignupPage() {
 
           {/* Sign In Link */}
           <div className="signin-link">
-            Already have an account? <Link href="/login">Sign in</Link>
+            Already have an account? <Link href="/signin">Sign in</Link>
           </div>
         </div>
       </div>

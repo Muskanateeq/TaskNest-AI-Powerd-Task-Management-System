@@ -1,5 +1,5 @@
 /**
- * Login Page - TaskNest
+ * Sign In Page - TaskNest
  * Modern dark theme authentication page
  */
 
@@ -10,7 +10,7 @@ import Link from 'next/link';
 import LoginForm from '@/components/auth/LoginForm';
 import '../auth.css';
 
-export default function LoginPage() {
+export default function SignInPage() {
   return (
     <div className="auth-page">
       {/* Back to Home Button */}
@@ -21,7 +21,7 @@ export default function LoginPage() {
         <span>Back to Home</span>
       </Link>
 
-      <div className="login-container">
+      <div className="signin-container">
         {/* Logo */}
         <div className="logo">
           <Link href="/">
@@ -29,15 +29,15 @@ export default function LoginPage() {
           </Link>
         </div>
 
-        {/* Login Card */}
-        <div className="login-card">
+        {/* Sign In Card */}
+        <div className="signin-card">
           {/* Header */}
-          <div className="login-header">
+          <div className="signin-header">
             <h1>Welcome Back</h1>
             <p>Sign in to your account to continue</p>
           </div>
 
-          {/* Login Form */}
+          {/* Sign In Form */}
           <LoginForm />
 
           {/* Sign Up Link */}

@@ -89,11 +89,9 @@ async function request<T = unknown>(
     // Handle errors
     if (!response.ok) {
       // Handle 401 Unauthorized - JWT token expired or invalid
+      // Don't auto-redirect here - let the auth context handle it
       if (response.status === 401) {
-        // Redirect to login page
-        if (typeof window !== 'undefined') {
-          window.location.href = '/login';
-        }
+        console.warn('API request unauthorized - token may be expired');
       }
 
       throw new APIError(

@@ -29,15 +29,6 @@ export default function NotificationsPage() {
   const [filterStatus, setFilterStatus] = useState<FilterStatus>('all');
 
   /**
-   * Redirect if not authenticated
-   */
-  useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      router.push('/login');
-    }
-  }, [authLoading, isAuthenticated, router]);
-
-  /**
    * Load notifications
    */
   const loadNotifications = async () => {

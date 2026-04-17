@@ -38,18 +38,6 @@ export default function SettingsPage() {
   const [trashedTasks, setTrashedTasks] = useState<Task[]>([]);
   const [isLoadingTrash, setIsLoadingTrash] = useState(false);
 
-  /**
-   * Redirect if not authenticated
-   */
-  useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      router.push('/login');
-    }
-  }, [authLoading, isAuthenticated, router]);
-
-  /**
-   * Load settings from backend
-   */
   useEffect(() => {
     const loadSettings = async () => {
       if (!isAuthenticated) return;
@@ -71,9 +59,6 @@ export default function SettingsPage() {
     loadSettings();
   }, [isAuthenticated, getToken, user]);
 
-  /**
-   * Handle setting change with backend sync
-   */
   const handleSettingChange = async (updates: SettingsUpdate) => {
     if (!settings) return;
 
@@ -92,9 +77,6 @@ export default function SettingsPage() {
     }
   };
 
-  /**
-   * Handle profile name update
-   */
   const handleNameUpdate = async () => {
     if (!userName.trim()) {
       alert('Name cannot be empty');
@@ -116,9 +98,6 @@ export default function SettingsPage() {
     }
   };
 
-  /**
-   * Handle export data
-   */
   const handleExportData = async () => {
     try {
       setIsSaving(true);
@@ -144,9 +123,6 @@ export default function SettingsPage() {
     }
   };
 
-  /**
-   * Load trash when trash tab is active
-   */
   useEffect(() => {
     const loadTrash = async () => {
       if (activeTab !== 'trash' || !isAuthenticated) return;
@@ -165,9 +141,6 @@ export default function SettingsPage() {
     loadTrash();
   }, [activeTab, isAuthenticated]);
 
-  /**
-   * Handle clear history
-   */
   const handleClearHistory = async () => {
     if (!confirm('Are you sure you want to clear all activity history? This cannot be undone.')) return;
 
@@ -183,9 +156,6 @@ export default function SettingsPage() {
     }
   };
 
-  /**
-   * Handle restore task
-   */
   const handleRestoreTask = async (taskId: number) => {
     try {
       setIsSaving(true);
@@ -200,9 +170,6 @@ export default function SettingsPage() {
     }
   };
 
-  /**
-   * Handle permanent delete
-   */
   const handlePermanentDelete = async (taskId: number) => {
     if (!confirm('Permanently delete this task? This cannot be undone.')) return;
 
@@ -219,9 +186,6 @@ export default function SettingsPage() {
     }
   };
 
-  /**
-   * Handle empty trash
-   */
   const handleEmptyTrash = async () => {
     if (!confirm('Permanently delete all tasks in trash? This cannot be undone.')) return;
 
@@ -238,9 +202,6 @@ export default function SettingsPage() {
     }
   };
 
-  /**
-   * Handle account deletion
-   */
   const handleDeleteAccount = async () => {
     const confirmation = prompt(
       'This action is permanent and cannot be undone. All your data will be deleted.\n\nType your email to confirm:'

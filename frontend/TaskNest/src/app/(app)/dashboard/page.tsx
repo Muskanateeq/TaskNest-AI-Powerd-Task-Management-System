@@ -149,15 +149,6 @@ function DashboardContent() {
   }, [registerRefresh, unregisterRefresh, refreshTasks, refetchStats]);
 
   /**
-   * Redirect to login if not authenticated
-   */
-  useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      router.push('/login');
-    }
-  }, [authLoading, isAuthenticated, router]);
-
-  /**
    * Handle create task
    */
   const handleCreateTask = async (data: TaskCreateRequest | TaskUpdateRequest) => {
@@ -398,13 +389,6 @@ function DashboardContent() {
         <div className="dashboard-spinner"></div>
       </div>
     );
-  }
-
-  /**
-   * Don't render if not authenticated (will redirect)
-   */
-  if (!isAuthenticated) {
-    return null;
   }
 
   // Calculate statistics from API or fallback to local calculation

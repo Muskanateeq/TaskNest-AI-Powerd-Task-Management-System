@@ -8,39 +8,93 @@
 import { createAuthClient } from "better-auth/react";
 import { jwtClient } from "better-auth/client/plugins";
 
+/**
+ * Get the base URL for Better Auth
+ * Priority: env var > production URL (if on Vercel) > localhost
+ */
+function getBaseURL(): string {
+  // If env var is set, use it
+  if (process.env.NEXT_PUBLIC_APP_URL) {
+    return process.env.NEXT_PUBLIC_APP_URL;
+  }
+
+  // Check if we're on Vercel (production)
+  if (process.env.VERCEL || process.env.NEXT_PUBLIC_VERCEL_URL) {
+    return "https://tasknest-ai-powerd.vercel.app";
+  }
+
+  // Client-side: check if hostname is vercel.app
+  if (typeof window !== "undefined") {
+    if (window.location.hostname.includes("vercel.app")) {
+      return `https://${window.location.hostname}`;
+    }
+  }
+
+  // Default to localhost for development
+  return "http://localhost:3000";
+}
+
 // Create Better Auth client with JWT plugin
 export const authClient = createAuthClient({
-  // Base URL for auth endpoints
-  baseURL: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+  // Base URL for auth endpoints with smart fallback
+  baseURL: getBaseURL(),
   basePath: "/api/auth",
   // Add JWT plugin to client
   plugins: [jwtClient()],
 });
 
 /**
- * Get JWT token for API requests
+ * Token cache to prevent repeated API calls
+ */
+let cachedToken: string | null = null;
+let tokenExpiry: number = 0;
+
+/**
+ * Get JWT token for API requests with caching
  *
  * This function retrieves a JWT token from Better Auth
  * that can be sent to the FastAPI backend for authentication.
+ * Tokens are cached for 5 minutes to reduce API calls.
  *
  * @returns JWT token string or null if not authenticated
  */
 export async function getJWTToken(): Promise<string | null> {
   try {
-    // CORRECT METHOD: Use authClient.token() not getToken()
-    // This is the documented Better Auth API
+    // Check if cached token is still valid (with 1 minute buffer)
+    const now = Date.now();
+    if (cachedToken && tokenExpiry > now + 60000) {
+      return cachedToken;
+    }
+
+    // Fetch new token
     const { data, error } = await authClient.token();
 
     if (error) {
       console.error("Failed to get JWT token:", error);
+      cachedToken = null;
+      tokenExpiry = 0;
       return null;
     }
 
-    return data?.token || null;
+    // Cache token for 5 minutes
+    cachedToken = data?.token || null;
+    tokenExpiry = now + 5 * 60 * 1000;
+
+    return cachedToken;
   } catch (error) {
     console.error("Error getting JWT token:", error);
+    cachedToken = null;
+    tokenExpiry = 0;
     return null;
   }
+}
+
+/**
+ * Clear cached token (call on logout)
+ */
+export function clearTokenCache(): void {
+  cachedToken = null;
+  tokenExpiry = 0;
 }
 
 /**
