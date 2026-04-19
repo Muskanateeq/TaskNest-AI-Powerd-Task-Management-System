@@ -121,9 +121,9 @@ export const auth = betterAuth({
 
   // Advanced configuration for production
   advanced: {
-    // Use secure cookies in production (HTTPS) to ensure proper cookie delivery
-    // This fixes the issue where cookies are not sent to middleware in production
-    useSecureCookies: process.env.NODE_ENV === "production",
+    // Force secure cookies to ensure proper cookie delivery over HTTPS
+    // This is the most reliable way per Better Auth docs (not conditional on NODE_ENV)
+    useSecureCookies: true,
   },
 
   // Trusted origins for CORS with production URL

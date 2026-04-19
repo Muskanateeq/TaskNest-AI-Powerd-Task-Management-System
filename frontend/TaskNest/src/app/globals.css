@@ -92,6 +92,7 @@
 }
 
 html {
+  font-size: 14px; /* Base font size - makes entire site text smaller */
   scroll-behavior: smooth;
 }
 
