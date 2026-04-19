@@ -45,6 +45,7 @@ class ConversationService:
         return ConversationPublic(
             id=conversation.id,
             user_id=conversation.user_id,
+            title=conversation.title,
             created_at=conversation.created_at,
             updated_at=conversation.updated_at,
             message_count=0
@@ -90,6 +91,7 @@ class ConversationService:
             ConversationPublic(
                 id=conv.id,
                 user_id=conv.user_id,
+                title=conv.title,
                 created_at=conv.created_at,
                 updated_at=conv.updated_at,
                 message_count=msg_count
@@ -159,6 +161,7 @@ class ConversationService:
         return ConversationPublic(
             id=conv.id,
             user_id=conv.user_id,
+            title=conv.title,
             created_at=conv.created_at,
             updated_at=conv.updated_at,
             message_count=msg_count
