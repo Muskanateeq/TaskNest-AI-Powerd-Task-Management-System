@@ -28,6 +28,11 @@ class Conversation(SQLModel, table=True):
         sa_column=Column(String(255), nullable=False, index=True),
         description="User ID who owns this conversation (from Better Auth JWT)"
     )
+    title: Optional[str] = Field(
+        default=None,
+        sa_column=Column(String(200), nullable=True),
+        description="Conversation title (auto-generated from first user message)"
+    )
     created_at: datetime = Field(
         sa_column=Column(
             TIMESTAMP,
@@ -54,6 +59,7 @@ class Conversation(SQLModel, table=True):
             "example": {
                 "id": 1,
                 "user_id": "550e8400-e29b-41d4-a716-446655440000",
+                "title": "Create a task for project meeting",
                 "created_at": "2024-01-01T00:00:00Z",
                 "updated_at": "2024-01-01T00:00:00Z"
             }
@@ -66,6 +72,7 @@ class ConversationPublic(SQLModel):
     """
     id: int
     user_id: str
+    title: Optional[str] = None
     created_at: datetime
     updated_at: datetime
     message_count: int = 0  # Number of messages in conversation

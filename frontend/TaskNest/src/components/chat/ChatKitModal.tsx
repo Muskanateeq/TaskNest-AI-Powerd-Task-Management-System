@@ -513,7 +513,9 @@ export default function ChatKitModal({ isOpen, onClose }: ChatKitModalProps) {
                           </svg>
                         </button>
                       </div>
-                      <div className="history-conversation-title">Conversation {conversation.id}</div>
+                      <div className="history-conversation-title">
+                        {conversation.title || `Conversation ${conversation.id}`}
+                      </div>
                       <div className="history-conversation-date">
                         {new Date(conversation.updated_at).toLocaleDateString('en-US', {
                           month: 'short',
@@ -564,7 +566,15 @@ export default function ChatKitModal({ isOpen, onClose }: ChatKitModalProps) {
                         )}
                       </div>
                       <div className="message-content">
-                        <div className="message-text">{message.content}</div>
+                        {message.role === 'assistant' && message.content === '' && isLoading ? (
+                          <div className="typing-indicator">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                          </div>
+                        ) : (
+                          <div className="message-text">{message.content}</div>
+                        )}
                         <div className="message-time">
                           {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </div>

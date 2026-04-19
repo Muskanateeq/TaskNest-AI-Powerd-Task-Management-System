@@ -78,6 +78,16 @@ class ChatService:
                 session=session
             )
 
+            # Step 2.5: Set conversation title from first user message if not set
+            if conversation.title is None:
+                # Use first 100 characters of first user message as title
+                title = user_message[:100].strip()
+                conversation.title = title
+                session.add(conversation)
+                await session.commit()
+                await session.refresh(conversation)
+                logger.info(f"[ChatService] Set conversation {conversation_id} title: {title}")
+
             # Step 3: Build message history with agent's system instructions
             message_history = await ChatService._build_message_history(
                 conversation_id, user_id, session
@@ -283,6 +293,16 @@ class ChatService:
             ),
             session=session
         )
+
+        # Step 2.5: Set conversation title from first user message if not set
+        if conversation.title is None:
+            # Use first 100 characters of first user message as title
+            title = user_message[:100].strip()
+            conversation.title = title
+            session.add(conversation)
+            await session.commit()
+            await session.refresh(conversation)
+            logger.info(f"[ChatService] Set conversation {conversation_id} title: {title}")
 
         # Step 3: Build message history with agent's system instructions
         message_history = await ChatService._build_message_history(

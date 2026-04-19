@@ -314,7 +314,7 @@ export default function ChatPage() {
                 </div>
                 <div className="conversation-info">
                   <div className="conversation-title">
-                    Conversation {conversation.id}
+                    {conversation.title || `Conversation ${conversation.id}`}
                   </div>
                   <div className="conversation-date">
                     {new Date(conversation.updated_at).toLocaleDateString()}
@@ -408,7 +408,15 @@ export default function ChatPage() {
                     )}
                   </div>
                   <div className="message-content">
-                    <div className="message-text">{message.content}</div>
+                    {message.role === 'assistant' && message.content === '' && isSending ? (
+                      <div className="typing-indicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                      </div>
+                    ) : (
+                      <div className="message-text">{message.content}</div>
+                    )}
                     <div className="message-time">{formatTime(message.created_at)}</div>
                   </div>
                 </div>
