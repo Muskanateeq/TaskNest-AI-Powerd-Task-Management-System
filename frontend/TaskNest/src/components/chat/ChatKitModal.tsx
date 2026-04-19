@@ -39,6 +39,7 @@ export default function ChatKitModal({ isOpen, onClose }: ChatKitModalProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isTyping, setIsTyping] = useState(false); // Dedicated typing indicator state
   const [error, setError] = useState<string | null>(null);
   const [conversationId, setConversationId] = useState<number | null>(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
@@ -112,8 +113,9 @@ export default function ChatKitModal({ isOpen, onClose }: ChatKitModalProps) {
     };
     setMessages(prev => [...prev, assistantMessage]);
 
-    // Set loading AFTER messages are visible (non-blocking)
+    // Set loading and typing AFTER messages are visible (non-blocking)
     setIsLoading(true);
+    setIsTyping(true); // Show typing animation
 
     try {
       const token = await getToken();
@@ -169,6 +171,8 @@ export default function ChatKitModal({ isOpen, onClose }: ChatKitModalProps) {
                 setConversationId(event.conversation_id);
               } else if (event.type === 'content') {
                 // INSTANT: Append content immediately (no batching, no delays)
+                // Hide typing animation on first content
+                setIsTyping(false);
                 setMessages(prev =>
                   prev.map(msg =>
                     msg.id === assistantMessageId
@@ -566,7 +570,7 @@ export default function ChatKitModal({ isOpen, onClose }: ChatKitModalProps) {
                         )}
                       </div>
                       <div className="message-content">
-                        {message.role === 'assistant' && message.content === '' && isLoading ? (
+                        {message.role === 'assistant' && message.content === '' && isTyping ? (
                           <div className="typing-indicator">
                             <span></span>
                             <span></span>

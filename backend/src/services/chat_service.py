@@ -28,6 +28,63 @@ class ChatService:
     """Service class for AI chat operations"""
 
     @staticmethod
+    async def _generate_conversation_title(user_message: str) -> str:
+        """
+        Generate a smart, concise title from user's first message using LLM.
+
+        Args:
+            user_message: The user's first message in the conversation
+
+        Returns:
+            A 3-5 word concise title (e.g., "Buy groceries task" instead of full message)
+
+        Example:
+            "Create a task to buy groceries tomorrow" → "Buy groceries task"
+            "Show me all high priority tasks" → "High priority tasks"
+            "Mark task 5 as complete" → "Complete task 5"
+        """
+        try:
+            # Use LLM to extract concise title
+            agent = get_agent()
+
+            prompt = f"""Generate a concise 3-5 word title for this user query. Extract only the key action and subject.
+
+User query: "{user_message}"
+
+Rules:
+- Maximum 5 words
+- Focus on action + subject (e.g., "Buy groceries task", "High priority tasks")
+- Remove filler words (create, show, me, all, please, etc.)
+- Keep it natural and readable
+- English only
+
+Title:"""
+
+            response = await agent.create_completion(
+                messages=[{"role": "user", "content": prompt}],
+                tools=[],
+                stream=False
+            )
+
+            # Extract title from response
+            title = response.choices[0].message.content.strip()
+
+            # Clean up title (remove quotes, extra spaces)
+            title = title.strip('"\'').strip()
+
+            # Limit to 50 characters max
+            if len(title) > 50:
+                title = title[:50].strip()
+
+            logger.info(f"[ChatService] Generated title: '{title}' from message: '{user_message[:50]}...'")
+            return title
+
+        except Exception as e:
+            # Fallback: Use first 50 chars of message
+            logger.warning(f"[ChatService] Failed to generate title: {e}. Using fallback.")
+            return user_message[:50].strip()
+
+    @staticmethod
     async def send_message_stream(
         user_id: str,
         conversation_id: Optional[int],
@@ -89,8 +146,8 @@ class ChatService:
             conv_model = conv_result.scalar_one_or_none()
 
             if conv_model and conv_model.title is None:
-                # Use first 100 characters of first user message as title
-                title = user_message[:100].strip()
+                # Generate smart title using LLM (3-5 words)
+                title = await ChatService._generate_conversation_title(user_message)
                 conv_model.title = title
                 session.add(conv_model)
                 await session.commit()
@@ -313,8 +370,8 @@ class ChatService:
         conv_model = conv_result.scalar_one_or_none()
 
         if conv_model and conv_model.title is None:
-            # Use first 100 characters of first user message as title
-            title = user_message[:100].strip()
+            # Generate smart title using LLM (3-5 words)
+            title = await ChatService._generate_conversation_title(user_message)
             conv_model.title = title
             session.add(conv_model)
             await session.commit()

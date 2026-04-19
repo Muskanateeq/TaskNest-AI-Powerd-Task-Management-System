@@ -26,6 +26,7 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isSending, setIsSending] = useState(false);
+  const [isTyping, setIsTyping] = useState(false); // Dedicated typing indicator state
   const [error, setError] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [conversationToDelete, setConversationToDelete] = useState<number | null>(null);
@@ -103,6 +104,7 @@ export default function ChatPage() {
     const userMessageContent = inputValue.trim();
     setInputValue('');
     setIsSending(true);
+    setIsTyping(true); // Show typing animation
     setError(null);
 
     // Add user message to UI
@@ -149,6 +151,8 @@ export default function ChatPage() {
           }
         } else if (event.type === 'content') {
           // Append content to assistant message
+          // Hide typing animation on first content
+          setIsTyping(false);
           setMessages(prev =>
             prev.map(msg =>
               msg.id === assistantMessageId
@@ -408,7 +412,7 @@ export default function ChatPage() {
                     )}
                   </div>
                   <div className="message-content">
-                    {message.role === 'assistant' && message.content === '' && isSending ? (
+                    {message.role === 'assistant' && message.content === '' && isTyping ? (
                       <div className="typing-indicator">
                         <span></span>
                         <span></span>
