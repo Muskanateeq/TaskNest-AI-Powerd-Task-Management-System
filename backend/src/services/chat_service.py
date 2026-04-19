@@ -79,13 +79,21 @@ class ChatService:
             )
 
             # Step 2.5: Set conversation title from first user message if not set
-            if conversation.title is None:
+            # Fetch the actual Conversation database model (not ConversationPublic)
+            from src.models.conversation import Conversation
+            from sqlmodel import select
+
+            conv_result = await session.execute(
+                select(Conversation).where(Conversation.id == conversation_id)
+            )
+            conv_model = conv_result.scalar_one_or_none()
+
+            if conv_model and conv_model.title is None:
                 # Use first 100 characters of first user message as title
                 title = user_message[:100].strip()
-                conversation.title = title
-                session.add(conversation)
+                conv_model.title = title
+                session.add(conv_model)
                 await session.commit()
-                await session.refresh(conversation)
                 logger.info(f"[ChatService] Set conversation {conversation_id} title: {title}")
 
             # Step 3: Build message history with agent's system instructions
@@ -295,13 +303,21 @@ class ChatService:
         )
 
         # Step 2.5: Set conversation title from first user message if not set
-        if conversation.title is None:
+        # Fetch the actual Conversation database model (not ConversationPublic)
+        from src.models.conversation import Conversation
+        from sqlmodel import select
+
+        conv_result = await session.execute(
+            select(Conversation).where(Conversation.id == conversation_id)
+        )
+        conv_model = conv_result.scalar_one_or_none()
+
+        if conv_model and conv_model.title is None:
             # Use first 100 characters of first user message as title
             title = user_message[:100].strip()
-            conversation.title = title
-            session.add(conversation)
+            conv_model.title = title
+            session.add(conv_model)
             await session.commit()
-            await session.refresh(conversation)
             logger.info(f"[ChatService] Set conversation {conversation_id} title: {title}")
 
         # Step 3: Build message history with agent's system instructions
