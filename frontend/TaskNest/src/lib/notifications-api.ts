@@ -7,6 +7,8 @@
 import { api } from './api';
 import { Notification } from './types';
 
+export type { Notification };
+
 /**
  * Get user notifications
  */

@@ -8,6 +8,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useInAppNotifications } from '@/hooks/useInAppNotifications';
+import ConfirmDialog from './ConfirmDialog';
 import '../../app/notifications.css';
 
 export default function NotificationBell() {
@@ -23,6 +24,7 @@ export default function NotificationBell() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [showUnreadOnly, setShowUnreadOnly] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   /**
@@ -94,9 +96,19 @@ export default function NotificationBell() {
   /**
    * Handle delete notification
    */
-  const handleDelete = async (e: React.MouseEvent, notificationId: number) => {
+  const handleDelete = (e: React.MouseEvent, notificationId: number) => {
     e.stopPropagation();
-    await deleteNotification(notificationId);
+    setDeleteConfirm(notificationId);
+  };
+
+  /**
+   * Confirm delete
+   */
+  const confirmDelete = async () => {
+    if (deleteConfirm) {
+      await deleteNotification(deleteConfirm);
+      setDeleteConfirm(null);
+    }
   };
 
   /**
@@ -150,7 +162,18 @@ export default function NotificationBell() {
   };
 
   return (
-    <div className="notification-bell-container" ref={dropdownRef}>
+    <>
+      <ConfirmDialog
+        isOpen={deleteConfirm !== null}
+        title="Delete Notification"
+        message="Are you sure you want to delete this notification? This action cannot be undone."
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        variant="danger"
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteConfirm(null)}
+      />
+      <div className="notification-bell-container" ref={dropdownRef}>
       <button
         onClick={toggleDropdown}
         className="notification-bell-button"
@@ -221,6 +244,7 @@ export default function NotificationBell() {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 }

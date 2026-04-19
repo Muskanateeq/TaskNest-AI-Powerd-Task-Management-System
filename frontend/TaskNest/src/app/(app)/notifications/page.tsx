@@ -14,7 +14,8 @@ import {
   markAllAsRead,
   deleteNotification,
   type Notification,
-} from '@/lib/notificationsApi';
+} from '@/lib/notifications-api';
+import ConfirmDialog from '@/components/notifications/ConfirmDialog';
 import './notifications.css';
 
 type FilterType = 'all' | 'task_update' | 'mention' | 'assignment' | 'reminder';
@@ -27,6 +28,7 @@ export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [filterType, setFilterType] = useState<FilterType>('all');
   const [filterStatus, setFilterStatus] = useState<FilterStatus>('all');
+  const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
 
   /**
    * Load notifications
@@ -50,6 +52,14 @@ export default function NotificationsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, getToken]);
 
+  /**
+   * Handle notification click - mark as read
+   */
+  const handleNotificationClick = async (notification: Notification) => {
+    if (!notification.read) {
+      await handleMarkAsRead(notification.id);
+    }
+  };
   /**
    * Handle mark as read
    */
@@ -83,16 +93,23 @@ export default function NotificationsPage() {
   /**
    * Handle delete notification
    */
-  const handleDelete = async (notificationId: number) => {
-    if (!confirm('Delete this notification?')) return;
+  const handleDelete = (notificationId: number) => {
+    setDeleteConfirm(notificationId);
+  };
+
+  /**
+   * Confirm delete
+   */
+  const confirmDelete = async () => {
+    if (!deleteConfirm) return;
 
     try {
-      await deleteNotification(notificationId);
-
-      // Update local state
-      setNotifications(prev => prev.filter(n => n.id !== notificationId));
+      await deleteNotification(deleteConfirm);
+      setNotifications(prev => prev.filter(n => n.id !== deleteConfirm));
+      setDeleteConfirm(null);
     } catch (error) {
       console.error('Failed to delete notification:', error);
+      setDeleteConfirm(null);
     }
   };
 
@@ -157,7 +174,18 @@ export default function NotificationsPage() {
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
-    <div className="notifications-page">
+    <>
+      <ConfirmDialog
+        isOpen={deleteConfirm !== null}
+        title="Delete Notification"
+        message="Are you sure you want to delete this notification? This action cannot be undone."
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        variant="danger"
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteConfirm(null)}
+      />
+      <div className="notifications-page">
       {/* Header */}
       <div className="notifications-header">
         <div>
@@ -220,6 +248,8 @@ export default function NotificationsPage() {
             <div
               key={notification.id}
               className={`notification-item ${notification.read ? 'read' : 'unread'}`}
+              onClick={() => handleNotificationClick(notification)}
+              style={{ cursor: 'pointer' }}
             >
               <div className="notification-icon">
                 {getNotificationIcon(notification.type)}
@@ -235,7 +265,10 @@ export default function NotificationsPage() {
               <div className="notification-actions">
                 {!notification.read && (
                   <button
-                    onClick={() => handleMarkAsRead(notification.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleMarkAsRead(notification.id);
+                    }}
                     className="action-btn"
                     title="Mark as read"
                   >
@@ -245,7 +278,10 @@ export default function NotificationsPage() {
                   </button>
                 )}
                 <button
-                  onClick={() => handleDelete(notification.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(notification.id);
+                  }}
                   className="action-btn delete"
                   title="Delete"
                 >
@@ -258,6 +294,7 @@ export default function NotificationsPage() {
           ))}
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 }
