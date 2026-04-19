@@ -25,6 +25,7 @@ export default function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
   const [showUnreadOnly, setShowUnreadOnly] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   /**
@@ -102,12 +103,23 @@ export default function NotificationBell() {
   };
 
   /**
-   * Confirm delete
+   * Confirm delete with optimistic update
    */
   const confirmDelete = async () => {
-    if (deleteConfirm) {
+    if (!deleteConfirm) return;
+
+    setIsDeleting(true);
+
+    try {
+      // Optimistic update - remove immediately from UI
       await deleteNotification(deleteConfirm);
       setDeleteConfirm(null);
+    } catch (error) {
+      console.error('Failed to delete notification:', error);
+      // Refresh to restore if failed
+      fetchNotifications(showUnreadOnly);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -170,8 +182,9 @@ export default function NotificationBell() {
         confirmLabel="Delete"
         cancelLabel="Cancel"
         variant="danger"
+        isLoading={isDeleting}
         onConfirm={confirmDelete}
-        onCancel={() => setDeleteConfirm(null)}
+        onCancel={() => !isDeleting && setDeleteConfirm(null)}
       />
       <div className="notification-bell-container" ref={dropdownRef}>
       <button

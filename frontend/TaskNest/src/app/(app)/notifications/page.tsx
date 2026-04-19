@@ -29,6 +29,8 @@ export default function NotificationsPage() {
   const [filterType, setFilterType] = useState<FilterType>('all');
   const [filterStatus, setFilterStatus] = useState<FilterStatus>('all');
   const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [processingIds, setProcessingIds] = useState<Set<number>>(new Set());
 
   /**
    * Load notifications
@@ -77,16 +79,74 @@ export default function NotificationsPage() {
   };
 
   /**
-   * Handle mark all as read
+   * Handle notification click - mark as read with optimistic update
    */
+  const handleNotificationClick = async (notification: Notification) => {
+    if (!notification.read && !processingIds.has(notification.id)) {
+      // Optimistic update - mark as read immediately in UI
+      setNotifications(prev =>
+        prev.map(n => (n.id === notification.id ? { ...n, read: true } : n))
+      );
+
+      setProcessingIds(prev => new Set(prev).add(notification.id));
+
+      try {
+        await markAsRead(notification.id);
+      } catch (error) {
+        console.error('Failed to mark as read:', error);
+        // Revert on error
+        setNotifications(prev =>
+          prev.map(n => (n.id === notification.id ? { ...n, read: false } : n))
+        );
+      } finally {
+        setProcessingIds(prev => {
+          const next = new Set(prev);
+          next.delete(notification.id);
+          return next;
+        });
+      }
+    }
+  };
+
+  /**
+   * Handle mark as read with optimistic update
+   */
+  const handleMarkAsRead = async (notificationId: number) => {
+    if (processingIds.has(notificationId)) return;
+
+    // Optimistic update
+    setNotifications(prev =>
+      prev.map(n => (n.id === notificationId ? { ...n, read: true } : n))
+    );
+
+    setProcessingIds(prev => new Set(prev).add(notificationId));
+
+    try {
+      await markAsRead(notificationId);
+    } catch (error) {
+      console.error('Failed to mark as read:', error);
+      // Revert on error
+      setNotifications(prev =>
+        prev.map(n => (n.id === notificationId ? { ...n, read: false } : n))
+      );
+    } finally {
+      setProcessingIds(prev => {
+        const next = new Set(prev);
+        next.delete(notificationId);
+        return next;
+      });
+    }
+  };
   const handleMarkAllAsRead = async () => {
+    // Optimistic update - mark all as read immediately
+    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+
     try {
       await markAllAsRead();
-
-      // Update local state
-      setNotifications(prev => prev.map(n => ({ ...n, read: true })));
     } catch (error) {
       console.error('Failed to mark all as read:', error);
+      // Reload on error
+      loadNotifications();
     }
   };
 
@@ -98,18 +158,26 @@ export default function NotificationsPage() {
   };
 
   /**
-   * Confirm delete
+   * Confirm delete with optimistic update
    */
   const confirmDelete = async () => {
     if (!deleteConfirm) return;
 
+    setIsDeleting(true);
+
+    // Optimistic update - remove from UI immediately
+    const notificationToDelete = deleteConfirm;
+    setNotifications(prev => prev.filter(n => n.id !== notificationToDelete));
+    setDeleteConfirm(null);
+
     try {
-      await deleteNotification(deleteConfirm);
-      setNotifications(prev => prev.filter(n => n.id !== deleteConfirm));
-      setDeleteConfirm(null);
+      await deleteNotification(notificationToDelete);
     } catch (error) {
       console.error('Failed to delete notification:', error);
-      setDeleteConfirm(null);
+      // Reload on error to restore
+      loadNotifications();
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -182,8 +250,9 @@ export default function NotificationsPage() {
         confirmLabel="Delete"
         cancelLabel="Cancel"
         variant="danger"
+        isLoading={isDeleting}
         onConfirm={confirmDelete}
-        onCancel={() => setDeleteConfirm(null)}
+        onCancel={() => !isDeleting && setDeleteConfirm(null)}
       />
       <div className="notifications-page">
       {/* Header */}
@@ -269,8 +338,9 @@ export default function NotificationsPage() {
                       e.stopPropagation();
                       handleMarkAsRead(notification.id);
                     }}
-                    className="action-btn"
+                    className={`action-btn ${processingIds.has(notification.id) ? 'loading' : ''}`}
                     title="Mark as read"
+                    disabled={processingIds.has(notification.id)}
                   >
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />

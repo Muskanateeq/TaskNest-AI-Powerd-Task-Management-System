@@ -224,18 +224,52 @@
   color: #E0E0E0;
   cursor: pointer;
   transition: all 0.3s ease;
+  position: relative;
 }
 
-.action-btn:hover {
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.action-btn:hover:not(:disabled) {
   background: rgba(212, 175, 55, 0.15);
   border-color: rgba(212, 175, 55, 0.3);
   color: #d4af37;
 }
 
-.action-btn.delete:hover {
+.action-btn.delete:hover:not(:disabled) {
   background: rgba(239, 68, 68, 0.15);
   border-color: rgba(239, 68, 68, 0.3);
   color: #EF4444;
+}
+
+.action-btn.loading {
+  pointer-events: none;
+}
+
+.action-btn.loading svg {
+  opacity: 0;
+}
+
+.action-btn.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
 }
 
 /* Responsive */
