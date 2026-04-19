@@ -1664,6 +1664,45 @@ export default function ChatKitModal({ isOpen, onClose }: ChatKitModalProps) {
           }
         }
 
+        /* Typing Indicator Animation */
+        .typing-indicator {
+          display: flex;
+          align-items: center;
+          gap: 0.375rem;
+          padding: 0.75rem 1rem;
+        }
+
+        .typing-indicator span {
+          width: 8px;
+          height: 8px;
+          background: #E49B0F;
+          border-radius: 50%;
+          animation: typingDot 1.4s infinite ease-in-out;
+        }
+
+        .typing-indicator span:nth-child(1) {
+          animation-delay: 0s;
+        }
+
+        .typing-indicator span:nth-child(2) {
+          animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+          animation-delay: 0.4s;
+        }
+
+        @keyframes typingDot {
+          0%, 60%, 100% {
+            transform: translateY(0);
+            opacity: 0.4;
+          }
+          30% {
+            transform: translateY(-10px);
+            opacity: 1;
+          }
+        }
+
         /* Accessibility */
         .close-button:focus-visible,
         .chat-send-button:focus-visible {
