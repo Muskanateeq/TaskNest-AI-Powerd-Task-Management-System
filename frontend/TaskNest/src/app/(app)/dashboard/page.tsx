@@ -39,7 +39,7 @@ import '../../dashboard.css';
 function DashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { isLoading: authLoading } = useAuth();
   const { registerRefresh, unregisterRefresh } = useRefresh();
   const {
     tasks,

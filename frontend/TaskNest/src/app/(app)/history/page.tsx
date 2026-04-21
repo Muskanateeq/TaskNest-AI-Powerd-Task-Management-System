@@ -7,7 +7,6 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
 import { useRefresh } from '@/contexts/RefreshContext';
 import { getActivities, deleteActivity, clearAllActivities, type Activity, type ActivityType } from '@/lib/activities-api';
 import './history.css';
@@ -18,7 +17,6 @@ import './history.css';
 type DateFilter = 'today' | 'week' | 'month' | 'all';
 
 export default function HistoryPage() {
-  const router = useRouter();
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const { registerRefresh, unregisterRefresh } = useRefresh();
   const [activities, setActivities] = useState<Activity[]>([]);

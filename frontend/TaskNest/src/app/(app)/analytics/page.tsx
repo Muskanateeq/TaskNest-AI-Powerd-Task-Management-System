@@ -6,9 +6,8 @@
 
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
 import { useTasks } from '@/hooks/useTasks';
 import dynamic from 'next/dynamic';
 import './analytics.css';
@@ -22,7 +21,6 @@ const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 type TimeRange = '7days' | '30days' | '90days' | 'all';
 
 export default function AnalyticsPage() {
-  const router = useRouter();
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const { tasks, isLoading } = useTasks();
   const [timeRange, setTimeRange] = useState<TimeRange>('30days');

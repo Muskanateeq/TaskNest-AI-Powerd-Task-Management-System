@@ -7,7 +7,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
 import {
   getConversations,
   getConversationHistory,
@@ -19,7 +18,6 @@ import {
 import './chat.css';
 
 export default function ChatPage() {
-  const router = useRouter();
   const { isAuthenticated, isLoading: authLoading, getToken } = useAuth();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<number | null>(null);

@@ -7,7 +7,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
 import {
   getNotifications,
   markAsRead,
@@ -22,7 +21,6 @@ type FilterType = 'all' | 'task_update' | 'mention' | 'assignment' | 'reminder';
 type FilterStatus = 'all' | 'unread' | 'read';
 
 export default function NotificationsPage() {
-  const router = useRouter();
   const { isAuthenticated, isLoading: authLoading, getToken } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -53,30 +51,6 @@ export default function NotificationsPage() {
     loadNotifications();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, getToken]);
-
-  /**
-   * Handle notification click - mark as read
-   */
-  const handleNotificationClick = async (notification: Notification) => {
-    if (!notification.read) {
-      await handleMarkAsRead(notification.id);
-    }
-  };
-  /**
-   * Handle mark as read
-   */
-  const handleMarkAsRead = async (notificationId: number) => {
-    try {
-      await markAsRead(notificationId);
-
-      // Update local state
-      setNotifications(prev =>
-        prev.map(n => (n.id === notificationId ? { ...n, read: true } : n))
-      );
-    } catch (error) {
-      console.error('Failed to mark as read:', error);
-    }
-  };
 
   /**
    * Handle notification click - mark as read with optimistic update

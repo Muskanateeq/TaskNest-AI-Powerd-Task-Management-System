@@ -8,7 +8,6 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
 import authClient, { getJWTToken, clearTokenCache } from '@/lib/auth-client';
 
 /**
@@ -94,7 +93,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
 
   /**
    * Initialize authentication state from Better Auth session
@@ -202,7 +200,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     } finally {
       setIsLoading(false);
     }
-  }, [router]);
+  }, []);
 
   /**
    * Register new user with Better Auth
@@ -272,7 +270,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setIsLoading(false);
       console.log("🔵 [AUTH-CONTEXT] Register completed");
     }
-  }, [router]);
+  }, []);
 
   /**
    * Logout user with Better Auth
